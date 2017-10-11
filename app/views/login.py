@@ -45,7 +45,7 @@ class IndexView(MethodView):
 class IvleView(MethodView):
 
     def get(self):
-        return redirect("https://ivle.nus.edu.sg/api/login/?apikey=bAbUg4vhpnzADp7DO9GU0&url=http://localhost:3040/ivle_token")
+        return redirect("https://ivle.nus.edu.sg/api/login/?apikey=bAbUg4vhpnzADp7DO9GU0&url=https://imgratefultoday.com:3040/ivle_token")
 
 
 class IvleToken(MethodView):
