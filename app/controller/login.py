@@ -11,14 +11,14 @@ from app import db, login_manager
 
 
 @login_manager.user_loader
-def load_user(metric):
-    return User.query.filter(User.metric == metric).first()
+def load_user(id):
+    return User.query.filter(User.id == id).first()
 
 
 class LoginController:
 
     def login(self, token):
-        is_token_valid = self._validate_token(token)
+        is_token_valid, token = self._validate_token(token)
         if is_token_valid:
             metric = self._get_metric(token)
 
@@ -29,6 +29,8 @@ class LoginController:
                 user = User(metric, name, email)
                 db.session.add(user)
                 db.session.commit()
+            user.token = token
+            db.session.commit()
             login_user(user)
             d = dict()
             d['name'] = user.name
@@ -44,7 +46,7 @@ class LoginController:
             "Token": token
         }
         resp = requests.get(validate_url, params=params).json()
-        return resp['Success']
+        return resp['Success'], resp['Token']
 
     def _get_metric(self, token):
         url = IVLE_URL + METRIC_URL
