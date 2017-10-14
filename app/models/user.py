@@ -12,7 +12,7 @@ class User(UserMixin, db.Model):
     email = Column(String)
     token = Column(String)
 
-    def __init__(self, metric, name, email):
+    def __init__(self, metric, name, email=""):
         self.metric = metric
         self.name = name
         self.email = email

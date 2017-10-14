@@ -147,7 +147,7 @@ print()
 
 param = {
     "APIKey": API_KEY,
-    # "AuthToken": TOKEN,
+    "AuthToken": TOKEN,
 }
 service = "GroupsByUser"
 url = IVLE_URL + service
