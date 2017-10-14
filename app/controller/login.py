@@ -48,6 +48,7 @@ class LoginController:
         d['name'] = user.name
         d['email'] = user.email
         d['metric'] = user.metric
+        d['status'] = 200
         return d
 
     def _validate_token(self, token):
