@@ -37,7 +37,15 @@ class LoginController:
             d['email'] = user.email
             d['metric'] = user.metric
             return d, 200
-        return "Invalid Token"
+        return "Invalid Token", 301
+
+    def login_user(self, user):
+        d = dict()
+        d['name'] = user.name
+        d['email'] = user.email
+        d['metric'] = user.metric
+        return d, 200
+
 
     def _validate_token(self, token):
         validate_url = IVLE_URL + VALIDATE_URL
