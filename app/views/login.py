@@ -43,7 +43,7 @@ class IvleToken(MethodView):
     def get(self):
         token = request.args.get('token')
         self.control.login(token)
-        return redirect(url_for('login'))
+        return redirect("http://localhost:3000")
 
 
 app.add_url_rule('/login', view_func=LoginView.as_view('login'))
