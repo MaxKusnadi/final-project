@@ -18,8 +18,8 @@ class LoginView(MethodView):
     def get(self):
         logging.info("New /login request")
         if current_user.is_authenticated:
-            result, status = self.control.login_user(current_user)
-            return json.dumps(result), status
+            result = self.control.login_user(current_user)
+            return json.dumps(result)
         else:
             return redirect(LOGIN_URL)
 
@@ -32,8 +32,8 @@ class LoginStatusView(MethodView):
     def get(self):
         logging.info("New /login_status request")
         if current_user.is_authenticated:
-            result, status = self.control.login_user(current_user)
-            return json.dumps(result), status
+            result = self.control.login_user(current_user)
+            return json.dumps(result)
         else:
             logout_user()  # Destroy cookies
             return "Not logged in"

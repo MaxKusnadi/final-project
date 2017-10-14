@@ -17,6 +17,7 @@ db = SQLAlchemy(app)
 
 # Models
 from app.models.user import User
+from app.models.academic_time import AcademicTime
 
 # Views
 from app.views.login import *
