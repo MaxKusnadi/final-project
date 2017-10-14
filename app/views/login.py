@@ -7,7 +7,7 @@ from flask import request, redirect
 
 from app import app
 from app.controller.login import LoginController
-from app.constants.ivle import LOGIN_URL
+from app.constants.ivle import LOGIN_URL, LOGIN_REDIRECT_URL
 
 
 class LoginView(MethodView):
@@ -58,7 +58,7 @@ class IvleToken(MethodView):
     def get(self):
         token = request.args.get('token')
         self.control.login(token)
-        return redirect("http://localhost:3000")
+        return redirect(LOGIN_REDIRECT_URL)  # TODO change localhost to different url according to env
 
 
 app.add_url_rule('/login', view_func=LoginView.as_view('login'))
