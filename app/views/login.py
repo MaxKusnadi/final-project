@@ -36,7 +36,10 @@ class LoginStatusView(MethodView):
             return json.dumps(result)
         else:
             logout_user()  # Destroy cookies
-            return "Not logged in"
+            return json.dumps({
+                "text": "Not logged in",
+                "status": 301}
+            )
 
 
 class LogoutView(MethodView):
@@ -47,7 +50,10 @@ class LogoutView(MethodView):
 
     def get(self):
         logout_user()
-        return "Logged out"
+        return json.dumps({
+                "text": "Logged Out",
+                "status": 200}
+            )
 
 
 class IvleToken(MethodView):
