@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from app import db
 
@@ -14,6 +14,7 @@ class Course(db.Model):
     course_name = Column(String)
     acad_year = Column(String)
     semester = Column(Integer)
+    is_mocked = Column(Boolean)
 
     def __init__(self, creator_user_id, creator_name,
                  course_id, course_code, course_name,
@@ -25,6 +26,7 @@ class Course(db.Model):
         self.course_name = course_name
         self.acad_year = acad_year
         self.semester = semester
+        self.is_mocked = False
 
     def __repr__(self):
         return "{course_code}: {course_name} {acad_year}/{semester} by {creator_name}".format(

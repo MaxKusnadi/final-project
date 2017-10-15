@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from app import db
 
@@ -15,6 +15,7 @@ class Session(db.Model):
     end_date = Column(Integer)
     attendance_start_time = Column(Integer)
     code = Column(String)
+    is_mocked = Column(Boolean)
 
     def __init__(self, group, week_name, start_date, end_date):
         self.group = group
@@ -24,6 +25,7 @@ class Session(db.Model):
         self.end_date = end_date
         self.attendance_start_time = None
         self.code = None
+        self.is_mocked = False
 
     def __repr__(self):
         return "Session for course {course} for week {week} at {start_date} to {end_date}".format(

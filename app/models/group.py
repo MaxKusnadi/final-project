@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from app import db
 
@@ -18,6 +18,7 @@ class Group(db.Model):
     week_code = Column(Integer)
     venue = Column(String)
     group_type = Column(String)
+    is_mocked = Column(Boolean)
 
     def __init__(self, course, group_name, start_time,
                  end_time, day_code, week_code, venue, group_type):
@@ -31,6 +32,8 @@ class Group(db.Model):
         self.week_code = week_code
         self.venue = venue
         self.group_type = group_type
+        self.is_mocked = False
+
 
     def __repr__(self):
         return "{course_name} {group_type} {group_name} | Day: {day_code} Week: {week_code} Venue: {venue}".format(

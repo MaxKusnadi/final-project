@@ -1,5 +1,5 @@
 from flask_login import UserMixin
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, String, Integer, Boolean
 from app import db
 
 
@@ -11,12 +11,14 @@ class User(UserMixin, db.Model):
     name = Column(String)
     email = Column(String)
     token = Column(String)
+    is_mocked = Column(Boolean)
 
     def __init__(self, metric, name, email=""):
         self.metric = metric
         self.name = name
         self.email = email
         self.token = ""
+        self.is_mocked = False
 
     def is_active(self):
         return True
