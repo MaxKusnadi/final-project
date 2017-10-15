@@ -17,3 +17,4 @@ LOGIN_URL = "https://ivle.nus.edu.sg/api/login/?apikey={api_key}&url={redirect_u
 VALIDATE_URL = "Validate"
 PROFILE_URL = "Profile_View"
 ACAD_TIME_URL = "MyOrganizer_AcadSemesterInfo"
+WEEK_CODE_URL = "CodeTable_WeekTypes"
