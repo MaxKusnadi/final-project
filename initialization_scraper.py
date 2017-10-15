@@ -84,10 +84,6 @@ class InitializationScraper:
 
 
 if __name__ == "__main__":
-    a = AcademicTime.query.all()
-    for x in a:
-        db.session.delete(x)
-    db.session.commit()
     initial = InitializationScraper()
-    # initial.initialize()
+    initial.initialize()
     initial.check_db()

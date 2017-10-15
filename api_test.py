@@ -22,33 +22,33 @@ KAIDI_TOKEN = "36C5E5A0DAEEEFFDE451284055243FD1BAC5B957FD6EF2708290B454946D7B324
 
 # =======================================================
 
-# param = {
-#     "APIKey": API_KEY,
-#     "AuthToken": TOKEN
-#     "AcadYear": "2017/2018",
-#     "Semester": 1
-#
-# }
-# service = "MyOrganizer_AcadSemesterInfo"
-# url = IVLE_URL + service
-# resp = requests.get(url, params=param)
-# print("Acad year info")
-# print(resp.json())
-# print()
-
-# # =======================================================
-#
 param = {
     "APIKey": API_KEY,
     "AuthToken": MAX_TOKEN,
+    "AcadYear": "2017/2018",
+    "Semester": 1
+
 }
-service = "Profile_View"
+service = "MyOrganizer_AcadSemesterInfo"
 url = IVLE_URL + service
 resp = requests.get(url, params=param)
-print("Profile_View")
+print("Acad year info")
 print(resp.json())
 print()
+
+# # =======================================================
 #
+# param = {
+#     "APIKey": API_KEY,
+#     "AuthToken": MAX_TOKEN,
+# }
+# service = "Profile_View"
+# url = IVLE_URL + service
+# resp = requests.get(url, params=param)
+# print("Profile_View")
+# print(resp.json())
+# print()
+# #
 # # =======================================================
 #
 # param = {

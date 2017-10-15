@@ -16,7 +16,7 @@ class LoginView(MethodView):
         self.control = LoginController()
 
     def get(self):
-        logging.info("New /login request")
+        logging.info("New GET /login request")
         if current_user.is_authenticated:
             result = self.control.get_user_info(current_user)
             return json.dumps(result)
@@ -30,9 +30,9 @@ class LoginStatusView(MethodView):
         self.control = LoginController()
 
     def get(self):
-        logging.info("New /login_status request")
+        logging.info("New GET /login_status request")
         if current_user.is_authenticated:
-            result = self.control.login_user(current_user)
+            result = self.control.get_user_info(current_user)
             return json.dumps(result)
         else:
             logout_user()  # Destroy cookies
@@ -58,13 +58,13 @@ class LogoutView(MethodView):
 
 class IvleToken(MethodView):
 
-    def __init__(self):
+    def __init__(self):  # pragma: no cover
         self.control = LoginController()
 
     def get(self):
         token = request.args.get('token')
         self.control.login(token)
-        return redirect(LOGIN_REDIRECT_URL)  # TODO change localhost to different url according to env
+        return redirect(LOGIN_REDIRECT_URL)
 
 
 app.add_url_rule('/login', view_func=LoginView.as_view('login'))
