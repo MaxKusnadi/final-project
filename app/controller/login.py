@@ -4,9 +4,7 @@ import logging
 from flask_login import login_user
 
 from app.models.user import User
-from app.constants.ivle import (IVLE_URL, METRIC_URL,
-                                NAME_URL, VALIDATE_URL,
-                                API_KEY, EMAIL_URL)
+from app.constants.ivle import (IVLE_URL, VALIDATE_URL, API_KEY, PROFILE_URL)
 from app import db, login_manager
 
 
@@ -18,14 +16,17 @@ def load_user(id):
 class LoginController:
 
     def login(self, token):
+        logging.info("Validation token...")
         is_token_valid, token = self._validate_token(token)
         if is_token_valid:
-            metric = self._get_metric(token)
+            profile = self._get_profile(token)
+            metric = profile['UserID']
 
             user = User.query.filter(User.metric == metric).first()
             if not user:
-                name = self._get_name(token)
-                email = self._get_email(token)
+                logging.info("Creating user with UserID {}".format(metric))
+                name = profile['Name']
+                email = profile['Email']
                 user = User(metric, name, email)
                 db.session.add(user)
                 db.session.commit()
@@ -38,12 +39,14 @@ class LoginController:
             d['metric'] = user.metric
             d['status'] = 200
             return d
+        logging.error("Invalid token {}".format(token))
         d = dict()
         d['text'] = "Invalid Token"
         d['status'] = 301
         return d
 
-    def login_user(self, user):
+    def get_user_info(self, user):
+        logging.info("Getting information for user {}".format(user.metric))
         d = dict()
         d['name'] = user.name
         d['email'] = user.email
@@ -60,29 +63,11 @@ class LoginController:
         resp = requests.get(validate_url, params=params).json()
         return resp['Success'], resp['Token']
 
-    def _get_metric(self, token):
-        url = IVLE_URL + METRIC_URL
+    def _get_profile(self, token):
+        url = IVLE_URL + PROFILE_URL
         params = {
             "APIKey": API_KEY,
             "Token": token
         }
-        resp = requests.get(url, params=params).text
-        return resp
-
-    def _get_name(self, token):
-        url = IVLE_URL + NAME_URL
-        params = {
-            "APIKey": API_KEY,
-            "Token": token
-        }
-        resp = requests.get(url, params=params).text
-        return resp
-
-    def _get_email(self, token):
-        url = IVLE_URL + EMAIL_URL
-        params = {
-            "APIKey": API_KEY,
-            "Token": token
-        }
-        resp = requests.get(url, params=params).text
-        return resp
+        resp = requests.get(url, params=params).json()
+        return resp['Results'][0]

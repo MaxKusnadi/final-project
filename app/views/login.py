@@ -18,7 +18,7 @@ class LoginView(MethodView):
     def get(self):
         logging.info("New /login request")
         if current_user.is_authenticated:
-            result = self.control.login_user(current_user)
+            result = self.control.get_user_info(current_user)
             return json.dumps(result)
         else:
             return redirect(LOGIN_URL)
