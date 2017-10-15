@@ -54,6 +54,10 @@ class LoginController:
             d = Error.USER_NOT_FOUND
             d['text'] = d['text'].format(metric)
             return d
+        if not user.is_mocked:
+            d = Error.USER_NOT_MOCKED
+            d['text'] = d['text'].format(metric)
+            return d
         login_user(user)
         d = dict()
         d['name'] = user.name

@@ -29,3 +29,4 @@ from app.views.login import *
 from app.views.academic_time import *
 from app.views.mock.user import *
 from app.views.mock.login import *
+from app.views.mock.course import *
