@@ -27,3 +27,4 @@ from app.models.week_code import WeekCode
 # Views
 from app.views.login import *
 from app.views.academic_time import *
+from app.views.mock.user import *

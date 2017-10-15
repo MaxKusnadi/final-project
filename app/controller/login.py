@@ -16,7 +16,7 @@ def load_user(id):
 class LoginController:
 
     def login(self, token):
-        logging.info("Validation token...")
+        logging.info("Validating token...")
         is_token_valid, token = self._validate_token(token)
         if is_token_valid:
             profile = self._get_profile(token)
@@ -67,7 +67,8 @@ class LoginController:
         url = IVLE_URL + PROFILE_URL
         params = {
             "APIKey": API_KEY,
-            "Token": token
+            "AuthToken": token
         }
         resp = requests.get(url, params=params).json()
+        logging.info(resp)
         return resp['Results'][0]
