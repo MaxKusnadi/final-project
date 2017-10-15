@@ -5,6 +5,7 @@ from flask_login import login_user
 
 from app.models.user import User
 from app.constants.ivle import (IVLE_URL, VALIDATE_URL, API_KEY, PROFILE_URL)
+from app.constants.error import Error
 from app import db, login_manager
 
 
@@ -43,6 +44,22 @@ class LoginController:
         d = dict()
         d['text'] = "Invalid Token"
         d['status'] = 301
+        return d
+
+    def mock_login(self, **kwargs):
+        metric = kwargs.get('metric')
+        logging.info("Logging in for mocked user {}".format(metric))
+        user = User.query.filter(User.metric == metric).first()
+        if not user:
+            d = Error.USER_NOT_FOUND
+            d['text'] = d['text'].format(metric)
+            return d
+        login_user(user)
+        d = dict()
+        d['name'] = user.name
+        d['email'] = user.email
+        d['metric'] = user.metric
+        d['status'] = 200
         return d
 
     def get_user_info(self, user):
