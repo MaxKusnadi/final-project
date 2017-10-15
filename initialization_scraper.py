@@ -43,8 +43,8 @@ class InitializationScraper:
             raw_json['EvenOddWeek'],
             raw_json['AcadYear'],
             int(raw_json['Semester'].split(' ')[-1]),
-            self._date_iso_to_epoch(raw_json['SemesterStartDate_js']),
-            self._date_iso_to_epoch(raw_json['SemesterEndDate_js'])
+            self._date_iso_to_epoch(raw_json['WeekTypeStartDate_js']),
+            self._date_iso_to_epoch(raw_json['WeekTypeEndDate_js'])
         )
 
     def _week_code_to_model_args(self, raw_json):
@@ -84,6 +84,10 @@ class InitializationScraper:
 
 
 if __name__ == "__main__":
+    a = AcademicTime.query.all()
+    for x in a:
+        db.session.delete(x)
+    db.session.commit()
     initial = InitializationScraper()
-    initial.initialize()
+    # initial.initialize()
     initial.check_db()
