@@ -3,7 +3,6 @@ import json
 
 from flask.views import MethodView
 from flask import request
-from flask_login import current_user, login_required
 
 from app import app
 from app.controller.course import CourseController

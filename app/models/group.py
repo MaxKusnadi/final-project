@@ -10,10 +10,9 @@ class Group(db.Model):
     course_id = Column(Integer, ForeignKey('course.id'))
     course = relationship("Course", backref="groups")
 
-    course_name = Column(String)
     group_name = Column(String)
-    start_time = Column(Integer)
-    end_time = Column(Integer)
+    start_time = Column(String)
+    end_time = Column(String)
     day_code = Column(Integer)
     week_code = Column(Integer)
     venue = Column(String)
@@ -24,7 +23,6 @@ class Group(db.Model):
                  end_time, day_code, week_code, venue, group_type):
         self.course = course
         self.course_id = course.id
-        self.course_name = course.course_name
         self.group_name = group_name
         self.start_time = start_time
         self.end_time = end_time
@@ -34,10 +32,9 @@ class Group(db.Model):
         self.group_type = group_type
         self.is_mocked = False
 
-
     def __repr__(self):
-        return "{course_name} {group_type} {group_name} | Day: {day_code} Week: {week_code} Venue: {venue}".format(
-            course_name=self.course_name, group_type=self.group_type, group_name=self.group_name,
+        return "{course_code} {group_type} {group_name} | Day: {day_code} Week: {week_code} Venue: {venue}".format(
+            course_code=self.course.course_code, group_type=self.group_type, group_name=self.group_name,
             day_code=self.day_code, week_code=self.week_code, venue=self.venue
         )
 

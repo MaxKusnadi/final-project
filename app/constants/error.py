@@ -33,3 +33,20 @@ class Error:
         "text": "Course {} is not found",
         "status": 404
     }
+    # ================================================== #
+    GROUP_NAME_NOT_FOUND = {
+        "text": "group_name is empty",
+        "status": 400
+    }
+    GROUP_TYPE_NOT_FOUND = {
+        "text": "group_type is empty",
+        "status": 400
+    }
+    GROUP_EXIST = {
+        "text": "Group {} exist",
+        "status": 500
+    }
+    GROUP_NOT_FOUND = {
+        "text": "Course {} Group {}/{} is not found",
+        "status": 404
+    }
