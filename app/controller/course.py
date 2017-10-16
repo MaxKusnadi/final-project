@@ -22,7 +22,7 @@ class CourseController:
         course.is_mocked = True
         db.session.add(course)
         db.session.commit()
-        d = self._get_course_info(course)
+        d = Utils.get_course_info(course)
         d['status'] = 200
         return d
 
@@ -36,9 +36,9 @@ class CourseController:
             d = Utils.create_error_code(Error.USER_NOT_MOCKED, metric)
             return d
         course_taken = user.course_taken
-        course_taken = list(map(lambda x: self._get_course_info(x.course), course_taken))
+        course_taken = list(map(lambda x: Utils.get_course_info(x.course), course_taken))
         course_taught = user.course_taught
-        course_taught = list(map(lambda x: self._get_course_info(x.course), course_taught))
+        course_taught = list(map(lambda x: Utils.get_course_info(x.course), course_taught))
 
         d = dict()
         d['course_taken'] = course_taken
@@ -52,7 +52,7 @@ class CourseController:
         if not course:
             d = Utils.create_error_code(Error.COURSE_NOT_FOUND, course_code)
             return d
-        d = self._get_course_info(course)
+        d = Utils.get_course_info(course)
         d['status'] = 200
         return d
 
@@ -92,7 +92,7 @@ class CourseController:
             d = Utils.create_error_code(Error.COURSE_NOT_FOUND, course_code)
             return d
         course_students = course.students
-        course_students = list(map(lambda x: self._get_user_info(x.user), course_students))
+        course_students = list(map(lambda x: Utils.get_user_info(x.user), course_students))
         d = dict()
         d['results'] = course_students
         d['status'] = 200
@@ -105,24 +105,22 @@ class CourseController:
             d = Utils.create_error_code(Error.COURSE_NOT_FOUND, course_code)
             return d
         course_staffs = course.staffs
-        course_staffs = list(map(lambda x: self._get_user_info(x.user), course_staffs))
+        course_staffs = list(map(lambda x: Utils.get_user_info(x.user), course_staffs))
         d = dict()
         d['results'] = course_staffs
         d['status'] = 200
         return d
 
-    def _get_course_info(self, course):
+    def get_course_group(self, course_code):
+        logging.info("Getting course group for {}".format(course_code))
+        course = Course.query.filter(Course.course_code == course_code).first()
+        if not course:
+            d = Utils.create_error_code(Error.COURSE_NOT_FOUND, course_code)
+            return d
+        course_groups = course.groups
+        course_groups = list(map(lambda x: Utils.get_group_info(x), course_groups))
         d = dict()
-        d['creator_name'] = course.creator_name
-        d['course_code'] = course.course_code
-        d['course_name'] = course.course_name
-        d['acad_year'] = course.acad_year
-        d['semester'] = course.semester
+        d['results'] = course_groups
+        d['status'] = 200
         return d
 
-    def _get_user_info(self, user):
-        d = dict()
-        d['name'] = user.name
-        d['metric'] = user.metric
-        d['email'] = user.email
-        return d

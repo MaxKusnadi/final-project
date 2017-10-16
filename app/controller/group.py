@@ -1,8 +1,7 @@
 import logging
 
-from app.models.course import Course, CourseStudent, CourseStaff
+from app.models.course import Course
 from app.models.group import Group, GroupStudent, GroupStaff
-from app.models.week_code import WeekCode
 from app.models.user import User
 from app.controller.utils import Utils
 from app.constants.error import Error
@@ -29,7 +28,7 @@ class GroupController:
         group.is_mocked = True
         db.session.add(group)
         db.session.commit()
-        d = self._get_group_info(group)
+        d = Utils.get_group_info(group)
         d['status'] = 200
         return d
 
@@ -43,9 +42,9 @@ class GroupController:
             d = Utils.create_error_code(Error.USER_NOT_MOCKED, metric)
             return d
         groups_taken = user.groups
-        groups_taken = list(map(lambda x: self._get_group_info(x.group), groups_taken))
+        groups_taken = list(map(lambda x: Utils.get_group_info(x.group), groups_taken))
         groups_taught = user.groups_taught
-        groups_taught = list(map(lambda x: self._get_group_info(x.group), groups_taught))
+        groups_taught = list(map(lambda x: Utils.get_group_info(x.group), groups_taught))
 
         d = dict()
         d['group_taken'] = groups_taken
@@ -61,7 +60,7 @@ class GroupController:
         if not group:
             d = Utils.create_error_code(Error.GROUP_NOT_FOUND, course_code, group_name, group_type)
             return d
-        d = self._get_group_info(group)
+        d = Utils.get_group_info(group)
         d['status'] = 200
         return d
 
@@ -107,7 +106,7 @@ class GroupController:
             d = Utils.create_error_code(Error.GROUP_NOT_FOUND, course_code, group_name, group_type)
             return d
         group_students = group.students
-        group_students = list(map(lambda x: self._get_user_info(x.user), group_students))
+        group_students = list(map(lambda x: Utils.get_user_info(x.user), group_students))
         d = dict()
         d['results'] = group_students
         d['status'] = 200
@@ -122,27 +121,8 @@ class GroupController:
             d = Utils.create_error_code(Error.GROUP_NOT_FOUND, course_code, group_name, group_type)
             return d
         group_staffs = group.staffs
-        group_staffs = list(map(lambda x: self._get_user_info(x.user), group_staffs))
+        group_staffs = list(map(lambda x: Utils.get_user_info(x.user), group_staffs))
         d = dict()
         d['results'] = group_staffs
         d['status'] = 200
-        return d
-
-    def _get_group_info(self, group):
-        d = dict()
-        d['group_name'] = group.group_name
-        d['course_code'] = group.course.course_code
-        d['start_time'] = group.start_time
-        d['end_time'] = group.end_time
-        d['day_code'] = group.day_code
-        d['week_code'] = WeekCode.query.filter(WeekCode.week_code == group.week_code).first().description
-        d['venue'] = group.venue
-        d['group_type'] = group.group_type
-        return d
-
-    def _get_user_info(self, user):
-        d = dict()
-        d['name'] = user.name
-        d['metric'] = user.metric
-        d['email'] = user.email
         return d

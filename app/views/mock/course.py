@@ -77,6 +77,17 @@ class CourseStaffView(MethodView):
         return json.dumps(result)
 
 
+class CourseGroupView(MethodView):
+
+    def __init__(self):  # pragma: no cover
+        self.control = CourseController()
+
+    def get(self, course_code):
+        logging.info("New GET /mock/course/<string:course_code>/groups request")
+        result = self.control.get_course_group(course_code)
+        return json.dumps(result)
+
+
 course_view = CourseView.as_view('mock_course')
 app.add_url_rule('/mock/course', view_func=course_view, methods=['POST'])
 app.add_url_rule('/mock/course', defaults={'course_code': None}, view_func=course_view, methods=['GET'])
@@ -84,3 +95,5 @@ app.add_url_rule('/mock/course/<string:course_code>', view_func=course_view, met
 app.add_url_rule('/mock/join/course/<string:course_code>', view_func=JoinCourseView.as_view('mock_join_course'))
 app.add_url_rule('/mock/course/<string:course_code>/students', view_func=CourseStudentView.as_view('mock_course_student'))
 app.add_url_rule('/mock/course/<string:course_code>/staffs', view_func=CourseStaffView.as_view('mock_course_staff'))
+app.add_url_rule('/mock/course/<string:course_code>/groups', view_func=CourseGroupView.as_view('mock_course_group'))
+

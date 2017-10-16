@@ -22,7 +22,7 @@ class UserController:
         user.is_mocked = True
         db.session.add(user)
         db.session.commit()
-        d = self._get_user_info(user)
+        d = Utils.get_user_info(user)
         return d
 
     def get_user(self, metric_id):
@@ -31,18 +31,10 @@ class UserController:
         if not user:
             d = Utils.create_error_code(Error.USER_NOT_FOUND, metric_id)
             return d
-        d = self._get_user_info(user)
+        d = Utils.get_user_info(user)
         return d
 
     def get_my_info(self, user):
         logging.info("Getting user {} info".format(user.metric))
-        d = self._get_user_info(user)
-        return d
-
-    def _get_user_info(self, user):
-        d = dict()
-        d['name'] = user.name
-        d['metric'] = user.metric
-        d['email'] = user.email
-        d['status'] = 200
+        d = Utils.get_user_info(user)
         return d
