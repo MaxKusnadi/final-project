@@ -5,14 +5,14 @@ from flask.views import MethodView
 from flask import request
 
 from app import app
-from app.controller.group import GroupController
+from app.controller.group import MockGroupController
 from app.constants.error import Error
 
 
 class GroupView(MethodView):
 
     def __init__(self):  # pragma: no cover
-        self.control = GroupController()
+        self.control = MockGroupController()
 
     def post(self):
         logging.info("New POST /mock/group request")
@@ -48,7 +48,7 @@ class GroupView(MethodView):
 class JoinGroupView(MethodView):
 
     def __init__(self):  # pragma: no cover
-        self.control = GroupController()
+        self.control = MockGroupController()
 
     def post(self, course_code):
         logging.info("New POST mock/join/group/ request")
@@ -73,7 +73,7 @@ class JoinGroupView(MethodView):
 class GroupStudentView(MethodView):
 
     def __init__(self):  # pragma: no cover
-        self.control = GroupController()
+        self.control = MockGroupController()
 
     def get(self, course_code):
         logging.info("New GET /mock/group/<string:course_code>/students request")
@@ -90,7 +90,7 @@ class GroupStudentView(MethodView):
 class GroupStaffView(MethodView):
 
     def __init__(self):  # pragma: no cover
-        self.control = GroupController()
+        self.control = MockGroupController()
 
     def get(self, course_code):
         logging.info("New GET /mock/group/<string:course_code>/staffs request")

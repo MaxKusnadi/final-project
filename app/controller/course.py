@@ -7,7 +7,7 @@ from app.constants.error import Error
 from app import db
 
 
-class CourseController:
+class MockCourseController:
 
     def create_course(self, **kwargs):
         logging.info("Creating a mocked course")
@@ -52,6 +52,9 @@ class CourseController:
         if not course:
             d = Utils.create_error_code(Error.COURSE_NOT_FOUND, course_code)
             return d
+        if not course.is_mocked:
+            d = Utils.create_error_code(Error.COURSE_NOT_MOCKED, course_code)
+            return d
         d = Utils.get_course_info(course)
         d['status'] = 200
         return d
@@ -73,6 +76,9 @@ class CourseController:
         if not course:
             d = Utils.create_error_code(Error.COURSE_NOT_FOUND, course_code)
             return d
+        if not course.is_mocked:
+            d = Utils.create_error_code(Error.COURSE_NOT_MOCKED, course_code)
+            return d
 
         role = int(role)
         if role == 1:
@@ -91,6 +97,10 @@ class CourseController:
         if not course:
             d = Utils.create_error_code(Error.COURSE_NOT_FOUND, course_code)
             return d
+        if not course.is_mocked:
+            d = Utils.create_error_code(Error.COURSE_NOT_MOCKED, course_code)
+            return d
+
         course_students = course.students
         course_students = list(map(lambda x: Utils.get_user_info(x.user), course_students))
         d = dict()
@@ -104,6 +114,9 @@ class CourseController:
         if not course:
             d = Utils.create_error_code(Error.COURSE_NOT_FOUND, course_code)
             return d
+        if not course.is_mocked:
+            d = Utils.create_error_code(Error.COURSE_NOT_MOCKED, course_code)
+            return d
         course_staffs = course.staffs
         course_staffs = list(map(lambda x: Utils.get_user_info(x.user), course_staffs))
         d = dict()
@@ -116,6 +129,9 @@ class CourseController:
         course = Course.query.filter(Course.course_code == course_code).first()
         if not course:
             d = Utils.create_error_code(Error.COURSE_NOT_FOUND, course_code)
+            return d
+        if not course.is_mocked:
+            d = Utils.create_error_code(Error.COURSE_NOT_MOCKED, course_code)
             return d
         course_groups = course.groups
         course_groups = list(map(lambda x: Utils.get_group_info(x), course_groups))

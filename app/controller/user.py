@@ -6,7 +6,7 @@ from app.constants.error import Error
 from app import db
 
 
-class UserController:
+class MockUserController:
 
     def create_user(self, **kwargs):
         logging.info("Creating a mocked user")

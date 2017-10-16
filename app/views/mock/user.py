@@ -6,14 +6,14 @@ from flask import request
 from flask_login import current_user, login_required
 
 from app import app
-from app.controller.user import UserController
+from app.controller.user import MockUserController
 from app.constants.error import Error
 
 
 class UserView(MethodView):
 
     def __init__(self):  # pragma: no cover
-        self.control = UserController()
+        self.control = MockUserController()
 
     def post(self):
         logging.info("New POST /mock/user request")
@@ -38,7 +38,7 @@ class MyProfileView(MethodView):
     decorators = [login_required]
 
     def __init__(self):  # pragma: no cover
-        self.control = UserController()
+        self.control = MockUserController()
 
     def get(self):
         logging.info("New GET /mock/me request")

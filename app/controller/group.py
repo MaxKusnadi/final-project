@@ -8,7 +8,7 @@ from app.constants.error import Error
 from app import db
 
 
-class GroupController:
+class MockGroupController:
 
     def create_group(self, **kwargs):
         logging.info("Creating a mocked group")
@@ -18,6 +18,9 @@ class GroupController:
         course = Course.query.filter(Course.course_code == course_code).first()
         if not course:
             d = Utils.create_error_code(Error.COURSE_NOT_FOUND, course_code)
+            return d
+        if not course.is_mocked:
+            d = Utils.create_error_code(Error.COURSE_NOT_MOCKED, course_code)
             return d
         group = Group.query.filter(Group.group_name == group_name,
                                    Group.course_name == course.course_name).first()
@@ -60,6 +63,9 @@ class GroupController:
         if not group:
             d = Utils.create_error_code(Error.GROUP_NOT_FOUND, course_code, group_name, group_type)
             return d
+        if not group.is_mocked:
+            d = Utils.create_error_code(Error.GROUP_NOT_MOCKED, group.id)
+            return d
         d = Utils.get_group_info(group)
         d['status'] = 200
         return d
@@ -85,6 +91,9 @@ class GroupController:
         if not group:
             d = Utils.create_error_code(Error.GROUP_NOT_FOUND, course_code, group_name, group_type)
             return d
+        if not group.is_mocked:
+            d = Utils.create_error_code(Error.GROUP_NOT_MOCKED, group.id)
+            return d
 
         role = int(role)
         if role == 1:
@@ -105,6 +114,9 @@ class GroupController:
         if not group:
             d = Utils.create_error_code(Error.GROUP_NOT_FOUND, course_code, group_name, group_type)
             return d
+        if not group.is_mocked:
+            d = Utils.create_error_code(Error.GROUP_NOT_MOCKED, group.id)
+            return d
         group_students = group.students
         group_students = list(map(lambda x: Utils.get_user_info(x.user), group_students))
         d = dict()
@@ -119,6 +131,9 @@ class GroupController:
                                    Group.course.course_code == course_code).first()
         if not group:
             d = Utils.create_error_code(Error.GROUP_NOT_FOUND, course_code, group_name, group_type)
+            return d
+        if not group.is_mocked:
+            d = Utils.create_error_code(Error.GROUP_NOT_MOCKED, group.id)
             return d
         group_staffs = group.staffs
         group_staffs = list(map(lambda x: Utils.get_user_info(x.user), group_staffs))

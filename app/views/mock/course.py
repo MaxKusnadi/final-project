@@ -5,14 +5,14 @@ from flask.views import MethodView
 from flask import request
 
 from app import app
-from app.controller.course import CourseController
+from app.controller.course import MockCourseController
 from app.constants.error import Error
 
 
 class CourseView(MethodView):
 
     def __init__(self):  # pragma: no cover
-        self.control = CourseController()
+        self.control = MockCourseController()
 
     def post(self):
         logging.info("New POST /mock/course request")
@@ -40,7 +40,7 @@ class CourseView(MethodView):
 class JoinCourseView(MethodView):
 
     def __init__(self):  # pragma: no cover
-        self.control = CourseController()
+        self.control = MockCourseController()
 
     def post(self, course_code):
         logging.info("New POST mock/join/course/ request")
@@ -58,7 +58,7 @@ class JoinCourseView(MethodView):
 class CourseStudentView(MethodView):
 
     def __init__(self):  # pragma: no cover
-        self.control = CourseController()
+        self.control = MockCourseController()
 
     def get(self, course_code):
         logging.info("New GET /mock/course/<string:course_code>/students request")
@@ -69,7 +69,7 @@ class CourseStudentView(MethodView):
 class CourseStaffView(MethodView):
 
     def __init__(self):  # pragma: no cover
-        self.control = CourseController()
+        self.control = MockCourseController()
 
     def get(self, course_code):
         logging.info("New GET /mock/course/<string:course_code>/staffs request")
@@ -80,7 +80,7 @@ class CourseStaffView(MethodView):
 class CourseGroupView(MethodView):
 
     def __init__(self):  # pragma: no cover
-        self.control = CourseController()
+        self.control = MockCourseController()
 
     def get(self, course_code):
         logging.info("New GET /mock/course/<string:course_code>/groups request")
