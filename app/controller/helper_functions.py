@@ -96,11 +96,11 @@ def generate_sessions(group, semester_start_date, semester):
 # Helper function of generate_sessions
 def convert_week_code_description_to_week_name(week_code):
     if week_code == 'EVERY WEEK':
-        return [0,1,2,3,4,5,7,8,9,10,11,12,13]
+        return [1,2,3,4,5,7,8,9,10,11,12,13,14]
     elif week_code == 'ODD WEEK':
-        return [0,2,4,7,9,11,13] #include 13?
-    elif week_code == 'EVEN WEEK':
         return [1,3,5,8,10,12]
+    elif week_code == 'EVEN WEEK':
+        return [2,4,6,9,11,13]
     elif week_code == 'ORIENTATION WEEK':
         return [] #dont care about orientatation week?
     else:
