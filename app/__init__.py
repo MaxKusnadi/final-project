@@ -4,6 +4,12 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from flask_socketio import SocketIO
+
+# @socketio.on('update counter')
+# def handle_message(message):
+#     print('received message: ' + str(message))
+#     emit('sync counter', message, broadcast=True)
 
 
 logging.basicConfig(level=logging.INFO,
@@ -12,6 +18,7 @@ logging.basicConfig(level=logging.INFO,
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 app.config.from_object('config')
+socketio = SocketIO(app)
 login_manager = LoginManager(app)
 db = SQLAlchemy(app)
 
@@ -31,3 +38,4 @@ from app.views.mock.user import *
 from app.views.mock.login import *
 from app.views.mock.course import *
 from app.views.mock.session import *
+from app.views.attendance import *
