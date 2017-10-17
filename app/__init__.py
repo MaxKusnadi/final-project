@@ -6,11 +6,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_socketio import SocketIO
 
-# @socketio.on('update counter')
-# def handle_message(message):
-#     print('received message: ' + str(message))
-#     emit('sync counter', message, broadcast=True)
-
 
 logging.basicConfig(level=logging.INFO,
                     format=' %(asctime)s - %(levelname)s - %(message)s')
