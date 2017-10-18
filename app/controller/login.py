@@ -1,12 +1,10 @@
-import requests
 import logging
 
 from flask_login import login_user
 
 from app.models.user import User
 from app.controller.utils.checker import Checker
-from app.constants.ivle import (IVLE_URL, VALIDATE_URL, API_KEY, PROFILE_URL)
-from app.constants.error import Error
+from app.controller.utils.ivle import IVLEApi
 from app import db, login_manager
 
 
@@ -19,9 +17,9 @@ class LoginController:
 
     def login(self, token):
         logging.info("Validating token...")
-        is_token_valid, token = self._validate_token(token)
+        is_token_valid, token = IVLEApi.validate_token(token)
         if is_token_valid:
-            profile = self._get_profile(token)
+            profile = IVLEApi.get_profile(token)
             matric = profile['UserID']
 
             user = User.query.filter(User.matric == matric).first()
@@ -70,22 +68,3 @@ class LoginController:
         d['matric'] = user.matric
         d['status'] = 200
         return d
-
-    def _validate_token(self, token):
-        validate_url = IVLE_URL + VALIDATE_URL
-        params = {
-            "APIKey": API_KEY,
-            "Token": token
-        }
-        resp = requests.get(validate_url, params=params).json()
-        return resp['Success'], resp['Token']
-
-    def _get_profile(self, token):
-        url = IVLE_URL + PROFILE_URL
-        params = {
-            "APIKey": API_KEY,
-            "AuthToken": token
-        }
-        resp = requests.get(url, params=params).json()
-        logging.info(resp)
-        return resp['Results'][0]

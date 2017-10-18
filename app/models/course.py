@@ -59,15 +59,17 @@ class CourseStaff(db.Model):
 
     user_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
     course_id = Column(Integer, ForeignKey('course.id'), primary_key=True)
+    role = Column(String)
 
     user = relationship("User", backref="courses_taught")
     course = relationship("Course", backref="staffs")
 
-    def __init__(self, user, course):
+    def __init__(self, user, course, role=""):
         self.user = user
         self.course = course
         self.user_id = user.id
         self.course_id = course.id
+        self.role = role
 
     def __repr__(self):
         return "<STAFF> User: {user} - Course: {course}".format(user=self.user.metric, course=self.course_id)
