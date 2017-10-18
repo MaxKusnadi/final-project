@@ -87,6 +87,10 @@ class Error:
         "text": "Session {} is not a mock",
         "status": 500
     }
+    SESSION_EXISTS = {
+        "text": "Session {} already exists",
+        "status": 500
+    }
     USER_NOT_AUTHORIZED = {
         "text": "User {} is not authorized to do this action",
         "status": 301

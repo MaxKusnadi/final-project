@@ -7,6 +7,7 @@ from app.models.group import Group
 from app.models.session import Session
 from app.models.user import User
 from app.controller.utils.utils import Utils
+from app.controller.utils.checker import Checker
 from app.constants.error import Error
 from app import db
 
@@ -23,12 +24,15 @@ class MockSessionController:
         end_date = int(end_date) if end_date else None
 
         group = Group.query.filter(Group.id == group_id).first()
-        if not group:
-            d = Utils.create_error_code(Error.GROUP_WITH_ID_NOT_FOUND, group_id)
-            return d
-        if not group.is_mocked:
-            d = Utils.create_error_code(Error.GROUP_NOT_MOCKED, group_id)
-            return d
+        error = Checker.check_mock_group_id(group, group_id)
+        if error:
+            return error
+        session = Session.query.filter(Session.group_id == group.id,
+                                       Session.start_date == start_date,
+                                       Session.end_date == end_date).first()
+        error = Checker.check_session_exist(session)
+        if error:
+            return error
         session = Session(group, "9", start_date, end_date)
         session.is_mocked = True
         db.session.add(session)
@@ -40,12 +44,9 @@ class MockSessionController:
     def get_users_sessions(self, matric):
         logging.info("Getting all sessions for user {} this week".format(matric))
         user = User.query.filter(User.matric == matric).first()
-        if not user:
-            d = Utils.create_error_code(Error.USER_NOT_FOUND, matric)
-            return d
-        if not user.is_mocked:
-            d = Utils.create_error_code(Error.USER_NOT_MOCKED, matric)
-            return d
+        error = Checker.check_mock_user(user, matric)
+        if error:
+            return error
 
         now = datetime.now(TIMEZONE)
         now_epoch = int(now.timestamp())
@@ -76,12 +77,9 @@ class MockSessionController:
     def get_session_info(self, session_id, matric):
         logging.info("Getting session {} info for {}".format(session_id, matric))
         session = Session.query.filter(Session.id == session_id).first()
-        if not session:
-            d = Utils.create_error_code(Error.SESSION_NOT_FOUND, session_id)
-            return d
-        if not session.is_mocked:
-            d = Utils.create_error_code(Error.SESSION_NOT_MOCKED, session_id)
-            return d
+        error = Checker.check_mock_session(session, session_id)
+        if error:
+            return error
         d = Utils.get_session_info(session)
         d['status'] = 200
         group = session.group
@@ -96,24 +94,20 @@ class MockSessionController:
     def get_session_code(self, session_id, matric):
         logging.info("Getting session {} code for {}".format(session_id, matric))
         session = Session.query.filter(Session.id == session_id).first()
-        if not session:
-            d = Utils.create_error_code(Error.SESSION_NOT_FOUND, session_id)
-            return d
-        if not session.is_mocked:
-            d = Utils.create_error_code(Error.SESSION_NOT_MOCKED, session_id)
-            return d
+        error = Checker.check_mock_session(session, session_id)
+        if error:
+            return error
 
         user = User.query.filter(User.matric == matric).first()
-        if not user:
-            d = Utils.create_error_code(Error.USER_NOT_FOUND, matric)
-            return d
-        if not user.is_mocked:
-            d = Utils.create_error_code(Error.USER_NOT_MOCKED, matric)
-            return d
+        error = Checker.check_mock_user(user, matric)
+        if error:
+            return error
+
         group = session.group
-        if user not in group.staffs:
-            d = Utils.create_error_code(Error.USER_NOT_AUTHORIZED, matric)
-            return d
+        error = Checker.check_user_in_group(user, group)
+        if error:
+            return error
+
         d = dict()
         d['status'] = 200
         if session.code:
@@ -130,24 +124,19 @@ class MockSessionController:
     def start_session(self, session_id, matric):
         logging.info("Getting session {} code for {}".format(session_id, matric))
         session = Session.query.filter(Session.id == session_id).first()
-        if not session:
-            d = Utils.create_error_code(Error.SESSION_NOT_FOUND, session_id)
-            return d
-        if not session.is_mocked:
-            d = Utils.create_error_code(Error.SESSION_NOT_MOCKED, session_id)
-            return d
+        error = Checker.check_mock_session(session, session_id)
+        if error:
+            return error
 
         user = User.query.filter(User.matric == matric).first()
-        if not user:
-            d = Utils.create_error_code(Error.USER_NOT_FOUND, matric)
-            return d
-        if not user.is_mocked:
-            d = Utils.create_error_code(Error.USER_NOT_MOCKED, matric)
-            return d
+        error = Checker.check_mock_user(user, matric)
+        if error:
+            return error
+
         group = session.group
-        if user not in group.staffs:
-            d = Utils.create_error_code(Error.USER_NOT_AUTHORIZED, matric)
-            return d
+        error = Checker.check_user_in_group(user, group)
+        if error:
+            return error
 
         now = datetime.now(TIMEZONE)
         now_epoch = int(now.timestamp())

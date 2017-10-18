@@ -4,11 +4,12 @@ from app.models.course import Course
 from app.models.group import Group, GroupStudent, GroupStaff
 from app.models.user import User
 from app.controller.utils.utils import Utils
+from app.controller.utils.checker import Checker
 from app.constants.error import Error
 from app import db
 
 
-class matric:
+class MockGroupController:
 
     def create_group(self, **kwargs):
         logging.info("Creating a mocked group")
@@ -16,17 +17,16 @@ class matric:
         group_name = kwargs.get("group_name")
 
         course = Course.query.filter(Course.course_code == course_code).first()
-        if not course:
-            d = Utils.create_error_code(Error.COURSE_NOT_FOUND, course_code)
-            return d
-        if not course.is_mocked:
-            d = Utils.create_error_code(Error.COURSE_NOT_MOCKED, course_code)
-            return d
+        error = Checker.check_mock_course(course, course_code)
+        if error:
+            return error
+
         group = Group.query.filter(Group.group_name == group_name,
                                    Group.course_name == course.course_name).first()
-        if group:
-            d = Utils.create_error_code(Error.GROUP_EXIST, group_name)
-            return d
+        error = Checker.check_group_exist(group)
+        if error:
+            return error
+
         group = Group(course, group_name, "1500", "1600", 2, 0, "SOC", "Lecture")
         group.is_mocked = True
         db.session.add(group)
@@ -38,12 +38,10 @@ class matric:
     def get_users_groups(self, matric):
         logging.info("Getting all groups for user {}".format(matric))
         user = User.query.filter(User.matric == matric).first()
-        if not user:
-            d = Utils.create_error_code(Error.USER_NOT_FOUND, matric)
-            return d
-        if not user.is_mocked:
-            d = Utils.create_error_code(Error.USER_NOT_MOCKED, matric)
-            return d
+        error = Checker.check_mock_user(user)
+        if error:
+            return error
+
         groups_taken = user.groups
         groups_taken = list(map(lambda x: Utils.get_group_info(x.group), groups_taken))
         groups_taught = user.groups_taught
@@ -60,12 +58,10 @@ class matric:
         group = Group.query.filter(Group.group_name == group_name,
                                    Group.group_type == group_type,
                                    Group.course.course_code == course_code).first()
-        if not group:
-            d = Utils.create_error_code(Error.GROUP_NOT_FOUND, course_code, group_name, group_type)
-            return d
-        if not group.is_mocked:
-            d = Utils.create_error_code(Error.GROUP_NOT_MOCKED, group.id)
-            return d
+        error = Checker.check_mock_group(group, course_code, group_name, group_type)
+        if error:
+            return error
+
         d = Utils.get_group_info(group)
         d['status'] = 200
         return d
@@ -78,22 +74,16 @@ class matric:
         logging.info("User {} joins group {} course {}".format(matric, group_name, course_code))
 
         user = User.query.filter(User.matric == matric).first()
-        if not user:
-            d = Utils.create_error_code(Error.USER_NOT_FOUND, matric)
-            return d
-        if not user.is_mocked:
-            d = Utils.create_error_code(Error.USER_NOT_MOCKED, matric)
-            return d
+        error = Checker.check_mock_user(user)
+        if error:
+            return error
 
         group = Group.query.filter(Group.group_name == group_name,
                                    Group.group_type == group_type,
                                    Group.course.course_code == course_code).first()
-        if not group:
-            d = Utils.create_error_code(Error.GROUP_NOT_FOUND, course_code, group_name, group_type)
-            return d
-        if not group.is_mocked:
-            d = Utils.create_error_code(Error.GROUP_NOT_MOCKED, group.id)
-            return d
+        error = Checker.check_mock_group(group, course_code, group_name, group_type)
+        if error:
+            return error
 
         role = int(role)
         if role == 1:
@@ -111,12 +101,10 @@ class matric:
         group = Group.query.filter(Group.group_name == group_name,
                                    Group.group_type == group_type,
                                    Group.course.course_code == course_code).first()
-        if not group:
-            d = Utils.create_error_code(Error.GROUP_NOT_FOUND, course_code, group_name, group_type)
-            return d
-        if not group.is_mocked:
-            d = Utils.create_error_code(Error.GROUP_NOT_MOCKED, group.id)
-            return d
+        error = Checker.check_mock_group(group, course_code, group_name, group_type)
+        if error:
+            return error
+
         group_students = group.students
         group_students = list(map(lambda x: Utils.get_user_info(x.user), group_students))
         d = dict()
@@ -129,12 +117,9 @@ class matric:
         group = Group.query.filter(Group.group_name == group_name,
                                    Group.group_type == group_type,
                                    Group.course.course_code == course_code).first()
-        if not group:
-            d = Utils.create_error_code(Error.GROUP_NOT_FOUND, course_code, group_name, group_type)
-            return d
-        if not group.is_mocked:
-            d = Utils.create_error_code(Error.GROUP_NOT_MOCKED, group.id)
-            return d
+        error = Checker.check_mock_group(group, course_code, group_name, group_type)
+        if error:
+            return error
         group_staffs = group.staffs
         group_staffs = list(map(lambda x: Utils.get_user_info(x.user), group_staffs))
         d = dict()

@@ -4,6 +4,7 @@ import logging
 from flask_login import login_user
 
 from app.models.user import User
+from app.controller.utils.checker import Checker
 from app.constants.ivle import (IVLE_URL, VALIDATE_URL, API_KEY, PROFILE_URL)
 from app.constants.error import Error
 from app import db, login_manager
@@ -50,14 +51,9 @@ class LoginController:
         matric = kwargs.get('matric')
         logging.info("Logging in for mocked user {}".format(matric))
         user = User.query.filter(User.matric == matric).first()
-        if not user:
-            d = Error.USER_NOT_FOUND
-            d['text'] = d['text'].format(matric)
-            return d
-        if not user.is_mocked:
-            d = Error.USER_NOT_MOCKED
-            d['text'] = d['text'].format(matric)
-            return d
+        error = Checker.check_mock_user(user, matric)
+        if error:
+            return error
         login_user(user)
         d = dict()
         d['name'] = user.name
