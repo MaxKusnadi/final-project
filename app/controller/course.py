@@ -29,7 +29,7 @@ class MockCourseController:
 
     def get_users_courses(self, matric):
         logging.info("Getting all courses of a user")
-        user = User.query.filter(User.metric == matric).first()
+        user = User.query.filter(User.matric == matric).first()
         error = Checker.check_mock_user(user, matric)
         if error:
             return error
@@ -59,16 +59,16 @@ class MockCourseController:
         return d
 
     def user_join_course(self, course_code, **kwargs):
-        metric = kwargs.get("metric")
+        matric = kwargs.get("matric")
         role = kwargs.get('role', 0)
-        logging.info("User {} joins course {}".format(metric, course_code))
+        logging.info("User {} joins course {}".format(matric, course_code))
 
-        user = User.query.filter(User.metric == metric).first()
+        user = User.query.filter(User.matric == matric).first()
         if not user:
-            d = Utils.create_error_code(Error.USER_NOT_FOUND, metric)
+            d = Utils.create_error_code(Error.USER_NOT_FOUND, matric)
             return d
         if not user.is_mocked:
-            d = Utils.create_error_code(Error.USER_NOT_MOCKED, metric)
+            d = Utils.create_error_code(Error.USER_NOT_MOCKED, matric)
             return d
 
         course = Course.query.filter(Course.course_code == course_code).first()

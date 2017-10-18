@@ -21,16 +21,16 @@ class UserView(MethodView):
 
         if not data:
             return json.dumps(Error.JSON_NOT_FOUND)
-        if not data.get("metric"):
-            return json.dumps(Error.METRIC_NOT_FOUND)
+        if not data.get("matric"):
+            return json.dumps(Error.MATRIC_NOT_FOUND)
         result = self.control.create_user(**data)
         return json.dumps(result)
 
-    def get(self, metric_id):
+    def get(self, matric_id):
         logging.info("New GET /mock/user request")
-        if not metric_id:
-            return json.dumps(Error.METRIC_NOT_FOUND)
-        result = self.control.get_user(metric_id)
+        if not matric_id:
+            return json.dumps(Error.MATRIC_NOT_FOUND)
+        result = self.control.get_user(matric_id)
         return json.dumps(result)
 
 
@@ -49,5 +49,5 @@ class MyProfileView(MethodView):
 
 user_view = UserView.as_view('mock_user')
 app.add_url_rule('/mock/user', view_func=user_view, methods=['POST'])
-app.add_url_rule('/mock/user/<string:metric_id>', view_func=user_view, methods=['GET'])
+app.add_url_rule('/mock/user/<string:matric_id>', view_func=user_view, methods=['GET'])
 app.add_url_rule('/mock/me', view_func=MyProfileView.as_view('mock_my_profile'))

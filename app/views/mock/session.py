@@ -31,13 +31,13 @@ class SessionView(MethodView):
 
     def get(self, session_id):
         logging.info("New GET /mock/group request")
-        metric = request.args.get('metric')
-        if not metric:
-            return json.dumps(Error.METRIC_NOT_FOUND)
+        matric = request.args.get('matric')
+        if not matric:
+            return json.dumps(Error.MATRIC_NOT_FOUND)
         if session_id is None:
-            result = self.control.get_users_sessions(metric)
+            result = self.control.get_users_sessions(matric)
         else:
-            result = self.control.get_session_info(session_id, metric)
+            result = self.control.get_session_info(session_id, matric)
         return json.dumps(result)
 
 
@@ -48,13 +48,13 @@ class SessionCodeView(MethodView):
 
     def get(self, session_id):
         logging.info("New GET /mock/session/<string:session_id>/code request")
-        metric = request.args.get('metric')
-        if not metric:
-            return json.dumps(Error.METRIC_NOT_FOUND)
+        matric = request.args.get('matric')
+        if not matric:
+            return json.dumps(Error.MATRIC_NOT_FOUND)
         if session_id is None:
-            result = self.control.get_users_sessions(metric)
+            result = self.control.get_users_sessions(matric)
         else:
-            result = self.control.get_session_code(session_id, metric)
+            result = self.control.get_session_code(session_id, matric)
         return json.dumps(result)
 
 
@@ -65,13 +65,13 @@ class StartSessionView(MethodView):
 
     def get(self, session_id):
         logging.info("New GET /mock/session/<string:session_id>/start request")
-        metric = request.args.get('metric')
-        if not metric:
-            return json.dumps(Error.METRIC_NOT_FOUND)
+        matric = request.args.get('matric')
+        if not matric:
+            return json.dumps(Error.MATRIC_NOT_FOUND)
         if session_id is None:
-            result = self.control.get_users_sessions(metric)
+            result = self.control.get_users_sessions(matric)
         else:
-            result = self.control.start_session(session_id, metric)
+            result = self.control.start_session(session_id, matric)
         return json.dumps(result)
 
 

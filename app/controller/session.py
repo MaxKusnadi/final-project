@@ -6,7 +6,7 @@ from app.constants.time import TIMEZONE
 from app.models.group import Group
 from app.models.session import Session
 from app.models.user import User
-from app.controller.utils import Utils
+from app.controller.utils.utils import Utils
 from app.constants.error import Error
 from app import db
 
@@ -37,14 +37,14 @@ class MockSessionController:
         d['status'] = 200
         return d
 
-    def get_users_sessions(self, metric):
-        logging.info("Getting all sessions for user {} this week".format(metric))
-        user = User.query.filter(User.metric == metric).first()
+    def get_users_sessions(self, matric):
+        logging.info("Getting all sessions for user {} this week".format(matric))
+        user = User.query.filter(User.matric == matric).first()
         if not user:
-            d = Utils.create_error_code(Error.USER_NOT_FOUND, metric)
+            d = Utils.create_error_code(Error.USER_NOT_FOUND, matric)
             return d
         if not user.is_mocked:
-            d = Utils.create_error_code(Error.USER_NOT_MOCKED, metric)
+            d = Utils.create_error_code(Error.USER_NOT_MOCKED, matric)
             return d
 
         now = datetime.now(TIMEZONE)
@@ -73,8 +73,8 @@ class MockSessionController:
         d['status'] = 200
         return d
 
-    def get_session_info(self, session_id, metric):
-        logging.info("Getting session {} info for {}".format(session_id, metric))
+    def get_session_info(self, session_id, matric):
+        logging.info("Getting session {} info for {}".format(session_id, matric))
         session = Session.query.filter(Session.id == session_id).first()
         if not session:
             d = Utils.create_error_code(Error.SESSION_NOT_FOUND, session_id)
@@ -85,7 +85,7 @@ class MockSessionController:
         d = Utils.get_session_info(session)
         d['status'] = 200
         group = session.group
-        user = User.query.filter(User.metric == metric).first()
+        user = User.query.filter(User.matric == matric).first()
         if user:
             if user in group.staffs:
                 attendance = session.students
@@ -93,8 +93,8 @@ class MockSessionController:
                 d['attendance'] = attendance
         return d
 
-    def get_session_code(self, session_id, metric):
-        logging.info("Getting session {} code for {}".format(session_id, metric))
+    def get_session_code(self, session_id, matric):
+        logging.info("Getting session {} code for {}".format(session_id, matric))
         session = Session.query.filter(Session.id == session_id).first()
         if not session:
             d = Utils.create_error_code(Error.SESSION_NOT_FOUND, session_id)
@@ -103,16 +103,16 @@ class MockSessionController:
             d = Utils.create_error_code(Error.SESSION_NOT_MOCKED, session_id)
             return d
 
-        user = User.query.filter(User.metric == metric).first()
+        user = User.query.filter(User.matric == matric).first()
         if not user:
-            d = Utils.create_error_code(Error.USER_NOT_FOUND, metric)
+            d = Utils.create_error_code(Error.USER_NOT_FOUND, matric)
             return d
         if not user.is_mocked:
-            d = Utils.create_error_code(Error.USER_NOT_MOCKED, metric)
+            d = Utils.create_error_code(Error.USER_NOT_MOCKED, matric)
             return d
         group = session.group
         if user not in group.staffs:
-            d = Utils.create_error_code(Error.USER_NOT_AUTHORIZED, metric)
+            d = Utils.create_error_code(Error.USER_NOT_AUTHORIZED, matric)
             return d
         d = dict()
         d['status'] = 200
@@ -127,8 +127,8 @@ class MockSessionController:
         d['code'] = code
         return d
 
-    def start_session(self, session_id, metric):
-        logging.info("Getting session {} code for {}".format(session_id, metric))
+    def start_session(self, session_id, matric):
+        logging.info("Getting session {} code for {}".format(session_id, matric))
         session = Session.query.filter(Session.id == session_id).first()
         if not session:
             d = Utils.create_error_code(Error.SESSION_NOT_FOUND, session_id)
@@ -137,16 +137,16 @@ class MockSessionController:
             d = Utils.create_error_code(Error.SESSION_NOT_MOCKED, session_id)
             return d
 
-        user = User.query.filter(User.metric == metric).first()
+        user = User.query.filter(User.matric == matric).first()
         if not user:
-            d = Utils.create_error_code(Error.USER_NOT_FOUND, metric)
+            d = Utils.create_error_code(Error.USER_NOT_FOUND, matric)
             return d
         if not user.is_mocked:
-            d = Utils.create_error_code(Error.USER_NOT_MOCKED, metric)
+            d = Utils.create_error_code(Error.USER_NOT_MOCKED, matric)
             return d
         group = session.group
         if user not in group.staffs:
-            d = Utils.create_error_code(Error.USER_NOT_AUTHORIZED, metric)
+            d = Utils.create_error_code(Error.USER_NOT_AUTHORIZED, matric)
             return d
 
         now = datetime.now(TIMEZONE)

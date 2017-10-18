@@ -3,12 +3,12 @@ import logging
 from app.models.course import Course
 from app.models.group import Group, GroupStudent, GroupStaff
 from app.models.user import User
-from app.controller.utils import Utils
+from app.controller.utils.utils import Utils
 from app.constants.error import Error
 from app import db
 
 
-class MockGroupController:
+class matric:
 
     def create_group(self, **kwargs):
         logging.info("Creating a mocked group")
@@ -35,14 +35,14 @@ class MockGroupController:
         d['status'] = 200
         return d
 
-    def get_users_groups(self, metric):
-        logging.info("Getting all groups for user {}".format(metric))
-        user = User.query.filter(User.metric == metric).first()
+    def get_users_groups(self, matric):
+        logging.info("Getting all groups for user {}".format(matric))
+        user = User.query.filter(User.matric == matric).first()
         if not user:
-            d = Utils.create_error_code(Error.USER_NOT_FOUND, metric)
+            d = Utils.create_error_code(Error.USER_NOT_FOUND, matric)
             return d
         if not user.is_mocked:
-            d = Utils.create_error_code(Error.USER_NOT_MOCKED, metric)
+            d = Utils.create_error_code(Error.USER_NOT_MOCKED, matric)
             return d
         groups_taken = user.groups
         groups_taken = list(map(lambda x: Utils.get_group_info(x.group), groups_taken))
@@ -71,18 +71,18 @@ class MockGroupController:
         return d
 
     def user_join_group(self, course_code, **kwargs):
-        metric = kwargs.get("metric")
+        matric = kwargs.get("matric")
         role = kwargs.get('role', 0)
         group_name = kwargs.get('group_name')
         group_type = kwargs.get('group_type')
-        logging.info("User {} joins group {} course {}".format(metric, group_name, course_code))
+        logging.info("User {} joins group {} course {}".format(matric, group_name, course_code))
 
-        user = User.query.filter(User.metric == metric).first()
+        user = User.query.filter(User.matric == matric).first()
         if not user:
-            d = Utils.create_error_code(Error.USER_NOT_FOUND, metric)
+            d = Utils.create_error_code(Error.USER_NOT_FOUND, matric)
             return d
         if not user.is_mocked:
-            d = Utils.create_error_code(Error.USER_NOT_MOCKED, metric)
+            d = Utils.create_error_code(Error.USER_NOT_MOCKED, matric)
             return d
 
         group = Group.query.filter(Group.group_name == group_name,

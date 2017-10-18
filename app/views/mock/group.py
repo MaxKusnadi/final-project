@@ -30,10 +30,10 @@ class GroupView(MethodView):
     def get(self, course_code):
         logging.info("New GET /mock/group request")
         if course_code is None:
-            metric = request.args.get('metric')
-            if not metric:
-                return json.dumps(Error.METRIC_NOT_FOUND)
-            result = self.control.get_users_groups(metric)
+            matric = request.args.get('matric')
+            if not matric:
+                return json.dumps(Error.MATRIC_NOT_FOUND)
+            result = self.control.get_users_groups(matric)
         else:
             group_name = request.args.get('group_name')
             group_type = request.args.get('group_type')
@@ -56,8 +56,8 @@ class JoinGroupView(MethodView):
 
         if not data:
             return json.dumps(Error.JSON_NOT_FOUND)
-        if not data.get("metric"):
-            return json.dumps(Error.METRIC_NOT_FOUND)
+        if not data.get("matric"):
+            return json.dumps(Error.MATRIC_NOT_FOUND)
 
         group_name = data.get('group_name')
         group_type = data.get('group_type')

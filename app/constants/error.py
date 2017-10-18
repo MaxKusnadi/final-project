@@ -4,8 +4,8 @@ class Error:
         "status": 400
     }
     # =================================================== #
-    METRIC_NOT_FOUND = {
-        "text": "metric_id is empty",
+    MATRIC_NOT_FOUND = {
+        "text": "matric_id is empty",
         "status": 400
     }
     USER_EXIST = {

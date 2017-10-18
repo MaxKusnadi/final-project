@@ -28,10 +28,10 @@ class CourseView(MethodView):
     def get(self, course_code):
         logging.info("New GET /mock/course request")
         if course_code is None:
-            metric = request.args.get('metric')
-            if not metric:
-                return json.dumps(Error.METRIC_NOT_FOUND)
-            result = self.control.get_users_courses(metric)
+            matric = request.args.get('matric')
+            if not matric:
+                return json.dumps(Error.MATRIC_NOT_FOUND)
+            result = self.control.get_users_courses(matric)
         else:
             result = self.control.get_course_info(course_code)
         return json.dumps(result)
@@ -48,8 +48,8 @@ class JoinCourseView(MethodView):
 
         if not data:
             return json.dumps(Error.JSON_NOT_FOUND)
-        if not data.get("metric"):
-            return json.dumps(Error.METRIC_NOT_FOUND)
+        if not data.get("matric"):
+            return json.dumps(Error.MATRIC_NOT_FOUND)
 
         result = self.control.user_join_course(course_code, **data)
         return json.dumps(result)

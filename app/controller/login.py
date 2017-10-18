@@ -21,14 +21,14 @@ class LoginController:
         is_token_valid, token = self._validate_token(token)
         if is_token_valid:
             profile = self._get_profile(token)
-            metric = profile['UserID']
+            matric = profile['UserID']
 
-            user = User.query.filter(User.metric == metric).first()
+            user = User.query.filter(User.matric == matric).first()
             if not user:
-                logging.info("Creating user with UserID {}".format(metric))
+                logging.info("Creating user with UserID {}".format(matric))
                 name = profile['Name']
                 email = profile['Email']
-                user = User(metric, name, email)
+                user = User(matric, name, email)
                 db.session.add(user)
                 db.session.commit()
             user.token = token
@@ -37,7 +37,7 @@ class LoginController:
             d = dict()
             d['name'] = user.name
             d['email'] = user.email
-            d['metric'] = user.metric
+            d['matric'] = user.matric
             d['status'] = 200
             return d
         logging.error("Invalid token {}".format(token))
@@ -47,31 +47,31 @@ class LoginController:
         return d
 
     def mock_login(self, **kwargs):
-        metric = kwargs.get('metric')
-        logging.info("Logging in for mocked user {}".format(metric))
-        user = User.query.filter(User.metric == metric).first()
+        matric = kwargs.get('matric')
+        logging.info("Logging in for mocked user {}".format(matric))
+        user = User.query.filter(User.matric == matric).first()
         if not user:
             d = Error.USER_NOT_FOUND
-            d['text'] = d['text'].format(metric)
+            d['text'] = d['text'].format(matric)
             return d
         if not user.is_mocked:
             d = Error.USER_NOT_MOCKED
-            d['text'] = d['text'].format(metric)
+            d['text'] = d['text'].format(matric)
             return d
         login_user(user)
         d = dict()
         d['name'] = user.name
         d['email'] = user.email
-        d['metric'] = user.metric
+        d['matric'] = user.matric
         d['status'] = 200
         return d
 
     def get_user_info(self, user):
-        logging.info("Getting information for user {}".format(user.metric))
+        logging.info("Getting information for user {}".format(user.matric))
         d = dict()
         d['name'] = user.name
         d['email'] = user.email
-        d['metric'] = user.metric
+        d['matric'] = user.matric
         d['status'] = 200
         return d
 
