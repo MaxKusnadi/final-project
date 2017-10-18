@@ -70,7 +70,7 @@ class Utils:
             return d
 
         # Check if it's weekend
-        academic_week = AcademicTime.query.filter(AcademicTime.end_date >= now_epoch).first()
+        academic_week = AcademicTime.query.filter(AcademicTime.end_date >= now_time).first()
         if academic_week:
             d['week_name'] = academic_week.week_name
             d['even_odd_week'] = academic_week.even_odd_week
@@ -90,4 +90,3 @@ class Utils:
         d['metric'] = attendance.user.metric
         d['email'] = attendance.user.email
         return d
-

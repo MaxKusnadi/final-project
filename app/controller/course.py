@@ -2,7 +2,8 @@ import logging
 
 from app.models.course import Course, CourseStudent, CourseStaff
 from app.models.user import User
-from app.controller.utils import Utils
+from app.controller.utils.checker import Checker
+from app.controller.utils.utils import Utils
 from app.constants.error import Error
 from app import db
 
@@ -26,15 +27,13 @@ class MockCourseController:
         d['status'] = 200
         return d
 
-    def get_users_courses(self, metric):
+    def get_users_courses(self, matric):
         logging.info("Getting all courses of a user")
-        user = User.query.filter(User.metric == metric).first()
-        if not user:
-            d = Utils.create_error_code(Error.USER_NOT_FOUND, metric)
-            return d
-        if not user.is_mocked:
-            d = Utils.create_error_code(Error.USER_NOT_MOCKED, metric)
-            return d
+        user = User.query.filter(User.metric == matric).first()
+        error = Checker.check_mock_user(user, matric)
+        if error:
+            return error
+
         course_taken = user.course_taken
         course_taken = list(map(lambda x: Utils.get_course_info(x.course), course_taken))
         course_taught = user.course_taught

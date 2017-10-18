@@ -131,9 +131,9 @@ def get_week_code_description(code):
     return week_codes_map[code]
 #################
 
-# print(get_teaching_modules(TOKEN))
-# print(get_class_roster(TOKEN, COURSE_ID))
+print(get_teaching_modules(TOKEN))
+print(get_class_roster(TOKEN, COURSE_ID))
 group = get_groups(TOKEN, COURSE_ID)[0]
-# print(get_week_codes())
+print(get_week_codes())
 # print(convert_week_code_description_to_exact_week_delta('1,2,3,4'))
 print(generate_sessions(group, SEMESTER_START_DATE, SEM))
