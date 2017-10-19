@@ -29,7 +29,7 @@ class SessionGenerator:
     # Helper function of generate_sessions
     def _convert_week_code_description_to_week_name(self, week_code):
         if week_code == 'EVERY WEEK':
-            return [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14]
+            return [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14]
         elif week_code == 'ODD WEEK':
             return [1, 3, 5, 8, 10, 12, 14]
         elif week_code == 'EVEN WEEK':
