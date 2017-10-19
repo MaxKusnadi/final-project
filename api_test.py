@@ -241,42 +241,42 @@ print()
 
 # =======================================================
 
-# param = {
-#     "APIKey": API_KEY,
-#     "AuthToken": TOKEN,
-#     "AcadYear": "2017/2018",
-#     "Semester": 1
-# }
-# service = "MyOrganizer_AcadSemesterInfo"
-# url = IVLE_URL + service
-# resp = requests.get(url, params=param)
-# print("MyOrganizer_AcadSemesterInfo")
-# print(resp.json())
-# print()
-
-# # =======================================================
-#
 param = {
-    "APIKey": API_KEY
+    "APIKey": API_KEY,
+    "AuthToken": MAX_TOKEN,
+    "AcadYear": "2017/2018",
+    "Semester": 1
 }
-service = "CodeTable_WeekTypes"
+service = "MyOrganizer_AcadSemesterInfo"
 url = IVLE_URL + service
 resp = requests.get(url, params=param)
-print("CodeTable_WeekTypes")
+print("MyOrganizer_AcadSemesterInfo")
 print(resp.json())
 print()
 
 # # =======================================================
-
-param = {
-    "APIKey": API_KEY,
-    "AuthToken": KAIDI_TOKEN,
-    "CourseID": "a9eb1fbf-75b7-4bd4-b88f-e06541a62373",
-    "Duration": 0
-}
-service = "Module_Lecturers"
-url = IVLE_URL + service
-resp = requests.get(url, params=param)
-print("Module_Lecturers")
-print(resp.text)
-print()
+#
+# param = {
+#     "APIKey": API_KEY
+# }
+# service = "CodeTable_WeekTypes"
+# url = IVLE_URL + service
+# resp = requests.get(url, params=param)
+# print("CodeTable_WeekTypes")
+# print(resp.json())
+# print()
+#
+# # # =======================================================
+#
+# param = {
+#     "APIKey": API_KEY,
+#     "AuthToken": KAIDI_TOKEN,
+#     "CourseID": "a9eb1fbf-75b7-4bd4-b88f-e06541a62373",
+#     "Duration": 0
+# }
+# service = "Module_Lecturers"
+# url = IVLE_URL + service
+# resp = requests.get(url, params=param)
+# print("Module_Lecturers")
+# print(resp.text)
+# print()

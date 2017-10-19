@@ -1,7 +1,7 @@
 import logging
 import random
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from app.constants.time import TIMEZONE
 from app.models.group import Group
 from app.models.session import Session
@@ -9,63 +9,6 @@ from app.models.user import User
 from app.controller.utils.utils import Utils
 from app.controller.utils.checker import Checker
 from app import db
-
-
-# class SessionController:
-#     # INPUT: a group as outputted from get_groups, semester_start_date in epoch as stored in DB, semester (int)
-#     # OUTPUT: a list of sessions, a session is a dictionary with keys: week_name, start_date, end_date
-#     def generate_sessions(group, semester_start_date, semester):
-#         first_monday = get_first_week_monday(datetime.fromtimestamp(semester_start_date), semester)
-#         start_time, end_time, day_code, week_code = group['start_time'], group['end_time'], group['day_code'], group[
-#             'week_code']
-#         start_time_hours, start_time_minutes = int(start_time[:2]), int(start_time[2:])
-#         end_time_hours, end_time_minutes = int(end_time[:2]), int(end_time[2:])
-#         week_string = get_week_code_description(week_code)
-#         week_deltas = convert_week_code_description_to_week_name(week_string)
-#         days = map(lambda x: (x, first_monday + timedelta(days=day_code - 1) + timedelta(weeks=x - 1)), week_deltas)
-#         return list(map(lambda x: {
-#             'week_name': str(x[0]),
-#             'start_date': int((x[1] + timedelta(hours=start_time_hours, minutes=start_time_minutes)).timestamp()),
-#             'end_date': int((x[1] + timedelta(hours=end_time_hours, minutes=end_time_minutes)).timestamp())
-#         }, days))
-#
-#     # Helper function of generate_sessions
-#     def convert_week_code_description_to_week_name(week_code):
-#         if week_code == 'EVERY WEEK':
-#             return [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14]
-#         elif week_code == 'ODD WEEK':
-#             return [1, 3, 5, 8, 10, 12]
-#         elif week_code == 'EVEN WEEK':
-#             return [2, 4, 6, 9, 11, 13]
-#         elif week_code == 'ORIENTATION WEEK':
-#             return []  # dont care about orientatation week?
-#         else:
-#             return list(map(lambda x: (x + 1) if x > 6 else x, map(int, week_code.split(','))))
-#
-#     # Helper function of generate_sessions
-#     def get_first_week_monday(semester_start_date, semester):
-#         if semester == 1:
-#             return semester_start_date + timedelta(days=7)
-#         else:
-#             return semester_start_date
-#
-#     ################ CODE NOT NEEDED, get_week_code_description need to be rewrite for actual production code ###################
-#     def get_week_codes():
-#         param = {
-#             "APIKey": API_KEY
-#         }
-#         service = "CodeTable_WeekTypes"
-#         url = IVLE_URL + service
-#         resp = requests.get(url, params=param)
-#         results = resp.json()['Results']
-#         # print(list(filter(lambda x: not re.match('^[0-9]+(?:,[0-9]+)*$', x['Description']), results)))
-#         return dict(list(map(lambda x: [int(x['WeekCode']), x['Description']], results)))
-#
-#     week_codes_map = get_week_codes()
-#
-#     def get_week_code_description(code):
-#         return week_codes_map[code]
-#         #################
 
 
 class MockSessionController:
