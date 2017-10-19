@@ -45,6 +45,10 @@ class Checker:
         return Utils.create_error_code(Error.USER_NOT_MOCKED, *args) if not user.is_mocked else None
 
     @staticmethod
+    def check_user(user, *args):
+        return Utils.create_error_code(Error.USER_NOT_FOUND, *args) if not user else None
+
+    @staticmethod
     def check_mock_course(course, *args):
         if not course:
             d = Utils.create_error_code(Error.COURSE_NOT_FOUND, *args)

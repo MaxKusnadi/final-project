@@ -91,3 +91,13 @@ class Utils:
         d['matric'] = attendance.user.matric
         d['email'] = attendance.user.email
         return d
+
+    @staticmethod
+    def get_missing_attendance_info(user):
+        d = dict()
+        d['status'] = 0
+        d['remark'] = ""
+        d['name'] = user.name
+        d['matric'] = user.matric
+        d['email'] = user.email
+        return d
