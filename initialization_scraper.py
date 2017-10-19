@@ -1,5 +1,6 @@
 import requests
 
+from datetime import timedelta
 from dateutil.parser import parse
 from app import db
 from app.models.academic_time import AcademicTime
@@ -37,6 +38,12 @@ class InitializationScraper:
         date_time = parse(iso_str)
         return int(date_time.timestamp())
 
+    def _date_iso_to_epoch_weekend(self, iso_str):
+        iso_str += '+08:00'
+        date_time = parse(iso_str)
+        date_time = date_time + timedelta(days=1)
+        return int(date_time.timestamp())
+
     def _academic_weeks_to_model_args(self, raw_json):
         return (
             raw_json['TypeName'],
@@ -44,7 +51,7 @@ class InitializationScraper:
             raw_json['AcadYear'],
             int(raw_json['Semester'].split(' ')[-1]),
             self._date_iso_to_epoch(raw_json['WeekTypeStartDate_js']),
-            self._date_iso_to_epoch(raw_json['WeekTypeEndDate_js'])
+            self._date_iso_to_epoch_weekend(raw_json['WeekTypeEndDate_js'])
         )
 
     def _week_code_to_model_args(self, raw_json):
