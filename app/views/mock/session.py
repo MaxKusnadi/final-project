@@ -5,14 +5,14 @@ from flask.views import MethodView
 from flask import request
 
 from app import app
-from app.controller.session import MockSessionController
+from app.controller.session import SessionController
 from app.constants.error import Error
 
 
 class SessionView(MethodView):
 
     def __init__(self):  # pragma: no cover
-        self.control = MockSessionController()
+        self.control = SessionController()
 
     def post(self):
         logging.info("New POST /mock/session request")
@@ -26,7 +26,7 @@ class SessionView(MethodView):
             return json.dumps(Error.START_DATE_NOT_FOUND)
         if not data.get("end_date"):
             return json.dumps(Error.END_DATE_NOT_FOUND)
-        result = self.control.create_session(**data)
+        result = self.control.create_mock_session(**data)
         return json.dumps(result)
 
     def get(self, session_id):
@@ -35,43 +35,37 @@ class SessionView(MethodView):
         if not matric:
             return json.dumps(Error.MATRIC_NOT_FOUND)
         if session_id is None:
-            result = self.control.get_users_sessions(matric)
+            result = self.control.get_mock_users_sessions(matric)
         else:
-            result = self.control.get_session_info(session_id, matric)
+            result = self.control.get_mock_session_info(session_id, matric)
         return json.dumps(result)
 
 
 class SessionCodeView(MethodView):
 
     def __init__(self):  # pragma: no cover
-        self.control = MockSessionController()
+        self.control = SessionController()
 
     def get(self, session_id):
         logging.info("New GET /mock/session/<string:session_id>/code request")
         matric = request.args.get('matric')
         if not matric:
             return json.dumps(Error.MATRIC_NOT_FOUND)
-        if session_id is None:
-            result = self.control.get_users_sessions(matric)
-        else:
-            result = self.control.get_session_code(session_id, matric)
+        result = self.control.get_mock_session_code(session_id, matric)
         return json.dumps(result)
 
 
 class StartSessionView(MethodView):
 
     def __init__(self):  # pragma: no cover
-        self.control = MockSessionController()
+        self.control = SessionController()
 
     def get(self, session_id):
         logging.info("New GET /mock/session/<string:session_id>/start request")
         matric = request.args.get('matric')
         if not matric:
             return json.dumps(Error.MATRIC_NOT_FOUND)
-        if session_id is None:
-            result = self.control.get_users_sessions(matric)
-        else:
-            result = self.control.start_session(session_id, matric)
+        result = self.control.start_mock_session(session_id, matric)
         return json.dumps(result)
 
 

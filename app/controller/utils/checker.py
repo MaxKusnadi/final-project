@@ -64,5 +64,9 @@ class Checker:
         return Utils.create_error_code(Error.SESSION_NOT_MOCKED, session.id) if not session.is_mocked else None
 
     @staticmethod
+    def check_session(session, *args):
+        return Utils.create_error_code(Error.SESSION_NOT_FOUND, *args) if not session else None
+
+    @staticmethod
     def check_user_in_group(user, group):
         return Utils.create_error_code(Error.USER_NOT_AUTHORIZED, user.matric) if user not in group.staffs else None
