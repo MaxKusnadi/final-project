@@ -24,6 +24,7 @@ class CourseView(MethodView):
 
 
 class CourseStudentView(MethodView):
+    decorators = [login_required]
 
     def __init__(self):  # pragma: no cover
         self.control = CourseController()
@@ -35,6 +36,7 @@ class CourseStudentView(MethodView):
 
 
 class CourseStaffView(MethodView):
+    decorators = [login_required]
 
     def __init__(self):  # pragma: no cover
         self.control = CourseController()
@@ -46,6 +48,7 @@ class CourseStaffView(MethodView):
 
 
 class CourseGroupView(MethodView):
+    decorators = [login_required]
 
     def __init__(self):  # pragma: no cover
         self.control = CourseController()

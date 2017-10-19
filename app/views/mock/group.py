@@ -5,14 +5,14 @@ from flask.views import MethodView
 from flask import request
 
 from app import app
-from app.controller.group import MockGroupController
+from app.controller.group import GroupController
 from app.constants.error import Error
 
 
 class GroupView(MethodView):
 
     def __init__(self):  # pragma: no cover
-        self.control = MockGroupController()
+        self.control = GroupController()
 
     def post(self):
         logging.info("New POST /mock/group request")
@@ -24,7 +24,7 @@ class GroupView(MethodView):
             return json.dumps(Error.COURSE_CODE_NOT_FOUND)
         if not data.get("group_name"):
             return json.dumps(Error.GROUP_NAME_NOT_FOUND)
-        result = self.control.create_group(**data)
+        result = self.control.create_mock_group(**data)
         return json.dumps(result)
 
     def get(self, course_code):
@@ -33,7 +33,7 @@ class GroupView(MethodView):
             matric = request.args.get('matric')
             if not matric:
                 return json.dumps(Error.MATRIC_NOT_FOUND)
-            result = self.control.get_users_groups(matric)
+            result = self.control.get_mock_users_groups(matric)
         else:
             group_name = request.args.get('group_name')
             group_type = request.args.get('group_type')
@@ -41,14 +41,14 @@ class GroupView(MethodView):
                 return json.dumps(Error.GROUP_NAME_NOT_FOUND)
             if not group_type:
                 return json.dumps(Error.GROUP_TYPE_NOT_FOUND)
-            result = self.control.get_group_info(course_code, group_name, group_type)
+            result = self.control.get_mock_group_info(course_code, group_name, group_type)
         return json.dumps(result)
 
 
 class JoinGroupView(MethodView):
 
     def __init__(self):  # pragma: no cover
-        self.control = MockGroupController()
+        self.control = GroupController()
 
     def post(self, course_code):
         logging.info("New POST mock/join/group/ request")
@@ -66,14 +66,14 @@ class JoinGroupView(MethodView):
         if not group_type:
             return json.dumps(Error.GROUP_TYPE_NOT_FOUND)
 
-        result = self.control.user_join_group(course_code, **data)
+        result = self.control.mock_user_join_group(course_code, **data)
         return json.dumps(result)
 
 
 class GroupStudentView(MethodView):
 
     def __init__(self):  # pragma: no cover
-        self.control = MockGroupController()
+        self.control = GroupController()
 
     def get(self, course_code):
         logging.info("New GET /mock/group/<string:course_code>/students request")
@@ -83,14 +83,14 @@ class GroupStudentView(MethodView):
             return json.dumps(Error.GROUP_NAME_NOT_FOUND)
         if not group_type:
             return json.dumps(Error.GROUP_TYPE_NOT_FOUND)
-        result = self.control.get_group_student(course_code, group_name, group_type)
+        result = self.control.get_mock_group_student(course_code, group_name, group_type)
         return json.dumps(result)
 
 
 class GroupStaffView(MethodView):
 
     def __init__(self):  # pragma: no cover
-        self.control = MockGroupController()
+        self.control = GroupController()
 
     def get(self, course_code):
         logging.info("New GET /mock/group/<string:course_code>/staffs request")
@@ -100,7 +100,7 @@ class GroupStaffView(MethodView):
             return json.dumps(Error.GROUP_NAME_NOT_FOUND)
         if not group_type:
             return json.dumps(Error.GROUP_TYPE_NOT_FOUND)
-        result = self.control.get_group_staff(course_code, group_name, group_type)
+        result = self.control.get_mock_group_staff(course_code, group_name, group_type)
         return json.dumps(result)
 
 

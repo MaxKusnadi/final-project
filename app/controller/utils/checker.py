@@ -46,6 +46,10 @@ class Checker:
         return Utils.create_error_code(Error.GROUP_NOT_MOCKED, group.id) if not group.is_mocked else None
 
     @staticmethod
+    def check_group(group, *args):
+        return Utils.create_error_code(Error.GROUP_NOT_FOUND, *args) if not group else None
+
+    @staticmethod
     def check_mock_group_id(group, *args):
         if not group:
             d = Utils.create_error_code(Error.GROUP_WITH_ID_NOT_FOUND, *args)

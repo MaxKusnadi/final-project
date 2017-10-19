@@ -8,9 +8,9 @@ from app.controller.utils.checker import Checker
 from app import db
 
 
-class MockGroupController:
+class GroupController:
 
-    def create_group(self, **kwargs):
+    def create_mock_group(self, **kwargs):
         logging.info("Creating a mocked group")
         course_code = kwargs.get("course_code")
         group_name = kwargs.get("group_name")
@@ -34,12 +34,8 @@ class MockGroupController:
         d['status'] = 200
         return d
 
-    def get_users_groups(self, matric):
-        logging.info("Getting all groups for user {}".format(matric))
-        user = User.query.filter(User.matric == matric).first()
-        error = Checker.check_mock_user(user)
-        if error:
-            return error
+    def get_users_groups(self, user):
+        logging.info("Getting all groups for user {}".format(user.name))
 
         groups_taken = user.groups
         groups_taken = list(map(lambda x: Utils.get_group_info(x.group), groups_taken))
@@ -52,12 +48,21 @@ class MockGroupController:
         d['status'] = 200
         return d
 
+    def get_mock_users_groups(self, matric):
+        logging.info("Getting all mocked groups for user {}".format(matric))
+        user = User.query.filter(User.matric == matric).first()
+        error = Checker.check_mock_user(user)
+        if error:
+            return error
+
+        return self.get_users_groups(user)
+
     def get_group_info(self, course_code, group_name, group_type):
         logging.info("Getting group info for {}".format(course_code))
         group = Group.query.filter(Group.group_name == group_name,
                                    Group.group_type == group_type,
                                    Group.course.course_code == course_code).first()
-        error = Checker.check_mock_group(group, course_code, group_name, group_type)
+        error = Checker.check_group(group, course_code, group_name, group_type)
         if error:
             return error
 
@@ -65,7 +70,18 @@ class MockGroupController:
         d['status'] = 200
         return d
 
-    def user_join_group(self, course_code, **kwargs):
+    def get_mock_group_info(self, course_code, group_name, group_type):
+        logging.info("Getting mock group info for {}".format(course_code))
+        group = Group.query.filter(Group.group_name == group_name,
+                                   Group.group_type == group_type,
+                                   Group.course.course_code == course_code).first()
+        error = Checker.check_mock_group(group, course_code, group_name, group_type)
+        if error:
+            return error
+
+        return self.get_group_info(course_code, group_name, group_type)
+
+    def mock_user_join_group(self, course_code, **kwargs):
         matric = kwargs.get("matric")
         role = kwargs.get('role', 0)
         group_name = kwargs.get('group_name')
@@ -95,12 +111,22 @@ class MockGroupController:
         d['text'] = "Success"
         return d
 
+    def get_mock_group_student(self, course_code, group_name, group_type):
+        logging.info("Getting mock group {} students for {}".format(group_name, course_code))
+        group = Group.query.filter(Group.group_name == group_name,
+                                   Group.group_type == group_type,
+                                   Group.course.course_code == course_code).first()
+        error = Checker.check_mock_group(group, course_code, group_name, group_type)
+        if error:
+            return error
+        return self.get_group_student(course_code, group_name, group_type)
+
     def get_group_student(self, course_code, group_name, group_type):
         logging.info("Getting group {} students for {}".format(group_name, course_code))
         group = Group.query.filter(Group.group_name == group_name,
                                    Group.group_type == group_type,
                                    Group.course.course_code == course_code).first()
-        error = Checker.check_mock_group(group, course_code, group_name, group_type)
+        error = Checker.check_group(group, course_code, group_name, group_type)
         if error:
             return error
 
@@ -111,12 +137,22 @@ class MockGroupController:
         d['status'] = 200
         return d
 
+    def get_mock_group_staff(self, course_code, group_name, group_type):
+        logging.info("Getting mock group {} students for {}".format(group_name, course_code))
+        group = Group.query.filter(Group.group_name == group_name,
+                                   Group.group_type == group_type,
+                                   Group.course.course_code == course_code).first()
+        error = Checker.check_mock_group(group, course_code, group_name, group_type)
+        if error:
+            return error
+        return self.get_group_staff(course_code, group_name, group_type)
+
     def get_group_staff(self, course_code, group_name, group_type):
         logging.info("Getting group {} students for {}".format(group_name, course_code))
         group = Group.query.filter(Group.group_name == group_name,
                                    Group.group_type == group_type,
                                    Group.course.course_code == course_code).first()
-        error = Checker.check_mock_group(group, course_code, group_name, group_type)
+        error = Checker.check_group(group, course_code, group_name, group_type)
         if error:
             return error
         group_staffs = group.staffs

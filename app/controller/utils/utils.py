@@ -1,6 +1,3 @@
-import logging
-
-from app.models.week_code import WeekCode
 from app.models.academic_time import AcademicTime
 
 
@@ -40,7 +37,7 @@ class Utils:
         d['start_time'] = group.start_time
         d['end_time'] = group.end_time
         d['day_code'] = group.day_code
-        d['week_code'] = WeekCode.query.filter(WeekCode.week_code == group.week_code).first().description
+        d['week_code'] = group.week_code
         d['venue'] = group.venue
         d['group_type'] = group.group_type
         return d
@@ -60,12 +57,10 @@ class Utils:
     @staticmethod
     def get_week_name(now_time):
         # Getting academic time information
-        logging.info(now_time)
         academic_week = AcademicTime.query.filter(AcademicTime.start_date <= now_time,
                                                   AcademicTime.end_date >= now_time).first()
         d = dict()
         if academic_week:
-            logging.info("WEEKDAY")
             d['week_name'] = academic_week.week_name
             d['even_odd_week'] = academic_week.even_odd_week
             d['acad_year'] = academic_week.acad_year
@@ -78,7 +73,6 @@ class Utils:
         # Check if it's weekend
         academic_week = AcademicTime.query.filter(AcademicTime.end_date >= now_time).first()
         if academic_week:
-            logging.info("WEEKEND")
             d['week_name'] = academic_week.week_name
             d['even_odd_week'] = academic_week.even_odd_week
             d['acad_year'] = academic_week.acad_year
