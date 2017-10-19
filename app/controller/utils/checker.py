@@ -16,6 +16,12 @@ class Checker:
                                        group.group_name) if user not in group.staffs else None
 
     @staticmethod
+    def check_user_from_course_staff(user, course):
+        return Utils.create_error_code(Error.USER_IS_NOT_STAFF_COURSE,
+                                       user.matric,
+                                       course.course_code) if user not in course.staffs else None
+
+    @staticmethod
     def check_attendance_code(session, code):
         if not session.is_open:
             return Utils.create_error_code(Error.SESSION_IS_CLOSED, session.id)

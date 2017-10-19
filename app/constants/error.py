@@ -121,5 +121,9 @@ class Error:
         "text": "User {} is not staff for group {}",
         "status": 301
     }
+    USER_IS_NOT_STAFF_COURSE = {
+        "text": "User {} is not staff for course {}",
+        "status": 301
+    }
 
 
