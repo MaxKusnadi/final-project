@@ -5,6 +5,23 @@ from app.controller.utils.utils import Utils
 class Checker:
 
     @staticmethod
+    def check_is_user_student_group(user, group):
+        return Utils.create_error_code(Error.USER_IS_NOT_STUDENT_GROUP,
+                                       user.matric,
+                                       group.group_name) if user not in group.students else None
+
+    @staticmethod
+    def check_is_user_staff_group(user, group):
+        return Utils.create_error_code(Error.USER_IS_NOT_STAFF_GROUP, user.matric,
+                                       group.group_name) if user not in group.staffs else None
+
+    @staticmethod
+    def check_attendance_code(session, code):
+        if not session.is_open:
+            return Utils.create_error_code(Error.SESSION_IS_CLOSED, session.id)
+        return Utils.create_error_code(Error.CODE_IS_WRONG) if session.code != code else None
+
+    @staticmethod
     def check_user_exist(user):
         return Utils.create_error_code(Error.USER_EXIST, user.metric) if user else None
 
@@ -66,6 +83,10 @@ class Checker:
     @staticmethod
     def check_session(session, *args):
         return Utils.create_error_code(Error.SESSION_NOT_FOUND, *args) if not session else None
+
+    @staticmethod
+    def check_is_session_open(session, *args):
+        return Utils.create_error_code(Error.SESSION_IS_OPEN, *args) if session.is_open else None
 
     @staticmethod
     def check_user_in_group(user, group):

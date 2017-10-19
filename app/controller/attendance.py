@@ -3,6 +3,7 @@ import random
 
 from datetime import datetime
 from app.constants.time import TIMEZONE
+from app.models.attendance import Attendance
 from app.models.group import Group
 from app.models.session import Session
 from app.models.user import User
@@ -11,34 +12,73 @@ from app.controller.utils.checker import Checker
 from app import db
 
 
-class SessionController:
+class AttendanceController:
 
-    def create_mock_session(self, **kwargs):
-        logging.info("Creating a mocked session")
-        group_id = kwargs.get('group_id')
-        start_date = kwargs.get('start_date')
-        end_date = kwargs.get('end_date')
+    def create_user_attendance(self, user, session_id, **kwargs):
+        logging.info("Creating an attendance for {}".format(user.name))
+        code = kwargs.get('code')
 
-        start_date = int(start_date) if start_date else None
-        end_date = int(end_date) if end_date else None
-
-        group = Group.query.filter(Group.id == group_id).first()
-        error = Checker.check_mock_group_id(group, group_id)
+        session = Session.query.filter(Session.id == session_id).first()
+        error = Checker.check_session(session, session_id)
         if error:
             return error
-        session = Session.query.filter(Session.group_id == group.id,
-                                       Session.start_date == start_date,
-                                       Session.end_date == end_date).first()
-        error = Checker.check_session_exist(session)
+
+        group = session.group
+        error = Checker.check_is_user_student_group(user, group)
         if error:
             return error
-        session = Session(group, "9", start_date, end_date)
-        session.is_mocked = True
-        db.session.add(session)
+
+        error = Checker.check_attendance_code(session, code)
+        if error:
+            return error
+
+        attendance = Attendance.query.filter(Attendance.session_id == session_id,
+                                             Attendance.user_id == user.id).first()
+        if not attendance:
+            attendance = Attendance(user, session, 1)
+            db.session.add(attendance)
+            db.session.commit()
+        attendance.status = 1
         db.session.commit()
-        d = Utils.get_session_info(session)
+        d = dict()
+        d['text'] = "Success"
         d['status'] = 200
         return d
+
+    def patch_user_attendance(self, user, session_id, **kwargs):
+        logging.info("Patching an attendance by {}".format(user.name))
+        status = kwargs.get("status")
+        matric = kwargs.get("matric")
+        remark = kwargs.get("remark", "")
+
+        user_db = User.query.filter(User.matric == matric).first()
+        # error = Checker.check_user(user_db)
+        # if error:
+        #     return error
+
+        session = Session.query.filter(Session.id == session_id).first()
+        error = Checker.check_session(session, session_id)
+        if error:
+            return error
+
+        group = session.group
+        error = Checker.check_is_user_staff_group(user, group)
+        if error:
+            return error
+
+        attendance = Attendance.query.filter(Attendance.session_id == session_id,
+                                             Attendance.user_id == user.id).first()
+        if not attendance:
+            attendance = Attendance(user, session, 1)
+            db.session.add(attendance)
+            db.session.commit()
+        attendance.status = 1
+        db.session.commit()
+        d = dict()
+        d['text'] = "Success"
+        d['status'] = 200
+        return d
+
 
     def get_mock_users_sessions(self, matric):
         logging.info("Getting all mock sessions for user {} this week".format(matric))

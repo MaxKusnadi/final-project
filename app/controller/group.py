@@ -59,9 +59,13 @@ class GroupController:
 
     def get_group_info(self, course_code, group_name, group_type):
         logging.info("Getting group info for {}".format(course_code))
+        course = Course.query.filter(Course.course_code == course_code).first()
+        error = Checker.check_course(course, course_code)
+        if error:
+            return error
         group = Group.query.filter(Group.group_name == group_name,
                                    Group.group_type == group_type,
-                                   Group.course.course_code == course_code).first()
+                                   Group.course_id == course.id).first()
         error = Checker.check_group(group, course_code, group_name, group_type)
         if error:
             return error
@@ -72,9 +76,13 @@ class GroupController:
 
     def get_mock_group_info(self, course_code, group_name, group_type):
         logging.info("Getting mock group info for {}".format(course_code))
+        course = Course.query.filter(Course.course_code == course_code).first()
+        error = Checker.check_course(course, course_code)
+        if error:
+            return error
         group = Group.query.filter(Group.group_name == group_name,
                                    Group.group_type == group_type,
-                                   Group.course.course_code == course_code).first()
+                                   Group.course_id == course.id).first()
         error = Checker.check_mock_group(group, course_code, group_name, group_type)
         if error:
             return error
@@ -93,9 +101,13 @@ class GroupController:
         if error:
             return error
 
+        course = Course.query.filter(Course.course_code == course_code).first()
+        error = Checker.check_course(course, course_code)
+        if error:
+            return error
         group = Group.query.filter(Group.group_name == group_name,
                                    Group.group_type == group_type,
-                                   Group.course.course_code == course_code).first()
+                                   Group.course_id == course.id).first()
         error = Checker.check_mock_group(group, course_code, group_name, group_type)
         if error:
             return error
@@ -113,9 +125,13 @@ class GroupController:
 
     def get_mock_group_student(self, course_code, group_name, group_type):
         logging.info("Getting mock group {} students for {}".format(group_name, course_code))
+        course = Course.query.filter(Course.course_code == course_code).first()
+        error = Checker.check_course(course, course_code)
+        if error:
+            return error
         group = Group.query.filter(Group.group_name == group_name,
                                    Group.group_type == group_type,
-                                   Group.course.course_code == course_code).first()
+                                   Group.course_id == course.id).first()
         error = Checker.check_mock_group(group, course_code, group_name, group_type)
         if error:
             return error
@@ -123,9 +139,13 @@ class GroupController:
 
     def get_group_student(self, course_code, group_name, group_type):
         logging.info("Getting group {} students for {}".format(group_name, course_code))
+        course = Course.query.filter(Course.course_code == course_code).first()
+        error = Checker.check_course(course, course_code)
+        if error:
+            return error
         group = Group.query.filter(Group.group_name == group_name,
                                    Group.group_type == group_type,
-                                   Group.course.course_code == course_code).first()
+                                   Group.course_id == course.id).first()
         error = Checker.check_group(group, course_code, group_name, group_type)
         if error:
             return error
@@ -139,9 +159,13 @@ class GroupController:
 
     def get_mock_group_staff(self, course_code, group_name, group_type):
         logging.info("Getting mock group {} students for {}".format(group_name, course_code))
+        course = Course.query.filter(Course.course_code == course_code).first()
+        error = Checker.check_course(course, course_code)
+        if error:
+            return error
         group = Group.query.filter(Group.group_name == group_name,
                                    Group.group_type == group_type,
-                                   Group.course.course_code == course_code).first()
+                                   Group.course_id == course.id).first()
         error = Checker.check_mock_group(group, course_code, group_name, group_type)
         if error:
             return error
@@ -149,9 +173,13 @@ class GroupController:
 
     def get_group_staff(self, course_code, group_name, group_type):
         logging.info("Getting group {} students for {}".format(group_name, course_code))
+        course = Course.query.filter(Course.course_code == course_code).first()
+        error = Checker.check_course(course, course_code)
+        if error:
+            return error
         group = Group.query.filter(Group.group_name == group_name,
                                    Group.group_type == group_type,
-                                   Group.course.course_code == course_code).first()
+                                   Group.course_id == course.id).first()
         error = Checker.check_group(group, course_code, group_name, group_type)
         if error:
             return error

@@ -95,3 +95,31 @@ class Error:
         "text": "User {} is not authorized to do this action",
         "status": 301
     }
+    SESSION_IS_OPEN = {
+        "text": "Session {} already opens its attendance",
+        "status": 500
+    }
+    SESSION_IS_CLOSED = {
+        "text": "Session {} already closes its attendance. Unable to post attendance",
+        "status": 500
+    }
+    # =================================================== #
+    CODE_NOT_FOUND = {
+        "text": "code is empty",
+        "status": 400
+    }
+
+    CODE_IS_WRONG = {
+        "text": "code is wrong",
+        "status": 500
+    }
+    USER_IS_NOT_STUDENT_GROUP = {
+        "text": "User {} is not student for group {}",
+        "status": 301
+    }
+    USER_IS_NOT_STAFF_GROUP = {
+        "text": "User {} is not staff for group {}",
+        "status": 301
+    }
+
+
