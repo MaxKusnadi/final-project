@@ -1,37 +1,47 @@
 FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
+HOST: https://imgratefultoday.com:3040
 
 # CS3216 Final
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+For CS3216 Final Assignment
 
-## Questions Collection [/questions]
+## Login Authentication [/login]
 
-### List All Questions [GET]
+### Login [GET]
 
 + Response 200 (application/json)
 
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
+        {
+            "name": "Colin",
+            "email": "colin@gmail.com",
+            "matric": "a01303333"
+        }
+
+## Logout Authentication [/logout]
+
+### Logout [GET]
+Will redirect to home page
+
++ Response 200 (application/json)
+    
+        {
+            "Ignore this. it will redirect"
+        }
+        
+
+## Login Status [/login_status]
+
+### Login Status [GET]
+Will return user info if logged in
+
++ Response 200 (application/json)
+
+        {
+            "name": "Colin",
+            "email": "colin@gmail.com",
+            "matric": "a01303333"
+        }
+
 
 ### Create a New Question [POST]
 
