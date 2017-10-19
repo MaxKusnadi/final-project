@@ -13,6 +13,7 @@ class Utils:
     @staticmethod
     def get_course_info(course):
         d = dict()
+        d['course_id'] = course.id
         d['creator_name'] = course.creator_name
         d['course_code'] = course.course_code
         d['course_name'] = course.course_name
@@ -31,6 +32,7 @@ class Utils:
     @staticmethod
     def get_group_info(group):
         d = dict()
+        d['group_id'] = group.id
         d['group_name'] = group.group_name
         d['course_code'] = group.course.course_code
         d['start_time'] = group.start_time
