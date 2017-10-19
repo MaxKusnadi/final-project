@@ -102,6 +102,13 @@ class Initializer:
             db.session.commit()
             # TODO find group tutor for each group
 
+        if not group_db.is_session_generated:
+            logging.info("Generating sessions for group {}".format(group_db.group_name))
+            sessions = self.session_generator.generate_sessions(group_db)
+            group_db.is_session_generated = True
+            db.session.commit()
+            list(map(lambda x: self._store_session(x, group_db), sessions))
+
     def _store_module_student(self, course, user, token):
         module_db = Course.query.filter(Course.course_id == course['course_id']).first()
         if not module_db:
