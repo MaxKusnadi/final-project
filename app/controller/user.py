@@ -6,7 +6,7 @@ from app.controller.utils.checker import Checker
 from app import db
 
 
-class MockUserController:
+class UserController:
 
     def create_user(self, **kwargs):
         logging.info("Creating a mocked user")
