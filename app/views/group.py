@@ -41,6 +41,7 @@ class IndividualGroupView(MethodView):
 
 
 class GroupStudentView(MethodView):
+    decorators = [login_required]
 
     def __init__(self):  # pragma: no cover
         self.control = GroupController()
@@ -58,6 +59,7 @@ class GroupStudentView(MethodView):
 
 
 class GroupStaffView(MethodView):
+    decorators = [login_required]
 
     def __init__(self):  # pragma: no cover
         self.control = GroupController()
