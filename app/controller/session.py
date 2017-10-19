@@ -158,7 +158,7 @@ class SessionController:
         return self.start_session(session_id, user)
 
     def start_session(self, session_id, user):
-        logging.info("Stating session {} attendance for {}".format(session_id, user.name))
+        logging.info("Starting session {} attendance for {}".format(session_id, user.name))
         session = Session.query.filter(Session.id == session_id).first()
         error = Checker.check_session(session, session_id)
         if error:
@@ -185,7 +185,7 @@ class SessionController:
         return d
 
     def stop_session(self, session_id, user):
-        logging.info("Stating session {} attendance for {}".format(session_id, user.name))
+        logging.info("Stopping session {} attendance for {}".format(session_id, user.name))
         session = Session.query.filter(Session.id == session_id).first()
         error = Checker.check_session(session, session_id)
         if error:
