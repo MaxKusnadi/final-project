@@ -5,7 +5,6 @@ from app.models.group import Group, GroupStudent, GroupStaff
 from app.models.user import User
 from app.controller.utils.utils import Utils
 from app.controller.utils.checker import Checker
-from app.constants.error import Error
 from app import db
 
 

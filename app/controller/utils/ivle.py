@@ -45,13 +45,17 @@ class IVLEScrapper:
     def _get_group_info(self, group):
         d = {
             'group_name': group['ClassNo'],
-            'start_time': group['StartTime'],
-            'end_time': group['EndTime'],
-            'day_code': int(group['DayCode']),
-            'week_code': int(group['WeekCode']),
+            'start_time': str(group['StartTime']),
+            'end_time': str(group['EndTime']),
             'venue': group['Venue'],
             'group_type': group['LessonType']
         }
+        try:
+            d['day_code'] = int(group['DayCode'])
+            d['week_code'] = int(group['WeekCode'])
+        except ValueError:
+            d['day_code'] = -1
+            d['week_code'] = -1
         return d
 
     def _get_module_info(self, course):
@@ -60,7 +64,7 @@ class IVLEScrapper:
             'course_code': course['CourseCode'],
             'course_name': course['CourseName'],
             'acad_year': course['CourseAcadYear'],
-            'semester': course['CourseSemester'].split(' ')[-1],
+            'semester': int(course['CourseSemester'].split(' ')[-1]),
             'permission': course['Permission']
         }
         try:

@@ -4,8 +4,8 @@ from flask_login import login_user
 
 from app.models.user import User
 from app.controller.utils.checker import Checker
-from app.controller.utils.ivle import IVLEApi, IVLEScrapper
-from app.controller.utils.session_generator import SessionGenerator
+from app.controller.utils.ivle import IVLEApi
+from app.controller.utils.initializer import Initializer
 from app import db, login_manager
 
 
@@ -17,8 +17,7 @@ def load_user(user_id):
 class LoginController:
 
     def __init__(self):
-        self.ivle_scrapper = IVLEScrapper()
-        self.session_generator = SessionGenerator()
+        self.initializer = Initializer()
 
     def login(self, token):
         logging.info("Validating token...")
@@ -38,7 +37,7 @@ class LoginController:
             user.token = token
             login_user(user)
             if not user.is_data_pulled:
-                self._initialize_user(user, token)
+                self.initializer.initialize_user(user, token)
                 user.is_data_pulled = True
             db.session.commit()
             d = dict()
@@ -52,10 +51,6 @@ class LoginController:
         d['text'] = "Invalid Token"
         d['status'] = 301
         return d
-
-    def _initialize_user(self, user, token):
-        pass
-
 
     def mock_login(self, **kwargs):
         matric = kwargs.get('matric')

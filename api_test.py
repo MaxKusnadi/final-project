@@ -191,19 +191,19 @@ print()
 #
 # # =======================================================
 
-# param = {
-#     "APIKey": API_KEY,
-#     "AuthToken": TOKEN,
-#     "CourseID": "cca020d4-f6f7-4a0c-b7bd-734b8a86a01e"
-#
-# }
-# service = "Timetable_Student_Module"
-# url = IVLE_URL + service
-# resp = requests.get(url, params=param)
-# print("Timetable_Student_Module")
-# print(resp.json())
-# print()
-#
+param = {
+    "APIKey": API_KEY,
+    "AuthToken": MAX_TOKEN,
+    "CourseID": "cca020d4-f6f7-4a0c-b7bd-734b8a86a01e"
+
+}
+service = "Timetable_Student_Module"
+url = IVLE_URL + service
+resp = requests.get(url, params=param)
+print("Timetable_Student_Module")
+print(resp.json())
+print()
+
 # # =======================================================
 
 param = {
