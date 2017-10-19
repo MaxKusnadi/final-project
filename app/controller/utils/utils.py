@@ -25,7 +25,7 @@ class Utils:
     def get_user_info(user):
         d = dict()
         d['name'] = user.name
-        d['metric'] = user.metric
+        d['matric'] = user.matric
         d['email'] = user.email
         return d
 
@@ -89,6 +89,6 @@ class Utils:
         d['status'] = attendance.status
         d['remark'] = attendance.remark
         d['name'] = attendance.user.name
-        d['metric'] = attendance.user.metric
+        d['matric'] = attendance.user.matric
         d['email'] = attendance.user.email
         return d
