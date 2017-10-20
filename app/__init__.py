@@ -4,6 +4,7 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from flask_socketio import SocketIO
 
 
 logging.basicConfig(level=logging.INFO,
@@ -12,6 +13,7 @@ logging.basicConfig(level=logging.INFO,
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 app.config.from_object('config')
+socketio = SocketIO(app)
 login_manager = LoginManager(app)
 db = SQLAlchemy(app)
 

@@ -5,7 +5,7 @@ from flask import request
 from flask.views import MethodView
 from flask_login import login_required, current_user
 
-from app import app
+from app import app, socketio
 from app.constants.error import Error
 from app.controller.attendance import AttendanceController
 
@@ -66,3 +66,4 @@ class GroupAttendanceView(MethodView):
 
 app.add_url_rule('/session/<string:session_id>/attendance', view_func=AttendanceView.as_view('attendance'))
 app.add_url_rule('/course/<string:course_code>/group/attendance', view_func=GroupAttendanceView.as_view('group_attendance'))
+socketio.on_namespace(AttendanceController('/'))
