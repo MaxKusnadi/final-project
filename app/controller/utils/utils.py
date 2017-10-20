@@ -1,4 +1,3 @@
-from app.models.week_code import WeekCode
 from app.models.academic_time import AcademicTime
 
 
@@ -13,6 +12,7 @@ class Utils:
     @staticmethod
     def get_course_info(course):
         d = dict()
+        d['course_id'] = course.id
         d['creator_name'] = course.creator_name
         d['course_code'] = course.course_code
         d['course_name'] = course.course_name
@@ -24,19 +24,20 @@ class Utils:
     def get_user_info(user):
         d = dict()
         d['name'] = user.name
-        d['metric'] = user.metric
+        d['matric'] = user.matric
         d['email'] = user.email
         return d
 
     @staticmethod
     def get_group_info(group):
         d = dict()
+        d['group_id'] = group.id
         d['group_name'] = group.group_name
         d['course_code'] = group.course.course_code
         d['start_time'] = group.start_time
         d['end_time'] = group.end_time
         d['day_code'] = group.day_code
-        d['week_code'] = WeekCode.query.filter(WeekCode.week_code == group.week_code).first().description
+        d['week_code'] = group.week_code
         d['venue'] = group.venue
         d['group_type'] = group.group_type
         return d
@@ -70,7 +71,7 @@ class Utils:
             return d
 
         # Check if it's weekend
-        academic_week = AcademicTime.query.filter(AcademicTime.end_date >= now_epoch).first()
+        academic_week = AcademicTime.query.filter(AcademicTime.end_date >= now_time).first()
         if academic_week:
             d['week_name'] = academic_week.week_name
             d['even_odd_week'] = academic_week.even_odd_week
@@ -87,7 +88,16 @@ class Utils:
         d['status'] = attendance.status
         d['remark'] = attendance.remark
         d['name'] = attendance.user.name
-        d['metric'] = attendance.user.metric
+        d['matric'] = attendance.user.matric
         d['email'] = attendance.user.email
         return d
 
+    @staticmethod
+    def get_missing_attendance_info(user):
+        d = dict()
+        d['status'] = 0
+        d['remark'] = ""
+        d['name'] = user.name
+        d['matric'] = user.matric
+        d['email'] = user.email
+        return d

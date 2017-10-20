@@ -50,10 +50,7 @@ class LogoutView(MethodView):
 
     def get(self):
         logout_user()
-        return json.dumps({
-                "text": "Logged Out",
-                "status": 200}
-            )
+        return redirect(LOGIN_REDIRECT_URL)
 
 
 class IvleToken(MethodView):

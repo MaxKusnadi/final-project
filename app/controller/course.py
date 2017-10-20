@@ -2,42 +2,19 @@ import logging
 
 from app.models.course import Course, CourseStudent, CourseStaff
 from app.models.user import User
-from app.controller.utils import Utils
-from app.constants.error import Error
+from app.controller.utils.checker import Checker
+from app.controller.utils.utils import Utils
 from app import db
 
 
-class MockCourseController:
+class CourseController:
 
-    def create_course(self, **kwargs):
-        logging.info("Creating a mocked course")
-        course_code = kwargs.get("course_code")
+    def get_users_courses(self, user):
+        logging.info("Getting all courses of user {}".format(user.name))
 
-        course = Course.query.filter(Course.course_code == course_code).first()
-        if course:
-            d = Utils.create_error_code(Error.COURSE_EXIST, course_code)
-            return d
-        course = Course("dummy_id", "Prof Dummy", "dummy_id", course_code,
-                        "Introduction to dummy module", "2017/2018", 1)
-        course.is_mocked = True
-        db.session.add(course)
-        db.session.commit()
-        d = Utils.get_course_info(course)
-        d['status'] = 200
-        return d
-
-    def get_users_courses(self, metric):
-        logging.info("Getting all courses of a user")
-        user = User.query.filter(User.metric == metric).first()
-        if not user:
-            d = Utils.create_error_code(Error.USER_NOT_FOUND, metric)
-            return d
-        if not user.is_mocked:
-            d = Utils.create_error_code(Error.USER_NOT_MOCKED, metric)
-            return d
-        course_taken = user.course_taken
+        course_taken = user.courses_taken
         course_taken = list(map(lambda x: Utils.get_course_info(x.course), course_taken))
-        course_taught = user.course_taught
+        course_taught = user.courses_taught
         course_taught = list(map(lambda x: Utils.get_course_info(x.course), course_taught))
 
         d = dict()
@@ -49,36 +26,62 @@ class MockCourseController:
     def get_course_info(self, course_code):
         logging.info("Getting course info for {}".format(course_code))
         course = Course.query.filter(Course.course_code == course_code).first()
-        if not course:
-            d = Utils.create_error_code(Error.COURSE_NOT_FOUND, course_code)
-            return d
-        if not course.is_mocked:
-            d = Utils.create_error_code(Error.COURSE_NOT_MOCKED, course_code)
-            return d
+        error = Checker.check_course(course, course_code)
+        if error:
+            return error
         d = Utils.get_course_info(course)
         d['status'] = 200
         return d
 
-    def user_join_course(self, course_code, **kwargs):
-        metric = kwargs.get("metric")
-        role = kwargs.get('role', 0)
-        logging.info("User {} joins course {}".format(metric, course_code))
-
-        user = User.query.filter(User.metric == metric).first()
-        if not user:
-            d = Utils.create_error_code(Error.USER_NOT_FOUND, metric)
-            return d
-        if not user.is_mocked:
-            d = Utils.create_error_code(Error.USER_NOT_MOCKED, metric)
-            return d
+    def create_mock_course(self, **kwargs):
+        logging.info("Creating a mocked course")
+        course_code = kwargs.get("course_code")
 
         course = Course.query.filter(Course.course_code == course_code).first()
-        if not course:
-            d = Utils.create_error_code(Error.COURSE_NOT_FOUND, course_code)
-            return d
-        if not course.is_mocked:
-            d = Utils.create_error_code(Error.COURSE_NOT_MOCKED, course_code)
-            return d
+        error = Checker.check_course_exist(course)
+        if error:
+            return error
+
+        course = Course("dummy_id", "Prof Dummy", "dummy_id", course_code,
+                        "Introduction to dummy module", "2017/2018", 1)
+        course.is_mocked = True
+        db.session.add(course)
+        db.session.commit()
+        d = Utils.get_course_info(course)
+        d['status'] = 200
+        return d
+
+    def get_mock_users_courses(self, matric):
+        logging.info("Getting all courses of a user")
+        user = User.query.filter(User.matric == matric).first()
+        error = Checker.check_mock_user(user, matric)
+        if error:
+            return error
+
+        return self.get_users_courses(user)
+
+    def get_mock_course_info(self, course_code):
+        logging.info("Getting mock course info for {}".format(course_code))
+        course = Course.query.filter(Course.course_code == course_code).first()
+        error = Checker.check_mock_course(course, course_code)
+        if error:
+            return error
+        return self.get_course_info(course_code)
+
+    def mock_user_join_course(self, course_code, **kwargs):
+        matric = kwargs.get("matric")
+        role = kwargs.get('role', 0)
+        logging.info("User {} joins course {}".format(matric, course_code))
+
+        user = User.query.filter(User.matric == matric).first()
+        error = Checker.check_mock_user(user, matric)
+        if error:
+            return error
+
+        course = Course.query.filter(Course.course_code == course_code).first()
+        error = Checker.check_mock_course(course, course_code)
+        if error:
+            return error
 
         role = int(role)
         if role == 1:
@@ -91,15 +94,21 @@ class MockCourseController:
         d['text'] = "Success"
         return d
 
+    def get_mock_course_student(self, course_code):
+        logging.info("Getting mock course student for {}".format(course_code))
+        course = Course.query.filter(Course.course_code == course_code).first()
+        error = Checker.check_mock_course(course, course_code)
+        if error:
+            return error
+
+        return self.get_course_student(course_code)
+
     def get_course_student(self, course_code):
         logging.info("Getting course student for {}".format(course_code))
         course = Course.query.filter(Course.course_code == course_code).first()
-        if not course:
-            d = Utils.create_error_code(Error.COURSE_NOT_FOUND, course_code)
-            return d
-        if not course.is_mocked:
-            d = Utils.create_error_code(Error.COURSE_NOT_MOCKED, course_code)
-            return d
+        error = Checker.check_course(course, course_code)
+        if error:
+            return error
 
         course_students = course.students
         course_students = list(map(lambda x: Utils.get_user_info(x.user), course_students))
@@ -108,15 +117,21 @@ class MockCourseController:
         d['status'] = 200
         return d
 
+    def get_mock_course_staff(self, course_code):
+        logging.info("Getting mock course staff for {}".format(course_code))
+        course = Course.query.filter(Course.course_code == course_code).first()
+        error = Checker.check_mock_course(course, course_code)
+        if error:
+            return error
+        return self.get_course_staff(course_code)
+
     def get_course_staff(self, course_code):
         logging.info("Getting course staff for {}".format(course_code))
         course = Course.query.filter(Course.course_code == course_code).first()
-        if not course:
-            d = Utils.create_error_code(Error.COURSE_NOT_FOUND, course_code)
-            return d
-        if not course.is_mocked:
-            d = Utils.create_error_code(Error.COURSE_NOT_MOCKED, course_code)
-            return d
+        error = Checker.check_course(course, course_code)
+        if error:
+            return error
+
         course_staffs = course.staffs
         course_staffs = list(map(lambda x: Utils.get_user_info(x.user), course_staffs))
         d = dict()
@@ -124,15 +139,22 @@ class MockCourseController:
         d['status'] = 200
         return d
 
+    def get_mock_course_group(self, course_code):
+        logging.info("Getting course group for {}".format(course_code))
+        course = Course.query.filter(Course.course_code == course_code).first()
+        error = Checker.check_mock_course(course, course_code)
+        if error:
+            return error
+
+        return self.get_course_group(course_code)
+
     def get_course_group(self, course_code):
         logging.info("Getting course group for {}".format(course_code))
         course = Course.query.filter(Course.course_code == course_code).first()
-        if not course:
-            d = Utils.create_error_code(Error.COURSE_NOT_FOUND, course_code)
-            return d
-        if not course.is_mocked:
-            d = Utils.create_error_code(Error.COURSE_NOT_MOCKED, course_code)
-            return d
+        error = Checker.check_course(course, course_code)
+        if error:
+            return error
+
         course_groups = course.groups
         course_groups = list(map(lambda x: Utils.get_group_info(x), course_groups))
         d = dict()

@@ -5,14 +5,14 @@ from flask.views import MethodView
 from flask import request
 
 from app import app
-from app.controller.course import MockCourseController
+from app.controller.course import CourseController
 from app.constants.error import Error
 
 
 class CourseView(MethodView):
 
     def __init__(self):  # pragma: no cover
-        self.control = MockCourseController()
+        self.control = CourseController()
 
     def post(self):
         logging.info("New POST /mock/course request")
@@ -22,25 +22,25 @@ class CourseView(MethodView):
             return json.dumps(Error.JSON_NOT_FOUND)
         if not data.get("course_code"):
             return json.dumps(Error.COURSE_CODE_NOT_FOUND)
-        result = self.control.create_course(**data)
+        result = self.control.create_mock_course(**data)
         return json.dumps(result)
 
     def get(self, course_code):
         logging.info("New GET /mock/course request")
         if course_code is None:
-            metric = request.args.get('metric')
-            if not metric:
-                return json.dumps(Error.METRIC_NOT_FOUND)
-            result = self.control.get_users_courses(metric)
+            matric = request.args.get('matric')
+            if not matric:
+                return json.dumps(Error.MATRIC_NOT_FOUND)
+            result = self.control.get_mock_users_courses(matric)
         else:
-            result = self.control.get_course_info(course_code)
+            result = self.control.get_mock_course_info(course_code)
         return json.dumps(result)
 
 
 class JoinCourseView(MethodView):
 
     def __init__(self):  # pragma: no cover
-        self.control = MockCourseController()
+        self.control = CourseController()
 
     def post(self, course_code):
         logging.info("New POST mock/join/course/ request")
@@ -48,43 +48,43 @@ class JoinCourseView(MethodView):
 
         if not data:
             return json.dumps(Error.JSON_NOT_FOUND)
-        if not data.get("metric"):
-            return json.dumps(Error.METRIC_NOT_FOUND)
+        if not data.get("matric"):
+            return json.dumps(Error.MATRIC_NOT_FOUND)
 
-        result = self.control.user_join_course(course_code, **data)
+        result = self.control.mock_user_join_course(course_code, **data)
         return json.dumps(result)
 
 
 class CourseStudentView(MethodView):
 
     def __init__(self):  # pragma: no cover
-        self.control = MockCourseController()
+        self.control = CourseController()
 
     def get(self, course_code):
         logging.info("New GET /mock/course/<string:course_code>/students request")
-        result = self.control.get_course_student(course_code)
+        result = self.control.get_mock_course_student(course_code)
         return json.dumps(result)
 
 
 class CourseStaffView(MethodView):
 
     def __init__(self):  # pragma: no cover
-        self.control = MockCourseController()
+        self.control = CourseController()
 
     def get(self, course_code):
         logging.info("New GET /mock/course/<string:course_code>/staffs request")
-        result = self.control.get_course_staff(course_code)
+        result = self.control.get_mock_course_staff(course_code)
         return json.dumps(result)
 
 
 class CourseGroupView(MethodView):
 
     def __init__(self):  # pragma: no cover
-        self.control = MockCourseController()
+        self.control = CourseController()
 
     def get(self, course_code):
         logging.info("New GET /mock/course/<string:course_code>/groups request")
-        result = self.control.get_course_group(course_code)
+        result = self.control.get_mock_course_group(course_code)
         return json.dumps(result)
 
 

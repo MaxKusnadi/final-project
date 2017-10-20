@@ -18,6 +18,7 @@ class Group(db.Model):
     venue = Column(String)
     group_type = Column(String)
     is_mocked = Column(Boolean)
+    is_session_generated = Column(Boolean)
 
     def __init__(self, course, group_name, start_time,
                  end_time, day_code, week_code, venue, group_type):
@@ -31,6 +32,7 @@ class Group(db.Model):
         self.venue = venue
         self.group_type = group_type
         self.is_mocked = False
+        self.is_session_generated = False
 
     def __repr__(self):
         return "{course_code} {group_type} {group_name} | Day: {day_code} Week: {week_code} Venue: {venue}".format(

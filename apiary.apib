@@ -1,0 +1,90 @@
+FORMAT: 1A
+HOST: https://imgratefultoday.com:3040
+
+# CS3216 Final
+
+For CS3216 Final Assignment
+
+## Login Authentication [/login]
+
+### Login [GET]
+
++ Response 200 (application/json)
+
+        {
+            "name": "Colin",
+            "email": "colin@gmail.com",
+            "matric": "a01303333"
+        }
+
+## Logout Authentication [/logout]
+
+### Logout [GET]
+Will redirect to home page
+
++ Response 200 (application/json)
+    
+        {
+            "Ignore this. it will redirect"
+        }
+        
+
+## Login Status [/login_status]
+
+### Login Status [GET]
+Will return user info if logged in
+
++ Response 200 (application/json)
+
+        {
+            "name": "Colin",
+            "email": "colin@gmail.com",
+            "matric": "a01303333"
+        }
+
+
+### Create a New Question [POST]
+
+You may create your own question using this action. It takes a JSON
+object containing a question and a collection of answers in the
+form of choices.
+
++ Request (application/json)
+
+        {
+            "question": "Favourite programming language?",
+            "choices": [
+                "Swift",
+                "Python",
+                "Objective-C",
+                "Ruby"
+            ]
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /questions/2
+
+    + Body
+
+            {
+                "question": "Favourite programming language?",
+                "published_at": "2015-08-05T08:40:51.620Z",
+                "choices": [
+                    {
+                        "choice": "Swift",
+                        "votes": 0
+                    }, {
+                        "choice": "Python",
+                        "votes": 0
+                    }, {
+                        "choice": "Objective-C",
+                        "votes": 0
+                    }, {
+                        "choice": "Ruby",
+                        "votes": 0
+                    }
+                ]
+            }

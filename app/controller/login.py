@@ -1,43 +1,49 @@
-import requests
 import logging
 
 from flask_login import login_user
 
 from app.models.user import User
-from app.constants.ivle import (IVLE_URL, VALIDATE_URL, API_KEY, PROFILE_URL)
-from app.constants.error import Error
+from app.controller.utils.checker import Checker
+from app.controller.utils.ivle import IVLEApi
+from app.controller.utils.initializer import Initializer
 from app import db, login_manager
 
 
 @login_manager.user_loader
-def load_user(id):
-    return User.query.filter(User.id == id).first()
+def load_user(user_id):
+    return User.query.filter(User.id == user_id).first()
 
 
 class LoginController:
 
+    def __init__(self):
+        self.initializer = Initializer()
+
     def login(self, token):
         logging.info("Validating token...")
-        is_token_valid, token = self._validate_token(token)
+        is_token_valid, token = IVLEApi.validate_token(token)
         if is_token_valid:
-            profile = self._get_profile(token)
-            metric = profile['UserID']
+            profile = IVLEApi.get_profile(token)
+            matric = profile['UserID']
 
-            user = User.query.filter(User.metric == metric).first()
+            user = User.query.filter(User.matric == matric).first()
             if not user:
-                logging.info("Creating user with UserID {}".format(metric))
+                logging.info("Creating user with UserID {}".format(matric))
                 name = profile['Name']
                 email = profile['Email']
-                user = User(metric, name, email)
+                user = User(matric, name, email)
                 db.session.add(user)
                 db.session.commit()
             user.token = token
-            db.session.commit()
             login_user(user)
+            if not user.is_data_pulled:
+                self.initializer.initialize_user(user, token)
+                user.is_data_pulled = True
+            db.session.commit()
             d = dict()
             d['name'] = user.name
             d['email'] = user.email
-            d['metric'] = user.metric
+            d['matric'] = user.matric
             d['status'] = 200
             return d
         logging.error("Invalid token {}".format(token))
@@ -47,49 +53,25 @@ class LoginController:
         return d
 
     def mock_login(self, **kwargs):
-        metric = kwargs.get('metric')
-        logging.info("Logging in for mocked user {}".format(metric))
-        user = User.query.filter(User.metric == metric).first()
-        if not user:
-            d = Error.USER_NOT_FOUND
-            d['text'] = d['text'].format(metric)
-            return d
-        if not user.is_mocked:
-            d = Error.USER_NOT_MOCKED
-            d['text'] = d['text'].format(metric)
-            return d
+        matric = kwargs.get('matric')
+        logging.info("Logging in for mocked user {}".format(matric))
+        user = User.query.filter(User.matric == matric).first()
+        error = Checker.check_mock_user(user, matric)
+        if error:
+            return error
         login_user(user)
         d = dict()
         d['name'] = user.name
         d['email'] = user.email
-        d['metric'] = user.metric
+        d['matric'] = user.matric
         d['status'] = 200
         return d
 
     def get_user_info(self, user):
-        logging.info("Getting information for user {}".format(user.metric))
+        logging.info("Getting information for user {}".format(user.matric))
         d = dict()
         d['name'] = user.name
         d['email'] = user.email
-        d['metric'] = user.metric
+        d['matric'] = user.matric
         d['status'] = 200
         return d
-
-    def _validate_token(self, token):
-        validate_url = IVLE_URL + VALIDATE_URL
-        params = {
-            "APIKey": API_KEY,
-            "Token": token
-        }
-        resp = requests.get(validate_url, params=params).json()
-        return resp['Success'], resp['Token']
-
-    def _get_profile(self, token):
-        url = IVLE_URL + PROFILE_URL
-        params = {
-            "APIKey": API_KEY,
-            "AuthToken": token
-        }
-        resp = requests.get(url, params=params).json()
-        logging.info(resp)
-        return resp['Results'][0]

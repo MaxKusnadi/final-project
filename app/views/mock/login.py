@@ -20,8 +20,8 @@ class LoginView(MethodView):
 
         if not data:
             return json.dumps(Error.JSON_NOT_FOUND)
-        if not data.get("metric"):
-            return json.dumps(Error.METRIC_NOT_FOUND)
+        if not data.get("matric"):
+            return json.dumps(Error.MATRIC_NOT_FOUND)
         result = self.control.mock_login(**data)
         return json.dumps(result)
 
