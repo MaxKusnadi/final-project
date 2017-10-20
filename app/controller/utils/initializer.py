@@ -92,7 +92,8 @@ class Initializer:
     def _store_group_staff(self, group, module_db):
         group_db = Group.query.filter(Group.course_id == module_db.id,
                                       Group.group_name == group['group_name'],
-                                      Group.group_type == group['group_type']).first()
+                                      Group.group_type == group['group_type'],
+                                      Group.day_code == group['day_code']).first()
         if not group_db:
             args = (module_db, group['group_name'], group['start_time'],
                     group['end_time'], group['day_code'], group['week_code'],
@@ -136,7 +137,8 @@ class Initializer:
     def _store_group_student(self, group, user, module_db):
         group_db = Group.query.filter(Group.course_id == module_db.id,
                                       Group.group_name == group['group_name'],
-                                      Group.group_type == group['group_type']).first()
+                                      Group.group_type == group['group_type'],
+                                      Group.day_code == group['day_code']).first()
         if not group_db:
             args = (module_db, group['group_name'], group['start_time'],
                     group['end_time'], group['day_code'], group['week_code'],
