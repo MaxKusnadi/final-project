@@ -27,9 +27,9 @@ print("Colin: {}".format(colin))
 cs3216 = Course.query.filter(Course.course_code == "CS3216").first()
 print("Course {}".format(cs3216))
 
-course_staff = CourseStaff(colin, cs3216, "Lecturer")
-db.session.add(course_staff)
-db.session.commit()
+# course_staff = CourseStaff(colin, cs3216, "Lecturer")
+# db.session.add(course_staff)
+# db.session.commit()
 
 # GROUPS
 group = Group(cs3216, "Dummy Tutorial", "1200", "1300", 5, 0, "SOC", "TUTORIAL")
