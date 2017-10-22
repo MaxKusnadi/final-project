@@ -141,8 +141,8 @@ class SessionController:
             d['code'] = session.code
             return d
 
-        code = random.randint(0, 10000)
-        code = str(code).zfill(4)
+        code = random.randint(0, 1000000)
+        code = str(code).zfill(6)
         session.code = code
         db.session.commit()
         d['code'] = code
