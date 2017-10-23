@@ -40,6 +40,8 @@ class Utils:
         d['week_code'] = group.week_code
         d['venue'] = group.venue
         d['group_type'] = group.group_type
+        d['course_id'] = group.course.id
+        d['course_name'] = group.course.course_name
         return d
 
     @staticmethod
@@ -52,6 +54,10 @@ class Utils:
         d['end_date'] = session.end_date
         d['is_code_generated'] = True if session.code else False
         d['attendance_start_time'] = session.attendance_start_time
+        d['start_time'] = session.group.start_time
+        d['end_time'] = session.group.end_time
+        d['venue'] = session.group.venue
+        d['group_type'] = session.group.group_type
         return d
 
     @staticmethod
