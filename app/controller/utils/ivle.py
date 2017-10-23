@@ -51,8 +51,8 @@ class IVLEScrapper:
     def _get_group_info(self, group):
         d = {
             'group_name': group['ClassNo'],
-            'start_time': str(group['StartTime']),
-            'end_time': str(group['EndTime']),
+            'start_time': str(group['StartTime']).zfill(4),
+            'end_time': str(group['EndTime']).zfill(4),
             'venue': group['Venue'],
             'group_type': group['LessonType']
         }
@@ -66,11 +66,11 @@ class IVLEScrapper:
 
     def _get_staff_group_info(self, group):
         group_time = group['Time']
-        start_time, end_time= group_time.split(" - ")
+        start_time, end_time = group_time.split(" - ")
         d = {
             'group_name': group['GroupName'],
-            'start_time': start_time,
-            'end_time': end_time,
+            'start_time': start_time.zfill(4),
+            'end_time': end_time.zfill(4),
             'venue': group['Venue'],
             'group_type': group['GroupType'].upper()
         }

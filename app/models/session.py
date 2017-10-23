@@ -31,5 +31,5 @@ class Session(db.Model):
 
     def __repr__(self):
         return "Session for course {course} for week {week} at {start_date} to {end_date}".format(
-            course=self.group.course_name, week=self.week_name, start_date=self.start_date, end_date=self.end_date
+            course=self.group.course.course_name, week=self.week_name, start_date=self.start_date, end_date=self.end_date
         )

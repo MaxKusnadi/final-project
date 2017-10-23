@@ -23,10 +23,10 @@ class CourseController:
         d['status'] = 200
         return d
 
-    def get_course_info(self, course_code):
-        logging.info("Getting course info for {}".format(course_code))
-        course = Course.query.filter(Course.course_code == course_code).first()
-        error = Checker.check_course(course, course_code)
+    def get_course_info(self, course_id):
+        logging.info("Getting course info for {}".format(course_id))
+        course = Course.query.filter(Course.id == course_id).first()
+        error = Checker.check_course(course, course_id)
         if error:
             return error
         d = Utils.get_course_info(course)
@@ -35,14 +35,14 @@ class CourseController:
 
     def create_mock_course(self, **kwargs):
         logging.info("Creating a mocked course")
-        course_code = kwargs.get("course_code")
+        course_id = kwargs.get("course_code")
 
-        course = Course.query.filter(Course.course_code == course_code).first()
-        error = Checker.check_course_exist(course)
+        course = Course.query.filter(Course.id == course_id).first()
+        error = Checker.check_course(course, course_id)
         if error:
             return error
 
-        course = Course("dummy_id", "Prof Dummy", "dummy_id", course_code,
+        course = Course("dummy_id", "Prof Dummy", "dummy_id", course_id,
                         "Introduction to dummy module", "2017/2018", 1)
         course.is_mocked = True
         db.session.add(course)
@@ -60,26 +60,26 @@ class CourseController:
 
         return self.get_users_courses(user)
 
-    def get_mock_course_info(self, course_code):
-        logging.info("Getting mock course info for {}".format(course_code))
-        course = Course.query.filter(Course.course_code == course_code).first()
-        error = Checker.check_mock_course(course, course_code)
+    def get_mock_course_info(self, course_id):
+        logging.info("Getting mock course info for {}".format(course_id))
+        course = Course.query.filter(Course.id == course_id).first()
+        error = Checker.check_course(course, course_id)
         if error:
             return error
-        return self.get_course_info(course_code)
+        return self.get_course_info(course_id)
 
-    def mock_user_join_course(self, course_code, **kwargs):
+    def mock_user_join_course(self, course_id, **kwargs):
         matric = kwargs.get("matric")
         role = kwargs.get('role', 0)
-        logging.info("User {} joins course {}".format(matric, course_code))
+        logging.info("User {} joins course {}".format(matric, course_id))
 
         user = User.query.filter(User.matric == matric).first()
         error = Checker.check_mock_user(user, matric)
         if error:
             return error
 
-        course = Course.query.filter(Course.course_code == course_code).first()
-        error = Checker.check_mock_course(course, course_code)
+        course = Course.query.filter(Course.id == course_id).first()
+        error = Checker.check_course(course, course_id)
         if error:
             return error
 
@@ -94,19 +94,19 @@ class CourseController:
         d['text'] = "Success"
         return d
 
-    def get_mock_course_student(self, course_code):
-        logging.info("Getting mock course student for {}".format(course_code))
-        course = Course.query.filter(Course.course_code == course_code).first()
-        error = Checker.check_mock_course(course, course_code)
+    def get_mock_course_student(self, course_id):
+        logging.info("Getting mock course student for {}".format(course_id))
+        course = Course.query.filter(Course.id == course_id).first()
+        error = Checker.check_course(course, course_id)
         if error:
             return error
 
-        return self.get_course_student(course_code)
+        return self.get_course_student(course_id)
 
-    def get_course_student(self, course_code):
-        logging.info("Getting course student for {}".format(course_code))
-        course = Course.query.filter(Course.course_code == course_code).first()
-        error = Checker.check_course(course, course_code)
+    def get_course_student(self, course_id):
+        logging.info("Getting course student for {}".format(course_id))
+        course = Course.query.filter(Course.id == course_id).first()
+        error = Checker.check_course(course, course_id)
         if error:
             return error
 
@@ -117,18 +117,18 @@ class CourseController:
         d['status'] = 200
         return d
 
-    def get_mock_course_staff(self, course_code):
-        logging.info("Getting mock course staff for {}".format(course_code))
-        course = Course.query.filter(Course.course_code == course_code).first()
-        error = Checker.check_mock_course(course, course_code)
+    def get_mock_course_staff(self, course_id):
+        logging.info("Getting mock course staff for {}".format(course_id))
+        course = Course.query.filter(Course.id == course_id).first()
+        error = Checker.check_course(course, course_id)
         if error:
             return error
-        return self.get_course_staff(course_code)
+        return self.get_course_staff(course_id)
 
-    def get_course_staff(self, course_code):
-        logging.info("Getting course staff for {}".format(course_code))
-        course = Course.query.filter(Course.course_code == course_code).first()
-        error = Checker.check_course(course, course_code)
+    def get_course_staff(self, course_id):
+        logging.info("Getting course staff for {}".format(course_id))
+        course = Course.query.filter(Course.id == course_id).first()
+        error = Checker.check_course(course, course_id)
         if error:
             return error
 
@@ -139,19 +139,19 @@ class CourseController:
         d['status'] = 200
         return d
 
-    def get_mock_course_group(self, course_code):
-        logging.info("Getting course group for {}".format(course_code))
-        course = Course.query.filter(Course.course_code == course_code).first()
-        error = Checker.check_mock_course(course, course_code)
+    def get_mock_course_group(self, course_id):
+        logging.info("Getting course group for {}".format(course_id))
+        course = Course.query.filter(Course.id == course_id).first()
+        error = Checker.check_course(course, course_id)
         if error:
             return error
 
-        return self.get_course_group(course_code)
+        return self.get_course_group(course_id)
 
-    def get_course_group(self, course_code):
-        logging.info("Getting course group for {}".format(course_code))
-        course = Course.query.filter(Course.course_code == course_code).first()
-        error = Checker.check_course(course, course_code)
+    def get_course_group(self, course_id):
+        logging.info("Getting course group for {}".format(course_id))
+        course = Course.query.filter(Course.id == course_id).first()
+        error = Checker.check_course(course, course_id)
         if error:
             return error
 
