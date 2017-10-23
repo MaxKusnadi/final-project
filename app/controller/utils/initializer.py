@@ -51,7 +51,7 @@ class Initializer:
         list(map(lambda x: self._store_course_roster(x, module_db), class_roster))
 
         logging.info("Getting groups for course {}".format(module_db.course_code))
-        groups = self.ivle_scrapper.get_student_groups(token, module_db.course_id)
+        groups = self.ivle_scrapper.get_staff_groups(token, module_db.course_id)
         list(map(lambda x: self._store_group_staff(x, module_db), groups))
 
     def _store_course_staffs(self, lecturer, module_db):

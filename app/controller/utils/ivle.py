@@ -1,9 +1,10 @@
 import logging
 import requests
 
-
+from app.models.week_code import WeekCode
 from app.constants.ivle import (API_KEY, IVLE_URL, MODULE_URL, PROFILE_URL, VALIDATE_URL,
-                                CLASS_ROSTER_URL, GROUP_URL, LECTURER_URL)
+                                CLASS_ROSTER_URL, STUDENT_GROUP_URL, LECTURER_URL,
+                                STAFF_GROUP_URL)
 
 
 class IVLEScrapper:
@@ -27,6 +28,11 @@ class IVLEScrapper:
         logging.info("Getting student groups for Course {}".format(course_id))
         results = IVLEApi.get_student_group(token, course_id)
         return list(map(lambda x: self._get_group_info(x), results))
+
+    def get_staff_groups(self, token, course_id):
+        logging.info("Getting staff groups for Course {}".format(course_id))
+        results = IVLEApi.get_staff_group(token, course_id)
+        return list(map(lambda x: self._get_staff_group_info(x), results))
 
     def get_course_staffs(self, token, course_id):
         logging.info("Getting staffs for Course {}".format(course_id))
@@ -58,6 +64,24 @@ class IVLEScrapper:
             d['week_code'] = -1
         return d
 
+    def _get_staff_group_info(self, group):
+        group_time = group['Time']
+        start_time, end_time= group_time.split(" - ")
+        d = {
+            'group_name': group['GroupName'],
+            'start_time': start_time,
+            'end_time': end_time,
+            'venue': group['Venue'],
+            'group_type': group['GroupType'].upper()
+        }
+        try:
+            d['day_code'] = self._get_day_code(group["Day"])
+            d['week_code'] = self._get_week_code(group['Week'])
+        except ValueError:
+            d['day_code'] = -1
+            d['week_code'] = -1
+        return d
+
     def _get_module_info(self, course):
         d = {
             'course_id': course['ID'],
@@ -83,16 +107,40 @@ class IVLEScrapper:
         }
         return d
 
+    def _get_day_code(self, day):
+        days = ['Monday', "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        for idx, val in enumerate(days):
+            if val == day:
+                return idx + 1
+
+    def _get_week_code(self, week_desc):
+        week = WeekCode.query.filter(WeekCode.description == week_desc.upper()).first()
+        return week.week_code
+
+
 
 class IVLEApi:
 
     @staticmethod
     def get_student_group(token, course_id):
-        url = IVLE_URL + GROUP_URL
+        url = IVLE_URL + STUDENT_GROUP_URL
         params = {
             "APIKey": API_KEY,
             "AuthToken": token,
             "CourseID": course_id
+        }
+        resp = requests.get(url, params=params).json()
+        return resp['Results']
+
+    @staticmethod
+    def get_staff_group(token, course_id):
+        url = IVLE_URL + STAFF_GROUP_URL
+        params = {
+            "APIKey": API_KEY,
+            "AuthToken": token,
+            "CourseID": course_id,
+            "AcadYear": "2017/2018",
+            "Semester": 1
         }
         resp = requests.get(url, params=params).json()
         return resp['Results']

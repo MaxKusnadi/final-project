@@ -129,20 +129,20 @@ print()
 #
 # # =======================================================
 #
-# param = {
-#     "APIKey": API_KEY,
-#     "AuthToken": TOKEN,
-#     "AcadYear": "2017/2018",
-#     "Semester": 1,
-#     "CourseID": "cca020d4-f6f7-4a0c-b7bd-734b8a86a01e"
-#
-# }
-# service = "GroupsByUserAndModule"
-# url = IVLE_URL + service
-# resp = requests.get(url, params=param)
-# print("GroupsByUserAndModule")
-# print(resp.text)
-# print()
+param = {
+    "APIKey": API_KEY,
+    "AuthToken": KAIDI_TOKEN,
+    "AcadYear": "2017/2018",
+    "Semester": 1,
+    "CourseID": "a9eb1fbf-75b7-4bd4-b88f-e06541a62373"
+
+}
+service = "GroupsByUserAndModule"
+url = IVLE_URL + service
+resp = requests.get(url, params=param)
+print("GroupsByUserAndModule")
+print(resp.text)
+print()
 
 # # =======================================================
 #
@@ -191,37 +191,37 @@ print()
 #
 # # =======================================================
 
-param = {
-    "APIKey": API_KEY,
-    "AuthToken": MAX_TOKEN,
-    "CourseID": "cca020d4-f6f7-4a0c-b7bd-734b8a86a01e"
-
-}
-service = "Timetable_Student_Module"
-url = IVLE_URL + service
-resp = requests.get(url, params=param)
-print("Timetable_Student_Module")
-print(resp.json())
-print()
+# param = {
+#     "APIKey": API_KEY,
+#     "AuthToken": KAIDI_TOKEN,
+#     "CourseID": "a9eb1fbf-75b7-4bd4-b88f-e06541a62373"
+#
+# }
+# service = "Timetable_Student_Module"
+# url = IVLE_URL + service
+# resp = requests.get(url, params=param)
+# print("Timetable_Student_Module")
+# print(resp.json())
+# print()
 
 # # =======================================================
 
-param = {
-    "APIKey": API_KEY,
-    "AuthToken": MAX_TOKEN,
-    "CourseID": "cca020d4-f6f7-4a0c-b7bd-734b8a86a01e",
-    "ModuleCode": "ST2132",
-    "GroupName": "SL1",
-    "AcadYear": "2017/2018",
-    "Semester": 1,
-    "GroupType": "LECTURE"
-}
-service = "Module_OfficialGroupUsers"
-url = IVLE_URL + service
-resp = requests.get(url, params=param)
-print("Module_OfficialGroupUsers")
-print(resp.text)
-print()
+# param = {
+#     "APIKey": API_KEY,
+#     "AuthToken": MAX_TOKEN,
+#     "CourseID": "cca020d4-f6f7-4a0c-b7bd-734b8a86a01e",
+#     "ModuleCode": "ST2132",
+#     "GroupName": "SL1",
+#     "AcadYear": "2017/2018",
+#     "Semester": 1,
+#     "GroupType": "LECTURE"
+# }
+# service = "Module_OfficialGroupUsers"
+# url = IVLE_URL + service
+# resp = requests.get(url, params=param)
+# print("Module_OfficialGroupUsers")
+# print(resp.text)
+# print()
 
 # =======================================================
 
