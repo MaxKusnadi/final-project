@@ -25,7 +25,7 @@ class CourseController:
 
     def get_course_info(self, course_id):
         logging.info("Getting course info for {}".format(course_id))
-        course = Course.query.filter(Course.id == course_id).first()
+        course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
             return error
@@ -33,11 +33,15 @@ class CourseController:
         d['status'] = 200
         return d
 
+    def _get_course(self, course_id):
+        course = Course.query.filter(Course.id == int(course_id)).first()
+        return course
+
     def create_mock_course(self, **kwargs):
         logging.info("Creating a mocked course")
         course_id = kwargs.get("course_code")
 
-        course = Course.query.filter(Course.id == course_id).first()
+        course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
             return error
@@ -62,7 +66,7 @@ class CourseController:
 
     def get_mock_course_info(self, course_id):
         logging.info("Getting mock course info for {}".format(course_id))
-        course = Course.query.filter(Course.id == course_id).first()
+        course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
             return error
@@ -78,7 +82,7 @@ class CourseController:
         if error:
             return error
 
-        course = Course.query.filter(Course.id == course_id).first()
+        course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
             return error
@@ -96,7 +100,7 @@ class CourseController:
 
     def get_mock_course_student(self, course_id):
         logging.info("Getting mock course student for {}".format(course_id))
-        course = Course.query.filter(Course.id == course_id).first()
+        course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
             return error
@@ -105,7 +109,7 @@ class CourseController:
 
     def get_course_student(self, course_id):
         logging.info("Getting course student for {}".format(course_id))
-        course = Course.query.filter(Course.id == course_id).first()
+        course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
             return error
@@ -119,7 +123,7 @@ class CourseController:
 
     def get_mock_course_staff(self, course_id):
         logging.info("Getting mock course staff for {}".format(course_id))
-        course = Course.query.filter(Course.id == course_id).first()
+        course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
             return error
@@ -127,7 +131,7 @@ class CourseController:
 
     def get_course_staff(self, course_id):
         logging.info("Getting course staff for {}".format(course_id))
-        course = Course.query.filter(Course.id == course_id).first()
+        course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
             return error
@@ -141,7 +145,7 @@ class CourseController:
 
     def get_mock_course_group(self, course_id):
         logging.info("Getting course group for {}".format(course_id))
-        course = Course.query.filter(Course.id == course_id).first()
+        course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
             return error
@@ -150,7 +154,7 @@ class CourseController:
 
     def get_course_group(self, course_id):
         logging.info("Getting course group for {}".format(course_id))
-        course = Course.query.filter(Course.id == course_id).first()
+        course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
             return error
