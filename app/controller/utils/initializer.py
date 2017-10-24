@@ -90,10 +90,7 @@ class Initializer:
             db.session.commit()
 
     def _store_group_staff(self, group, module_db):
-        group_db = Group.query.filter(Group.course_id == module_db.id,
-                                      Group.group_name == group['group_name'],
-                                      Group.group_type == group['group_type'],
-                                      Group.day_code == group['day_code']).first()
+        group_db = self._get_group_from_db(group, module_db)
         if not group_db:
             args = (module_db, group['group_name'], group['start_time'],
                     group['end_time'], group['day_code'], group['week_code'],
@@ -109,6 +106,14 @@ class Initializer:
             group_db.is_session_generated = True
             db.session.commit()
             list(map(lambda x: self._store_session(x, group_db), sessions))
+
+    def _get_group_from_db(self, group, module_db):
+        group_db = Group.query.filter(Group.course_id == module_db.id,
+                                      Group.group_name == group['group_name'],
+                                      Group.group_type == group['group_type'],
+                                      Group.day_code == group['day_code'],
+                                      Group.start_time == group['start_time']).first()
+        return group_db
 
     def _store_module_student(self, course, user, token):
         module_db = Course.query.filter(Course.course_id == course['course_id']).first()
@@ -135,10 +140,7 @@ class Initializer:
         list(map(lambda x: self._store_group_student(x, user, module_db), groups))
 
     def _store_group_student(self, group, user, module_db):
-        group_db = Group.query.filter(Group.course_id == module_db.id,
-                                      Group.group_name == group['group_name'],
-                                      Group.group_type == group['group_type'],
-                                      Group.day_code == group['day_code']).first()
+        group_db = self._get_group_from_db(group, module_db)
         if not group_db:
             args = (module_db, group['group_name'], group['start_time'],
                     group['end_time'], group['day_code'], group['week_code'],

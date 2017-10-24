@@ -75,6 +75,11 @@ class GroupStaffView(MethodView):
         result = self.control.get_group_staff(course_id, group_id)
         return json.dumps(result)
 
+    def delete(self, course_id, group_id):
+        logging.info("New DELETE/course/<string:course_id>/group/<int:group_id/staffs request")
+        result = self.control.delete_group_staff(course_id, current_user, group_id)
+        return json.dumps(result)
+
 
 app.add_url_rule('/groups', view_func=GroupView.as_view('group'), methods=['GET'])
 app.add_url_rule('/course/<int:course_id>/group/<int:group_id>', view_func=IndividualGroupView.as_view('individual_group'),

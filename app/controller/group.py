@@ -62,6 +62,33 @@ class GroupController:
         d['text'] = "Successful"
         return d
 
+    def delete_group_staff(self, course_id, user, group_id):
+        logging.info("Unlinking {} with a group from {}".format(user.name, course_id))
+
+        course = self._get_course(course_id)
+        error = Checker.check_course(course, course_id)
+        if error:
+            return error
+        group = self._get_group(course, group_id)
+        error = Checker.check_group(group, course_id, group_id)
+        if error:
+            return error
+
+        error = Checker.check_user_from_course_staff(user, course)
+        if error:
+            return error
+
+        group_staff = GroupStaff.query.filter(GroupStaff.user_id == user.id,
+                                              GroupStaff.group_id == group.id).first()
+        if group_staff:
+            db.session.remove(group_staff)
+            db.session.commit()
+
+        d = dict()
+        d['status'] = 200
+        d['text'] = "Successful"
+        return d
+
     def get_users_groups(self, user):
         logging.info("Getting all groups for user {}".format(user.name))
 
