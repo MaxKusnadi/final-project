@@ -52,18 +52,12 @@ class GroupAttendanceView(MethodView):
     def __init__(self):  # pragma: no cover
         self.control = AttendanceController()
 
-    def get(self, course_code):
-        logging.info("New GET /course/<string:course_code>/group/attendance request")
-        group_name = request.args.get('group_name')
-        group_type = request.args.get('group_type')
-        if not group_name:
-            return json.dumps(Error.GROUP_NAME_NOT_FOUND)
-        if not group_type:
-            return json.dumps(Error.GROUP_TYPE_NOT_FOUND)
-        result = self.control.get_group_attendance(current_user, course_code, group_name, group_type)
+    def get(self, course_id, group_id):
+        logging.info("New GET /course/<string:course_id>/group/<int:group_id>/attendance request")
+        result = self.control.get_group_attendance(current_user, course_id, group_id)
         return json.dumps(result)
 
 
-app.add_url_rule('/session/<string:session_id>/attendance', view_func=AttendanceView.as_view('attendance'))
-app.add_url_rule('/course/<string:course_code>/group/attendance', view_func=GroupAttendanceView.as_view('group_attendance'))
+app.add_url_rule('/session/<int:session_id>/attendance', view_func=AttendanceView.as_view('attendance'))
+app.add_url_rule('/course/<int:course_id>/group/<int:group_id>/attendance', view_func=GroupAttendanceView.as_view('group_attendance'))
 socketio.on_namespace(AttendanceController('/'))

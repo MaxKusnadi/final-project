@@ -28,15 +28,9 @@ class IndividualGroupView(MethodView):
     def __init__(self):  # pragma: no cover
         self.control = GroupController()
 
-    def get(self, course_code):
-        logging.info("New GET /course/<string:course_code>/group request")
-        group_name = request.args.get('group_name')
-        group_type = request.args.get('group_type')
-        if not group_name:
-            return json.dumps(Error.GROUP_NAME_NOT_FOUND)
-        if not group_type:
-            return json.dumps(Error.GROUP_TYPE_NOT_FOUND)
-        result = self.control.get_group_info(course_code, group_name, group_type)
+    def get(self, course_id, group_id):
+        logging.info("New GET /course/<string:course_id>/group/<int:group_id request")
+        result = self.control.get_group_info(course_id, group_id)
         return json.dumps(result)
 
 
@@ -46,9 +40,9 @@ class AllGroupView(MethodView):
     def __init__(self):  # pragma: no cover
         self.control = GroupController()
 
-    def get(self, course_code):
-        logging.info("New GET /course/<string:course_code>/groups request")
-        result = self.control.get_all_groups(course_code)
+    def get(self, course_id):
+        logging.info("New GET /course/<string:course_id>/groups request")
+        result = self.control.get_all_groups(course_id)
         return json.dumps(result)
 
 
@@ -58,15 +52,9 @@ class GroupStudentView(MethodView):
     def __init__(self):  # pragma: no cover
         self.control = GroupController()
 
-    def get(self, course_code):
-        logging.info("New GET /course/<string:course_code>/group/students request")
-        group_name = request.args.get('group_name')
-        group_type = request.args.get('group_type')
-        if not group_name:
-            return json.dumps(Error.GROUP_NAME_NOT_FOUND)
-        if not group_type:
-            return json.dumps(Error.GROUP_TYPE_NOT_FOUND)
-        result = self.control.get_group_student(course_code, group_name, group_type)
+    def get(self, course_id, group_id):
+        logging.info("New GET /course/<string:course_id>/group/<int:group_id/students request")
+        result = self.control.get_group_student(course_id, group_id)
         return json.dumps(result)
 
 
@@ -76,34 +64,21 @@ class GroupStaffView(MethodView):
     def __init__(self):  # pragma: no cover
         self.control = GroupController()
 
-    def post(self, course_code):
-        logging.info("New POST /course/<string:course_code>/group/staffs request")
-        data = request.get_json()
+    def post(self, course_id, group_id):
+        logging.info("New POST /course/<string:course_id>/group/<int:group_id/staffs request")
 
-        if not data:
-            return json.dumps(Error.JSON_NOT_FOUND)
-        if not data.get("group_name"):
-            return json.dumps(Error.GROUP_NAME_NOT_FOUND)
-        if not data.get("group_type"):
-            return json.dumps(Error.GROUP_TYPE_NOT_FOUND)
-        result = self.control.create_group_staff(course_code, current_user, **data)
+        result = self.control.create_group_staff(course_id, current_user, group_id)
         return json.dumps(result)
 
-    def get(self, course_code):
-        logging.info("New GET/course/<string:course_code>/group/staffs request")
-        group_name = request.args.get('group_name')
-        group_type = request.args.get('group_type')
-        if not group_name:
-            return json.dumps(Error.GROUP_NAME_NOT_FOUND)
-        if not group_type:
-            return json.dumps(Error.GROUP_TYPE_NOT_FOUND)
-        result = self.control.get_group_staff(course_code, group_name, group_type)
+    def get(self, course_id, group_id):
+        logging.info("New GET/course/<string:course_id>/group/<int:group_id/staffs request")
+        result = self.control.get_group_staff(course_id, group_id)
         return json.dumps(result)
 
 
 app.add_url_rule('/groups', view_func=GroupView.as_view('group'), methods=['GET'])
-app.add_url_rule('/course/<string:course_code>/group', view_func=IndividualGroupView.as_view('individual_group'),
+app.add_url_rule('/course/<int:course_id>/group/<int:group_id>', view_func=IndividualGroupView.as_view('individual_group'),
                  methods=['GET'])
-app.add_url_rule('/course/<string:course_code>/groups', view_func=AllGroupView.as_view('all_group'))
-app.add_url_rule('/course/<string:course_code>/group/students', view_func=GroupStudentView.as_view('group_student'))
-app.add_url_rule('/course/<string:course_code>/group/staffs', view_func=GroupStaffView.as_view('group_staff'))
+app.add_url_rule('/course/<int:course_id>/groups', view_func=AllGroupView.as_view('all_group'))
+app.add_url_rule('/course/<int:course_id>/group/<int:group_id>/students', view_func=GroupStudentView.as_view('group_student'))
+app.add_url_rule('/course/<int:course_id>/group<int:group_id>/staffs', view_func=GroupStaffView.as_view('group_staff'))

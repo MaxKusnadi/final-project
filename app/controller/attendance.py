@@ -113,16 +113,15 @@ class AttendanceController(Namespace):
         d['status'] = 200
         return d
 
-    def get_group_attendance(self, user, course_code, group_name, group_type):
-        logging.info("Getting group {}/{} attendance for {}".format(group_name, course_code, user.name))
-        course = Course.query.filter(Course.course_code == course_code).first()
-        error = Checker.check_course(course, course_code)
+    def get_group_attendance(self, user, course_id, group_id):
+        logging.info("Getting group {}/{} attendance for {}".format(group_id, course_id, user.name))
+        course = Course.query.filter(Course.id == course_id).first()
+        error = Checker.check_course(course, course_id)
         if error:
             return error
-        group = Group.query.filter(Group.group_name == group_name,
-                                   Group.group_type == group_type,
+        group = Group.query.filter(Group.id == group_id,
                                    Group.course_id == course.id).first()
-        error = Checker.check_group(group, course_code, group_name, group_type)
+        error = Checker.check_group(group, course_id, group_id)
         if error:
             return error
 

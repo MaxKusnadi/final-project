@@ -61,8 +61,8 @@ class CourseGroupView(MethodView):
 
 course_view = CourseView.as_view('course')
 app.add_url_rule('/course', defaults={'course_id': None}, view_func=course_view, methods=['GET'])
-app.add_url_rule('/course/<string:course_id>', view_func=course_view, methods=['GET'])
-app.add_url_rule('/course/<string:course_id>/students', view_func=CourseStudentView.as_view('course_student'))
-app.add_url_rule('/course/<string:course_id>/staffs', view_func=CourseStaffView.as_view('course_staff'))
-app.add_url_rule('/course/<string:course_id>/groups', view_func=CourseGroupView.as_view('course_group'))
+app.add_url_rule('/course/<int:course_id>', view_func=course_view, methods=['GET'])
+app.add_url_rule('/course/<int:course_id>/students', view_func=CourseStudentView.as_view('course_student'))
+app.add_url_rule('/course/<int:course_id>/staffs', view_func=CourseStaffView.as_view('course_staff'))
+app.add_url_rule('/course/<int:course_id>/groups', view_func=CourseGroupView.as_view('course_group'))
 

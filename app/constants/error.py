@@ -55,7 +55,7 @@ class Error:
         "status": 500
     }
     GROUP_NOT_FOUND = {
-        "text": "Course {} Group {}/{} is not found",
+        "text": "Course {} Group {} is not found",
         "status": 404
     }
     GROUP_WITH_ID_NOT_FOUND = {
