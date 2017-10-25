@@ -51,7 +51,7 @@ class CourseStudent(db.Model):
         self.course_id = course.id
 
     def __repr__(self):
-        return "<STUDENT> User: {user} - Course: {course}".format(user=self.user.metric, course=self.course_id)
+        return "<STUDENT> User: {user} - Course: {course}".format(user=self.user.matric, course=self.course_id)
 
 
 class CourseStaff(db.Model):
@@ -74,4 +74,4 @@ class CourseStaff(db.Model):
         self.is_attached_to_group = False
 
     def __repr__(self):
-        return "<STAFF> User: {user} - Course: {course}".format(user=self.user.metric, course=self.course_id)
+        return "<STAFF> User: {user} - Course: {course}".format(user=self.user.matric, course=self.course_id)
