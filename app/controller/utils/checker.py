@@ -8,19 +8,23 @@ class Checker:
 
     @staticmethod
     def check_is_user_student_group(user, group):
+        group_students = group.students
+        found = list(filter(lambda x: x.user_id == user.id, group_students))
         return Utils.create_error_code(Error.USER_IS_NOT_STUDENT_GROUP,
                                        user.matric,
-                                       group.group_name) if user not in group.students else None
+                                       group.group_name) if len(found) == 0 else None
 
     @staticmethod
     def check_is_user_staff_group(user, group):
+        group_staffs = group.staffs
+        found = list(filter(lambda x: x.user_id == user.id, group_staffs))
         return Utils.create_error_code(Error.USER_IS_NOT_STAFF_GROUP, user.matric,
-                                       group.group_name) if user not in group.staffs else None
+                                       group.group_name) if len(found) == 0 else None
 
     @staticmethod
     def check_user_from_course_staff(user, course):
         course_staff = course.staffs
-        found = list(filter(lambda x: x.user == user, course_staff))
+        found = list(filter(lambda x: x.user_id == user.id, course_staff))
         return Utils.create_error_code(Error.USER_IS_NOT_STAFF_COURSE,
                                        user.matric,
                                        course.course_code) if len(found) == 0 else None
@@ -78,7 +82,6 @@ class Checker:
 
     @staticmethod
     def check_group(group, *args):
-        logging.critical("Inside Checker {}, {} {}".format(group, *args))
         return Utils.create_error_code(Error.GROUP_NOT_FOUND, *args) if not group else None
 
     @staticmethod

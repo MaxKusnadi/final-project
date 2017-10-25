@@ -52,8 +52,6 @@ class GroupController:
         if error:
             return error
         group = self._get_group(course, group_id)
-        logging.critical("Group {}".format(group))
-        logging.critical("Course_id {} {}".format(course_id, group_id))
         error = Checker.check_group(group, course_id, group_id)
         if error:
             return error
@@ -98,7 +96,7 @@ class GroupController:
         group_staff = GroupStaff.query.filter(GroupStaff.user_id == user.id,
                                               GroupStaff.group_id == group.id).first()
         if group_staff:
-            db.session.remove(group_staff)
+            db.session.delete(group_staff)
             db.session.commit()
 
         d = dict()
