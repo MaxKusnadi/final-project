@@ -53,7 +53,7 @@ class Utils:
         d['start_date'] = session.start_date
         d['end_date'] = session.end_date
         d['is_code_generated'] = True if session.code else False
-        d['attendance_start_time'] = session.attendance_start_time
+        d['attendance_closed_time'] = session.attendance_closed_time
         d['start_time'] = session.group.start_time
         d['end_time'] = session.group.end_time
         d['venue'] = session.group.venue

@@ -22,8 +22,8 @@ class Checker:
                                        course.course_code) if user not in course.staffs else None
 
     @staticmethod
-    def check_attendance_code(session, code):
-        if not session.is_open:
+    def check_attendance_code(session, now, code):
+        if now > session.attendance_closed_time:
             return Utils.create_error_code(Error.SESSION_IS_CLOSED, session.id)
         return Utils.create_error_code(Error.CODE_IS_WRONG) if session.code != code else None
 
@@ -95,8 +95,8 @@ class Checker:
         return Utils.create_error_code(Error.SESSION_NOT_FOUND, *args) if not session else None
 
     @staticmethod
-    def check_is_session_open(session, *args):
-        return Utils.create_error_code(Error.SESSION_IS_OPEN, *args) if session.is_open else None
+    def check_is_session_open(session, time_now, *args):
+        return Utils.create_error_code(Error.SESSION_IS_OPEN, *args) if time_now <= session.attendance_closed_time else None
 
     @staticmethod
     def check_user_in_group(user, group):

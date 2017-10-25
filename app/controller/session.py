@@ -1,7 +1,7 @@
 import logging
 import random
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from app.constants.time import TIMEZONE
 from app.models.group import Group
 from app.models.session import Session
@@ -156,7 +156,7 @@ class SessionController:
         if error:
             return error
         return self.start_session(session_id, user)
-
+    # TODO join room and emit
     def start_session(self, session_id, user):
         logging.info("Starting session {} attendance for {}".format(session_id, user.name))
         session = Session.query.filter(Session.id == session_id).first()
@@ -169,36 +169,37 @@ class SessionController:
         if error:
             return error
 
-        error = Checker.check_is_session_open(session, session_id)
+        closed_time = datetime.now(TIMEZONE) + timedelta(seconds=30)
+        now_epoch = int(closed_time.timestamp())
+
+        error = Checker.check_is_session_open(session, now_epoch, session_id)
         if error:
             return error
 
-        now = datetime.now(TIMEZONE)
-        now_epoch = int(now.timestamp())
-        session.attendance_start_time = now_epoch
-        session.is_open = True
+        session.attendance_closed_time = now_epoch
         db.session.commit()
+
         d = dict()
         d['text'] = "Success"
-        d['attendance_start_time'] = now_epoch
+        d['attendance_closed_time'] = now_epoch
         d['status'] = 200
         return d
 
-    def stop_session(self, session_id, user):
-        logging.info("Stopping session {} attendance for {}".format(session_id, user.name))
-        session = Session.query.filter(Session.id == session_id).first()
-        error = Checker.check_session(session, session_id)
-        if error:
-            return error
-
-        group = session.group
-        error = Checker.check_user_in_group(user, group)
-        if error:
-            return error
-
-        session.is_open = True
-        db.session.commit()
-        d = dict()
-        d['text'] = "Success"
-        d['status'] = 200
-        return d
+    # def stop_session(self, session_id, user):
+    #     logging.info("Stopping session {} attendance for {}".format(session_id, user.name))
+    #     session = Session.query.filter(Session.id == session_id).first()
+    #     error = Checker.check_session(session, session_id)
+    #     if error:
+    #         return error
+    #
+    #     group = session.group
+    #     error = Checker.check_user_in_group(user, group)
+    #     if error:
+    #         return error
+    #
+    #     session.is_open = True
+    #     db.session.commit()
+    #     d = dict()
+    #     d['text'] = "Success"
+    #     d['status'] = 200
+    #     return d
