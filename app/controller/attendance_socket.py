@@ -14,6 +14,7 @@ class AttendanceSocket(Namespace):
         super().__init__(*args)
 
     def on_connect(self):
+        logging.info("HELLLOOO")
         if current_user.is_authenticated:
             logging.info("User {} is connected".format(current_user.name))
             room_id = self._get_room_id(current_user)
