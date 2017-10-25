@@ -52,6 +52,8 @@ class GroupController:
         if error:
             return error
         group = self._get_group(course, group_id)
+        logging.critical("Group {}".format(group))
+        logging.critical("Course_id {} {}".format(course_id, group_id))
         error = Checker.check_group(group, course_id, group_id)
         if error:
             return error
@@ -267,3 +269,7 @@ class GroupController:
         d['results'] = group_staffs
         d['status'] = 200
         return d
+
+if __name__ == '__main__':
+    error = Checker.check_group(None, 1, 2)
+    print(error)

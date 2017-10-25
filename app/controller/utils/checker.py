@@ -1,3 +1,5 @@
+import logging
+
 from app.constants.error import Error
 from app.controller.utils.utils import Utils
 
@@ -74,6 +76,7 @@ class Checker:
 
     @staticmethod
     def check_group(group, *args):
+        logging.critical("Inside Checker {}, {} {}".format(group, *args))
         return Utils.create_error_code(Error.GROUP_NOT_FOUND, *args) if not group else None
 
     @staticmethod

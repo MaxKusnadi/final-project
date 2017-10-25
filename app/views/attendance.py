@@ -60,4 +60,4 @@ class GroupAttendanceView(MethodView):
 
 app.add_url_rule('/session/<int:session_id>/attendance', view_func=AttendanceView.as_view('attendance'))
 app.add_url_rule('/course/<int:course_id>/group/<int:group_id>/attendance', view_func=GroupAttendanceView.as_view('group_attendance'))
-socketio.on_namespace(AttendanceController('/'))
+socketio.on_namespace(AttendanceController('/socket'))
