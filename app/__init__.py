@@ -10,6 +10,7 @@ from flask_socketio import SocketIO
 logging.basicConfig(level=logging.INFO,
                     format=' %(asctime)s - %(levelname)s - %(message)s')
 logging.getLogger('socketio').setLevel(logging.ERROR)
+logging.getLogger('engineio').setLevel(logging.ERROR)
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
