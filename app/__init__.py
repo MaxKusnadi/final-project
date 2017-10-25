@@ -6,11 +6,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_socketio import SocketIO
 
-
-logging.basicConfig(level=logging.INFO,
-                    format=' %(asctime)s - %(levelname)s - %(message)s')
-logging.getLogger('socketio').setLevel(logging.ERROR)
-logging.getLogger('engineio').setLevel(logging.ERROR)
+logging.getLogger('socketio').setLevel(logging.CRITICAL)
+logging.getLogger('engineio').setLevel(logging.CRITICAL)
+logging.basicConfig(format=' %(asctime)s - %(levelname)s - %(message)s')
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
