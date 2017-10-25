@@ -42,17 +42,17 @@ class Initializer:
             db.session.add(module_db)
             db.session.commit()
 
-        logging.info("Getting lecturers for course {}".format(module_db.course_code))
-        lecturers = self.ivle_scrapper.get_course_staffs(token, module_db.course_id)
-        list(map(lambda x: self._store_course_staffs(x, module_db), lecturers))
+        logging.info("Getting groups for course {}".format(module_db.course_code))
+        groups = self.ivle_scrapper.get_staff_groups(token, module_db.course_id)
+        list(map(lambda x: self._store_group_staff(x, module_db), groups))
 
         logging.info("Getting class roster for course {}".format(module_db.course_code))
         class_roster = self.ivle_scrapper.get_class_roster(token, module_db.course_id)
         list(map(lambda x: self._store_course_roster(x, module_db), class_roster))
 
-        logging.info("Getting groups for course {}".format(module_db.course_code))
-        groups = self.ivle_scrapper.get_staff_groups(token, module_db.course_id)
-        list(map(lambda x: self._store_group_staff(x, module_db), groups))
+        logging.info("Getting lecturers for course {}".format(module_db.course_code))
+        lecturers = self.ivle_scrapper.get_course_staffs(token, module_db.course_id)
+        list(map(lambda x: self._store_course_staffs(x, module_db), lecturers))
 
     def _store_course_staffs(self, lecturer, module_db):
         user_db = User.query.filter(User.matric == lecturer['matric']).first()
@@ -69,6 +69,10 @@ class Initializer:
         if not course_staff:
             course_staff = CourseStaff(user_db, module_db, lecturer['role'])
             db.session.add(course_staff)
+            db.session.commit()
+
+        if len(module_db.groups) == 0:
+            course_staff.is_attached_to_group = True
             db.session.commit()
 
     def _store_course_roster(self, student, module_db):
