@@ -7,7 +7,7 @@ from flask_cors import CORS
 from flask_socketio import SocketIO
 
 
-logging.basicConfig(level=logging.INFO,
+logging.basicConfig(level=logging.ERROR,
                     format=' %(asctime)s - %(levelname)s - %(message)s')
 
 app = Flask(__name__)
