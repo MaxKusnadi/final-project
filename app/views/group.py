@@ -81,7 +81,20 @@ class GroupStaffView(MethodView):
         return json.dumps(result)
 
 
+class CheckStaffGroupView(MethodView):
+    decorators = [login_required]
+
+    def __init__(self):  # pragma: no cover
+        self.control = GroupController()
+
+    def get(self):
+        logging.info("New GET /check-group request")
+        result = self.control.check_staff_group(current_user)
+        return json.dumps(result)
+
+
 app.add_url_rule('/groups', view_func=GroupView.as_view('group'), methods=['GET'])
+app.add_url_rule('/check-group', view_func=CheckStaffGroupView.as_view('check_group'), methods=['GET'])
 app.add_url_rule('/course/<int:course_id>/group/<int:group_id>', view_func=IndividualGroupView.as_view('individual_group'),
                  methods=['GET'])
 app.add_url_rule('/course/<int:course_id>/groups', view_func=AllGroupView.as_view('all_group'))

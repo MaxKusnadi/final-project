@@ -60,6 +60,7 @@ class CourseStaff(db.Model):
     user_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
     course_id = Column(Integer, ForeignKey('course.id'), primary_key=True)
     role = Column(String)
+    is_attached_to_group = Column(Boolean)
 
     user = relationship("User", backref="courses_taught")
     course = relationship("Course", backref="staffs")
@@ -70,6 +71,7 @@ class CourseStaff(db.Model):
         self.user_id = user.id
         self.course_id = course.id
         self.role = role
+        self.is_attached_to_group = False
 
     def __repr__(self):
         return "<STAFF> User: {user} - Course: {course}".format(user=self.user.metric, course=self.course_id)

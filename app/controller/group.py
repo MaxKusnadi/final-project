@@ -1,6 +1,6 @@
 import logging
 
-from app.models.course import Course
+from app.models.course import Course, CourseStaff
 from app.models.group import Group, GroupStudent, GroupStaff
 from app.models.user import User
 from app.controller.utils.utils import Utils
@@ -9,6 +9,16 @@ from app import db
 
 
 class GroupController:
+
+    def check_staff_group(self, user):
+        logging.info("Checking which course {} has not linked to".format(user.name))
+        course_staff = CourseStaff.query.filter(CourseStaff.user_id == user.id,
+                                                CourseStaff.is_attached_to_group == False).all()
+        module_info = list(map(lambda x: Utils.get_course_info(x.course), course_staff))
+        d = dict()
+        d['status'] = 200
+        d['result'] = module_info
+        return d
 
     def create_mock_group(self, **kwargs):
         logging.info("Creating a mocked group")
@@ -56,6 +66,11 @@ class GroupController:
             group_staff = GroupStaff(user, group)
             db.session.add(group_staff)
             db.session.commit()
+
+        course_staff = CourseStaff.query.filter(CourseStaff.course_id == course_id,
+                                                CourseStaff.user_id == user.id).first()
+        course_staff.is_attached_to_group = True
+        db.session.commit()
 
         d = dict()
         d['status'] = 200
