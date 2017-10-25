@@ -1,4 +1,3 @@
-import logging
 from app.models.academic_time import AcademicTime
 
 

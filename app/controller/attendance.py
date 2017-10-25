@@ -1,11 +1,8 @@
 import logging
 
-from flask_socketio import Namespace, emit, join_room
-
-from time import time
 from datetime import datetime
 
-from app.constants.time import COUNTDOWN_TIMEOUT, TIMEZONE
+from app.constants.time import TIMEZONE
 from app.models.attendance import Attendance
 from app.models.group import Group
 from app.models.session import Session
@@ -13,20 +10,14 @@ from app.models.course import Course
 from app.models.user import User
 from app.controller.utils.utils import Utils
 from app.controller.utils.checker import Checker
+from app.controller.attendance_socket import AttendanceSocket
 from app import db
 
 
-class AttendanceController(Namespace):
-  
-    def __init__(self, *args):
-        super().__init__(*args)
+class AttendanceController:
 
-    def on_connect(self):
-        join_room('1')
-
-    def on_start_count_down(self):
-        current_time = time() + COUNTDOWN_TIMEOUT
-        emit('count_down_received', current_time, room='1', broadcast=True)
+    def __init__(self):
+        self.socket = AttendanceSocket()
 
     def create_user_attendance(self, user, session_id, **kwargs):
         logging.info("Creating an attendance for {}".format(user.name))
@@ -55,6 +46,7 @@ class AttendanceController(Namespace):
             db.session.commit()
         attendance.status = 1
         db.session.commit()
+        self.socket.post_student_attendance(user, session_id)
         d = dict()
         d['text'] = "Success"
         d['status'] = 200

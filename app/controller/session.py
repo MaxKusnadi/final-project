@@ -2,16 +2,20 @@ import logging
 import random
 
 from datetime import datetime, timedelta
-from app.constants.time import TIMEZONE
+from app.constants.time import TIMEZONE, COUNTDOWN_TIMEOUT
 from app.models.group import Group
 from app.models.session import Session
 from app.models.user import User
 from app.controller.utils.utils import Utils
 from app.controller.utils.checker import Checker
+from app.controller.attendance_socket import AttendanceSocket
 from app import db
 
 
 class SessionController:
+
+    def __init__(self):
+        self.socket = AttendanceSocket()
 
     def create_mock_session(self, **kwargs):
         logging.info("Creating a mocked session")
@@ -156,7 +160,7 @@ class SessionController:
         if error:
             return error
         return self.start_session(session_id, user)
-    # TODO join room and emit
+
     def start_session(self, session_id, user):
         logging.info("Starting session {} attendance for {}".format(session_id, user.name))
         session = Session.query.filter(Session.id == session_id).first()
@@ -169,7 +173,7 @@ class SessionController:
         if error:
             return error
 
-        closed_time = datetime.now(TIMEZONE) + timedelta(seconds=30)
+        closed_time = datetime.now(TIMEZONE) + timedelta(seconds=COUNTDOWN_TIMEOUT)
         now_epoch = int(closed_time.timestamp())
 
         error = Checker.check_is_session_open(session, now_epoch, session_id)
@@ -178,6 +182,8 @@ class SessionController:
 
         session.attendance_closed_time = now_epoch
         db.session.commit()
+
+        self.socket.start_count_down(now_epoch, session_id)
 
         d = dict()
         d['text'] = "Success"
