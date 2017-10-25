@@ -99,4 +99,4 @@ app.add_url_rule('/course/<int:course_id>/group/<int:group_id>', view_func=Indiv
                  methods=['GET'])
 app.add_url_rule('/course/<int:course_id>/groups', view_func=AllGroupView.as_view('all_group'))
 app.add_url_rule('/course/<int:course_id>/group/<int:group_id>/students', view_func=GroupStudentView.as_view('group_student'))
-app.add_url_rule('/course/<int:course_id>/group<int:group_id>/staffs', view_func=GroupStaffView.as_view('group_staff'))
+app.add_url_rule('/course/<int:course_id>/group/<int:group_id>/staffs', view_func=GroupStaffView.as_view('group_staff'))
