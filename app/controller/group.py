@@ -13,7 +13,7 @@ class GroupController:
     def check_staff_group(self, user):
         logging.info("Checking which course {} has not linked to".format(user.name))
         course_staff = CourseStaff.query.filter(CourseStaff.user_id == user.id,
-                                                CourseStaff.is_attached_to_group != True).all()
+                                                CourseStaff.is_attached_to_group == False).all()
         module_info = list(map(lambda x: Utils.get_course_info(x.course), course_staff))
         d = dict()
         d['status'] = 200

@@ -74,4 +74,4 @@ class CourseStaff(db.Model):
         self.is_attached_to_group = False
 
     def __repr__(self):
-        return "<STAFF> User: {user} - Course: {course}".format(user=self.user.matric, course=self.course_id)
+        return "<STAFF> User: {user} - Course: {course}".format(user=self.user.maistric, course=self.course_id)
