@@ -19,9 +19,11 @@ class Checker:
 
     @staticmethod
     def check_user_from_course_staff(user, course):
+        course_staff = course.staffs
+        found = list(filter(lambda x: x.user == user, course_staff))
         return Utils.create_error_code(Error.USER_IS_NOT_STAFF_COURSE,
                                        user.matric,
-                                       course.course_code) if user not in course.staffs else None
+                                       course.course_code) if len(found) == 0 else None
 
     @staticmethod
     def check_attendance_code(session, now, code):
