@@ -1,7 +1,7 @@
 import logging
 
 from datetime import datetime
-from flask_socketio import Namespace, emit, join_room
+from flask_socketio import Namespace, emit, join_room, disconnect
 from flask_login import current_user
 
 from app.constants.time import TIMEZONE
@@ -14,11 +14,14 @@ class AttendanceSocket(Namespace):
         super().__init__(*args)
 
     def on_connect(self):
-        logging.info("HELLLOOO")
+        logging.info(current_user)
         if current_user.is_authenticated:
             logging.info("User {} is connected".format(current_user.name))
             room_id = self._get_room_id(current_user)
             join_room(room_id)
+        else:
+            logging.info("NOT AUTHENTICATED")
+            disconnect()
 
     def _get_room_id(self, user):
         now = datetime.now(TIMEZONE)
