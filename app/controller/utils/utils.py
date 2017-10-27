@@ -58,6 +58,7 @@ class Utils:
         d['end_time'] = session.group.end_time
         d['venue'] = session.group.venue
         d['group_type'] = session.group.group_type
+        d['day_code'] = session.group.day_code
         return d
 
     @staticmethod
