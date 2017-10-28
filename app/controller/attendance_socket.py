@@ -18,7 +18,10 @@ class AttendanceSocket(Namespace):
         if current_user.is_authenticated:
             logging.info("User {} is connected".format(current_user.name))
             room_id = self._get_room_id(current_user)
-            join_room(room_id)
+            if room_id:
+                join_room(room_id)
+            else:
+                logging.info("Room id not found")
         else:
             logging.info("NOT AUTHENTICATED")
             disconnect()
@@ -45,7 +48,7 @@ class AttendanceSocket(Namespace):
         if len(all_sessions) == 0:
             return
 
-        sorted_sessions = sorted(all_sessions, key=lambda x: x['start_date'])
+        sorted_sessions = sorted(all_sessions, key=lambda x: x.start_date)
         room_id = sorted_sessions[0].id
         return room_id
 
