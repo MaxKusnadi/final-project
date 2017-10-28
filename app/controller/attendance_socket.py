@@ -19,6 +19,7 @@ class AttendanceSocket(Namespace):
             logging.info("User {} is connected".format(current_user.name))
             room_id = self._get_room_id(current_user)
             if room_id:
+                logging.info("{} join room {}".format(current_user.name, room_id))
                 join_room(room_id)
             else:
                 logging.info("Room id not found")
