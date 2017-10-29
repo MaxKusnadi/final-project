@@ -1,11 +1,10 @@
-import logging
 import json
 
 from flask.views import MethodView
 from flask_login import login_required, logout_user, current_user
 from flask import request, redirect
 
-from app import app
+from app import app, logger
 from app.controller.login import LoginController
 from app.constants.ivle import LOGIN_URL, LOGIN_REDIRECT_URL_DEV, LOGIN_REDIRECT_URL_LIVE
 
@@ -16,8 +15,8 @@ class LoginView(MethodView):
         self.control = LoginController()
 
     def get(self):
-        logging.info("New GET /login request")
-        logging.info("Request referer: {}".format(request.environ.get("HTTP_REFERER")))
+        logger.info("New GET /login request")
+        logger.info("Request referer: {}".format(request.environ.get("HTTP_REFERER")))
         referer = request.environ.get("HTTP_REFERER")
         if current_user.is_authenticated:
             result = self.control.get_user_info(current_user)
@@ -32,7 +31,7 @@ class LoginStatusView(MethodView):
         self.control = LoginController()
 
     def get(self):
-        logging.info("New GET /login_status request")
+        logger.info("New GET /login_status request")
         if current_user.is_authenticated:
             result = self.control.get_user_info(current_user)
             return json.dumps(result)

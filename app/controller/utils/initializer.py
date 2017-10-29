@@ -1,12 +1,10 @@
-import logging
-
 from app.models.user import User
 from app.models.course import Course, CourseStudent, CourseStaff
 from app.models.group import GroupStudent, Group
 from app.models.session import Session
 from app.controller.utils.ivle import IVLEScrapper
 from app.controller.utils.session_generator import SessionGenerator
-from app import db
+from app import db, logger
 
 
 class Initializer:
@@ -16,7 +14,7 @@ class Initializer:
         self.session_generator = SessionGenerator()
 
     def initialize_user(self, user, token):
-        logging.info("Initializing {}/{}".format(user.name, user.matric))
+        logger.info("Initializing {}/{}".format(user.name, user.matric))
         self._initialize_course(user, token)
 
     def _initialize_course(self, user, token):
@@ -25,13 +23,13 @@ class Initializer:
         module_taken = user_courses['modules_taken']
         module_taught = user_courses['modules_taught']
 
-        logging.info("Iterating modules taught for {} modules".format(len(module_taught)))
+        logger.info("Iterating modules taught for {} modules".format(len(module_taught)))
         list(map(lambda x: self._store_module_taught(x, token), module_taught))
-        logging.info("Iterating modules taken for {} modules".format(len(module_taken)))
+        logger.info("Iterating modules taken for {} modules".format(len(module_taken)))
         list(map(lambda x: self._store_module_student(x, user, token), module_taken))
 
     def _store_module_taught(self, course, token):
-        logging.info('Storing course {}'.format(course['course_code']))
+        logger.info('Storing course {}'.format(course['course_code']))
         module_db = Course.query.filter(Course.course_id == course['course_id']).first()
         if not module_db:
             args = (course['creator_user_id'], course['creator_name'],
@@ -42,15 +40,15 @@ class Initializer:
             db.session.add(module_db)
             db.session.commit()
 
-        logging.info("Getting groups for course {}".format(module_db.course_code))
+        logger.info("Getting groups for course {}".format(module_db.course_code))
         groups = self.ivle_scrapper.get_staff_groups(token, module_db.course_id)
         list(map(lambda x: self._store_group_staff(x, module_db), groups))
 
-        logging.info("Getting class roster for course {}".format(module_db.course_code))
+        logger.info("Getting class roster for course {}".format(module_db.course_code))
         class_roster = self.ivle_scrapper.get_class_roster(token, module_db.course_id)
         list(map(lambda x: self._store_course_roster(x, module_db), class_roster))
 
-        logging.info("Getting lecturers for course {}".format(module_db.course_code))
+        logger.info("Getting lecturers for course {}".format(module_db.course_code))
         lecturers = self.ivle_scrapper.get_course_staffs(token, module_db.course_id)
         list(map(lambda x: self._store_course_staffs(x, module_db), lecturers))
 
@@ -61,7 +59,7 @@ class Initializer:
             user_db = User(*args)
             db.session.add(user_db)
             db.session.commit()
-        logging.info("Pairing course {} and staff {}/{}".format(module_db.course_code,
+        logger.info("Pairing course {} and staff {}/{}".format(module_db.course_code,
                                                                 user_db.name,
                                                                 user_db.matric))
         course_staff = CourseStaff.query.filter(CourseStaff.user_id == user_db.id,
@@ -83,7 +81,7 @@ class Initializer:
             db.session.add(user_db)
             db.session.commit()
 
-        logging.info("Pairing course {} and student {}/{}".format(module_db.course_code,
+        logger.info("Pairing course {} and student {}/{}".format(module_db.course_code,
                                                                   user_db.name,
                                                                   user_db.matric))
         course_student = CourseStudent.query.filter(CourseStudent.user_id == user_db.id,
@@ -105,7 +103,7 @@ class Initializer:
             # TODO find group tutor for each group
 
         if not group_db.is_session_generated:
-            logging.info("Generating sessions for group {}".format(group_db.group_name))
+            logger.info("Generating sessions for group {}".format(group_db.group_name))
             sessions = self.session_generator.generate_sessions(group_db)
             group_db.is_session_generated = True
             db.session.commit()
@@ -130,7 +128,7 @@ class Initializer:
             db.session.add(module_db)
             db.session.commit()
 
-        logging.info("Pairing course {} and student {}/{}".format(module_db.course_code,
+        logger.info("Pairing course {} and student {}/{}".format(module_db.course_code,
                                                                   user.name,
                                                                   user.matric))
         course_student = CourseStudent.query.filter(CourseStudent.user_id == user.id,
@@ -153,7 +151,7 @@ class Initializer:
             db.session.add(group_db)
             db.session.commit()
 
-        logging.info("Pairing group {}/{} and student {}/{}".format(group_db.group_type,
+        logger.info("Pairing group {}/{} and student {}/{}".format(group_db.group_type,
                                                                     group_db.group_name,
                                                                     user.name,
                                                                     user.matric))
@@ -165,14 +163,14 @@ class Initializer:
             db.session.commit()
 
         if not group_db.is_session_generated:
-            logging.info("Generating sessions for group {}".format(group_db.group_name))
+            logger.info("Generating sessions for group {}".format(group_db.group_name))
             sessions = self.session_generator.generate_sessions(group_db)
             group_db.is_session_generated = True
             db.session.commit()
             list(map(lambda x: self._store_session(x, group_db), sessions))
 
     def _store_session(self, session, group_db):
-        logging.info("Generating session {} for group {}".format(session['week_name'],
+        logger.info("Generating session {} for group {}".format(session['week_name'],
                                                                  group_db.group_name))
         session_db = Session.query.filter(Session.group_id == group_db.id,
                                           Session.week_name == session['week_name']).first()

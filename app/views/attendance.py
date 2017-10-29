@@ -1,11 +1,10 @@
-import logging
 import json
 
 from flask import request
 from flask.views import MethodView
 from flask_login import login_required, current_user
 
-from app import app, socketio
+from app import app, socketio, logger
 from app.constants.error import Error
 from app.controller.attendance import AttendanceController
 from app.controller.attendance_socket import on_connect
@@ -18,7 +17,7 @@ class AttendanceView(MethodView):
         self.control = AttendanceController(socketio)
 
     def post(self, session_id):
-        logging.info("New POST /session/<string:session_id>/attendance request")
+        logger.info("New POST /session/<string:session_id>/attendance request")
         data = request.get_json()
 
         if not data:
@@ -29,7 +28,7 @@ class AttendanceView(MethodView):
         return json.dumps(result)
 
     def patch(self, session_id):
-        logging.info("New PATCH /session/<string:session_id>/attendance request")
+        logger.info("New PATCH /session/<string:session_id>/attendance request")
         data = request.get_json()
 
         if not data:
@@ -42,7 +41,7 @@ class AttendanceView(MethodView):
         return json.dumps(result)
 
     def get(self, session_id):
-        logging.info("New GET /session/<string:session_id>/attendance request")
+        logger.info("New GET /session/<string:session_id>/attendance request")
         result = self.control.get_session_attendance(session_id, current_user)
         return json.dumps(result)
 
@@ -54,7 +53,7 @@ class GroupAttendanceView(MethodView):
         self.control = AttendanceController()
 
     def get(self, course_id, group_id):
-        logging.info("New GET /course/<string:course_id>/group/<int:group_id>/attendance request")
+        logger.info("New GET /course/<string:course_id>/group/<int:group_id>/attendance request")
         result = self.control.get_group_attendance(current_user, course_id, group_id)
         return json.dumps(result)
 

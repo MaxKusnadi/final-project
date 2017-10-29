@@ -1,7 +1,6 @@
-import logging
-
 from datetime import datetime, timedelta
 from app.models.week_code import WeekCode
+from app import logger
 
 SEMESTER_START_DATE = 1502035200
 SEMESTER = 1
@@ -10,7 +9,7 @@ SEMESTER = 1
 class SessionGenerator:
 
     def generate_sessions(self, group):
-        logging.info("Generating sessions for group {}".format(group.id))
+        logger.info("Generating sessions for group {}".format(group.id))
         first_monday = self._get_first_week_monday(datetime.fromtimestamp(SEMESTER_START_DATE), SEMESTER)
         start_time, end_time, day_code, week_code = group.start_time, group.end_time, group.day_code, group.week_code
         if day_code == -1 or week_code == -1:

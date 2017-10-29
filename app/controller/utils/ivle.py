@@ -1,16 +1,16 @@
-import logging
 import requests
 
 from app.models.week_code import WeekCode
 from app.constants.ivle import (API_KEY, IVLE_URL, MODULE_URL, PROFILE_URL, VALIDATE_URL,
                                 CLASS_ROSTER_URL, STUDENT_GROUP_URL, LECTURER_URL,
                                 STAFF_GROUP_URL)
+from app import logger
 
 
 class IVLEScrapper:
 
     def get_user_courses(self, token):
-        logging.info("Getting user modules")
+        logger.info("Getting user modules")
         results = IVLEApi.get_modules(token)
         teaching_modules = filter(lambda x: x['Permission'] != 'S', results)
         student_modules = filter(lambda x: x['Permission'] == 'S', results)
@@ -20,22 +20,22 @@ class IVLEScrapper:
         return d
 
     def get_class_roster(self, token, course_id):
-        logging.info("Getting class roster for Course {}".format(course_id))
+        logger.info("Getting class roster for Course {}".format(course_id))
         results = IVLEApi.get_class_roster(token, course_id)
         return list(map(lambda x: self._get_user_info(x), results))
 
     def get_student_groups(self, token, course_id):
-        logging.info("Getting student groups for Course {}".format(course_id))
+        logger.info("Getting student groups for Course {}".format(course_id))
         results = IVLEApi.get_student_group(token, course_id)
         return list(map(lambda x: self._get_group_info(x), results))
 
     def get_staff_groups(self, token, course_id):
-        logging.info("Getting staff groups for Course {}".format(course_id))
+        logger.info("Getting staff groups for Course {}".format(course_id))
         results = IVLEApi.get_staff_group(token, course_id)
         return list(map(lambda x: self._get_staff_group_info(x), results))
 
     def get_course_staffs(self, token, course_id):
-        logging.info("Getting staffs for Course {}".format(course_id))
+        logger.info("Getting staffs for Course {}".format(course_id))
         result = IVLEApi.get_course_staffs(token, course_id)
         return list(map(lambda x: self._get_staff_info(x), result))
 

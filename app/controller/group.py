@@ -1,17 +1,15 @@
-import logging
-
 from app.models.course import Course, CourseStaff
 from app.models.group import Group, GroupStudent, GroupStaff
 from app.models.user import User
 from app.controller.utils.utils import Utils
 from app.controller.utils.checker import Checker
-from app import db
+from app import db, logger
 
 
 class GroupController:
 
     def check_staff_group(self, user):
-        logging.info("Checking which course {} has not linked to".format(user.name))
+        logger.info("Checking which course {} has not linked to".format(user.name))
         course_staff = CourseStaff.query.filter(CourseStaff.user_id == user.id,
                                                 CourseStaff.is_attached_to_group == False).all()
         module_info = list(map(lambda x: Utils.get_course_info(x.course), course_staff))
@@ -21,7 +19,7 @@ class GroupController:
         return d
 
     def create_mock_group(self, **kwargs):
-        logging.info("Creating a mocked group")
+        logger.info("Creating a mocked group")
         course_code = kwargs.get("course_code")
         group_name = kwargs.get("group_name")
 
@@ -45,7 +43,7 @@ class GroupController:
         return d
 
     def create_group_staff(self, course_id, user, group_id):
-        logging.info("Linking {} with a group from {}".format(user.name, course_id))
+        logger.info("Linking {} with a group from {}".format(user.name, course_id))
 
         course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
@@ -78,7 +76,7 @@ class GroupController:
         return d
 
     def delete_group_staff(self, course_id, user, group_id):
-        logging.info("Unlinking {} with a group from {}".format(user.name, course_id))
+        logger.info("Unlinking {} with a group from {}".format(user.name, course_id))
 
         course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
@@ -105,7 +103,7 @@ class GroupController:
         return d
 
     def get_users_groups(self, user):
-        logging.info("Getting all groups for user {}".format(user.name))
+        logger.info("Getting all groups for user {}".format(user.name))
 
         groups_taken = user.groups
         groups_taken = list(map(lambda x: Utils.get_group_info(x.group), groups_taken))
@@ -119,7 +117,7 @@ class GroupController:
         return d
 
     def get_mock_users_groups(self, matric):
-        logging.info("Getting all mocked groups for user {}".format(matric))
+        logger.info("Getting all mocked groups for user {}".format(matric))
         user = User.query.filter(User.matric == matric).first()
         error = Checker.check_mock_user(user)
         if error:
@@ -128,7 +126,7 @@ class GroupController:
         return self.get_users_groups(user)
 
     def get_group_info(self, course_id, group_id):
-        logging.info("Getting group info for {}".format(course_id))
+        logger.info("Getting group info for {}".format(course_id))
         course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
@@ -152,7 +150,7 @@ class GroupController:
         return course
 
     def get_all_groups(self, course_id):
-        logging.info("Getting all groups info for {}".format(course_id))
+        logger.info("Getting all groups info for {}".format(course_id))
         course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
@@ -165,7 +163,7 @@ class GroupController:
         return d
 
     def get_mock_group_info(self, course_code, group_id):
-        logging.info("Getting mock group info for {}".format(course_code))
+        logger.info("Getting mock group info for {}".format(course_code))
         course = self._get_course(course_code)
         error = Checker.check_course(course, course_code)
         if error:
@@ -182,7 +180,7 @@ class GroupController:
         role = kwargs.get('role', 0)
         group_name = kwargs.get('group_name')
         group_type = kwargs.get('group_type')
-        logging.info("User {} joins group {} course {}".format(matric, group_name, course_code))
+        logger.info("User {} joins group {} course {}".format(matric, group_name, course_code))
 
         user = User.query.filter(User.matric == matric).first()
         error = Checker.check_mock_user(user)
@@ -210,7 +208,7 @@ class GroupController:
         return d
 
     def get_mock_group_student(self, course_code, group_name, group_type):
-        logging.info("Getting mock group {} students for {}".format(group_name, course_code))
+        logger.info("Getting mock group {} students for {}".format(group_name, course_code))
         course = self._get_course(course_code)
         error = Checker.check_course(course, course_code)
         if error:
@@ -222,7 +220,7 @@ class GroupController:
         return self.get_group_student(course_code, group_name)
 
     def get_group_student(self, course_id, group_id):
-        logging.info("Getting group {} students for {}".format(group_id, course_id))
+        logger.info("Getting group {} students for {}".format(group_id, course_id))
         course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
@@ -240,7 +238,7 @@ class GroupController:
         return d
 
     def get_mock_group_staff(self, course_code, group_name, group_type):
-        logging.info("Getting mock group {} students for {}".format(group_name, course_code))
+        logger.info("Getting mock group {} students for {}".format(group_name, course_code))
         course = self._get_course(course_code)
         error = Checker.check_course(course, course_code)
         if error:
@@ -252,7 +250,7 @@ class GroupController:
         return self.get_group_staff(course_code, group_name)
 
     def get_group_staff(self, course_id, group_id):
-        logging.info("Getting group {} students for {}".format(group_id, course_id))
+        logger.info("Getting group {} students for {}".format(group_id, course_id))
         course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:

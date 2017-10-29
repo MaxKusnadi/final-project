@@ -1,15 +1,13 @@
-import logging
-
 from app.models.user import User
 from app.controller.utils.utils import Utils
 from app.controller.utils.checker import Checker
-from app import db
+from app import db, logger
 
 
 class UserController:
 
     def create_user(self, **kwargs):
-        logging.info("Creating a mocked user")
+        logger.info("Creating a mocked user")
         name = kwargs.get('name', "")
         matric = kwargs.get("matric")
         email = kwargs.get('email', '')
@@ -27,7 +25,7 @@ class UserController:
         return d
 
     def get_user(self, matric_id):
-        logging.info("Getting user {} info".format(matric_id))
+        logger.info("Getting user {} info".format(matric_id))
         user = User.query.filter(User.matric == matric_id).first()
         error = Checker.check_mock_user(user, matric_id)
         if error:
@@ -36,6 +34,6 @@ class UserController:
         return d
 
     def get_my_info(self, user):
-        logging.info("Getting user {} info".format(user.matric))
+        logger.info("Getting user {} info".format(user.matric))
         d = Utils.get_user_info(user)
         return d

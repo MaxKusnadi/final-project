@@ -1,4 +1,3 @@
-import logging
 import random
 
 from datetime import datetime, timedelta
@@ -8,7 +7,7 @@ from app.models.session import Session
 from app.models.user import User
 from app.controller.utils.utils import Utils
 from app.controller.utils.checker import Checker
-from app import db
+from app import db, logger
 
 
 class SessionController:
@@ -17,7 +16,7 @@ class SessionController:
         self.socket = socket
 
     def create_mock_session(self, **kwargs):
-        logging.info("Creating a mocked session")
+        logger.info("Creating a mocked session")
         group_id = kwargs.get('group_id')
         start_date = kwargs.get('start_date')
         end_date = kwargs.get('end_date')
@@ -44,7 +43,7 @@ class SessionController:
         return d
 
     def get_mock_users_sessions(self, matric):
-        logging.info("Getting all mock sessions for user {} this week".format(matric))
+        logger.info("Getting all mock sessions for user {} this week".format(matric))
         user = User.query.filter(User.matric == matric).first()
         error = Checker.check_mock_user(user, matric)
         if error:
@@ -53,7 +52,7 @@ class SessionController:
         return self.get_users_sessions(user)
 
     def get_users_sessions(self, user):
-        logging.info("Getting all sessions for user {} this week".format(user.name))
+        logger.info("Getting all sessions for user {} this week".format(user.name))
 
         now = datetime.now(TIMEZONE)
         now_epoch = int(now.timestamp())
@@ -84,7 +83,7 @@ class SessionController:
         return d
 
     def get_mock_session_info(self, session_id, matric):
-        logging.info("Getting session {} info for {}".format(session_id, matric))
+        logger.info("Getting session {} info for {}".format(session_id, matric))
         session = Session.query.filter(Session.id == session_id).first()
         error = Checker.check_mock_session(session, session_id)
         if error:
@@ -101,7 +100,7 @@ class SessionController:
         return d
 
     def get_session_info(self, session_id, user):
-        logging.info("Getting session {} info for {}".format(session_id, user.name))
+        logger.info("Getting session {} info for {}".format(session_id, user.name))
         session = Session.query.filter(Session.id == session_id).first()
         error = Checker.check_session(session, session_id)
         if error:
@@ -117,7 +116,7 @@ class SessionController:
         return d
 
     def get_mock_session_code(self, session_id, matric):
-        logging.info("Getting mock session {} code for {}".format(session_id, matric))
+        logger.info("Getting mock session {} code for {}".format(session_id, matric))
 
         user = User.query.filter(User.matric == matric).first()
         error = Checker.check_mock_user(user, matric)
@@ -127,7 +126,7 @@ class SessionController:
         return self.get_session_code(session_id, user)
 
     def get_session_code(self, session_id, user):
-        logging.info("Getting session {} code for {}".format(session_id, user.name))
+        logger.info("Getting session {} code for {}".format(session_id, user.name))
         session = Session.query.filter(Session.id == session_id).first()
         error = Checker.check_session(session, session_id)
         if error:
@@ -152,7 +151,7 @@ class SessionController:
         return d
 
     def start_mock_session(self, session_id, matric):
-        logging.info("Stating mock session {} attendance for {}".format(session_id, matric))
+        logger.info("Stating mock session {} attendance for {}".format(session_id, matric))
 
         user = User.query.filter(User.matric == matric).first()
         error = Checker.check_mock_user(user, matric)
@@ -161,7 +160,7 @@ class SessionController:
         return self.start_session(session_id, user)
 
     def start_session(self, session_id, user):
-        logging.info("Starting session {} attendance for {}".format(session_id, user.name))
+        logger.info("Starting session {} attendance for {}".format(session_id, user.name))
         session = Session.query.filter(Session.id == session_id).first()
         error = Checker.check_session(session, session_id)
         if error:
@@ -195,7 +194,7 @@ class SessionController:
         return d
 
     # def stop_session(self, session_id, user):
-    #     logging.info("Stopping session {} attendance for {}".format(session_id, user.name))
+    #     logger.info("Stopping session {} attendance for {}".format(session_id, user.name))
     #     session = Session.query.filter(Session.id == session_id).first()
     #     error = Checker.check_session(session, session_id)
     #     if error:

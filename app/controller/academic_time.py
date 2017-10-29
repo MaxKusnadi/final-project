@@ -1,5 +1,3 @@
-import logging
-
 from datetime import datetime
 from app.constants.time import TIMEZONE
 from app.controller.utils.utils import Utils
@@ -8,7 +6,7 @@ from app.controller.utils.utils import Utils
 class AcademicTimeController:
 
     def get_acad_time(self):
-        logging.info("Getting current academic time")
+        logger.info("Getting current academic time")
         now = datetime.now(TIMEZONE)
         now_epoch = int(now.timestamp())
         d = Utils.get_week_name(now_epoch)

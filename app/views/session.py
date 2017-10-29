@@ -1,10 +1,9 @@
-import logging
 import json
 
 from flask.views import MethodView
 from flask_login import login_required, current_user
 
-from app import app, socketio
+from app import app, socketio, logger
 from app.controller.session import SessionController
 
 
@@ -15,7 +14,7 @@ class SessionView(MethodView):
         self.control = SessionController()
 
     def get(self, session_id):
-        logging.info("New GET /session request")
+        logger.info("New GET /session request")
         if session_id is None:
             result = self.control.get_users_sessions(current_user)
         else:
@@ -30,7 +29,7 @@ class SessionCodeView(MethodView):
         self.control = SessionController()
 
     def get(self, session_id):
-        logging.info("New GET /session/<string:session_id>/code request")
+        logger.info("New GET /session/<string:session_id>/code request")
         result = self.control.get_session_code(session_id, current_user)
         return json.dumps(result)
 
@@ -42,7 +41,7 @@ class StartSessionView(MethodView):
         self.control = SessionController(socketio)
 
     def get(self, session_id):
-        logging.info("New GET /session/<string:session_id>/start request")
+        logger.info("New GET /session/<string:session_id>/start request")
         result = self.control.start_session(session_id, current_user)
         return json.dumps(result)
 
@@ -54,7 +53,7 @@ class StartSessionView(MethodView):
 #         self.control = SessionController()
 #
 #     def get(self, session_id):
-#         logging.info("New GET /session/<string:session_id>/stop request")
+#         logger.info("New GET /session/<string:session_id>/stop request")
 #         result = self.control.stop_session(session_id, current_user)
 #         return json.dumps(result)
 

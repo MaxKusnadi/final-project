@@ -8,8 +8,16 @@ from flask_socketio import SocketIO
 
 logging.getLogger('socketio').setLevel(logging.ERROR)
 logging.getLogger('engineio').setLevel(logging.ERROR)
-# logging.basicConfig(level=logging.INFO,
-#                     format=' %(asctime)s - %(levelname)s - %(message)s')
+
+# CREATING LOGGER
+logger = logging.getLogger("main")
+logger.setLevel(logging.INFO)
+ch = logging.StreamHandler()
+ch.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)

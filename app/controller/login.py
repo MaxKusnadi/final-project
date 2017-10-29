@@ -1,12 +1,10 @@
-import logging
-
 from flask_login import login_user
 
 from app.models.user import User
 from app.controller.utils.checker import Checker
 from app.controller.utils.ivle import IVLEApi
 from app.controller.utils.initializer import Initializer
-from app import db, login_manager
+from app import db, login_manager, logger
 
 
 @login_manager.user_loader
@@ -20,7 +18,7 @@ class LoginController:
         self.initializer = Initializer()
 
     def login(self, token):
-        logging.info("Validating token...")
+        logger.info("Validating token...")
         is_token_valid, token = IVLEApi.validate_token(token)
         if is_token_valid:
             profile = IVLEApi.get_profile(token)
@@ -28,7 +26,7 @@ class LoginController:
 
             user = User.query.filter(User.matric == matric).first()
             if not user:
-                logging.info("Creating user with UserID {}".format(matric))
+                logger.info("Creating user with UserID {}".format(matric))
                 name = profile['Name']
                 email = profile['Email']
                 user = User(matric, name, email)
@@ -46,7 +44,7 @@ class LoginController:
             d['matric'] = user.matric
             d['status'] = 200
             return d
-        logging.error("Invalid token {}".format(token))
+        logger.error("Invalid token {}".format(token))
         d = dict()
         d['text'] = "Invalid Token"
         d['status'] = 301
@@ -54,7 +52,7 @@ class LoginController:
 
     def mock_login(self, **kwargs):
         matric = kwargs.get('matric')
-        logging.info("Logging in for mocked user {}".format(matric))
+        logger.info("Logging in for mocked user {}".format(matric))
         user = User.query.filter(User.matric == matric).first()
         error = Checker.check_mock_user(user, matric)
         if error:
@@ -68,7 +66,7 @@ class LoginController:
         return d
 
     def get_user_info(self, user):
-        logging.info("Getting information for user {}".format(user.matric))
+        logger.info("Getting information for user {}".format(user.matric))
         d = dict()
         d['name'] = user.name
         d['email'] = user.email

@@ -1,13 +1,10 @@
-import logging
 import json
 
 from flask.views import MethodView
 from flask_login import login_required, current_user
-from flask import request
 
-from app import app
+from app import app, logger
 from app.controller.group import GroupController
-from app.constants.error import Error
 
 
 class GroupView(MethodView):
@@ -17,7 +14,7 @@ class GroupView(MethodView):
         self.control = GroupController()
 
     def get(self):
-        logging.info("New GET /group request")
+        logger.info("New GET /group request")
         result = self.control.get_users_groups(current_user)
         return json.dumps(result)
 
@@ -29,7 +26,7 @@ class IndividualGroupView(MethodView):
         self.control = GroupController()
 
     def get(self, course_id, group_id):
-        logging.info("New GET /course/<string:course_id>/group/<int:group_id request")
+        logger.info("New GET /course/<string:course_id>/group/<int:group_id request")
         result = self.control.get_group_info(course_id, group_id)
         return json.dumps(result)
 
@@ -41,7 +38,7 @@ class AllGroupView(MethodView):
         self.control = GroupController()
 
     def get(self, course_id):
-        logging.info("New GET /course/<string:course_id>/groups request")
+        logger.info("New GET /course/<string:course_id>/groups request")
         result = self.control.get_all_groups(course_id)
         return json.dumps(result)
 
@@ -53,7 +50,7 @@ class GroupStudentView(MethodView):
         self.control = GroupController()
 
     def get(self, course_id, group_id):
-        logging.info("New GET /course/<string:course_id>/group/<int:group_id/students request")
+        logger.info("New GET /course/<string:course_id>/group/<int:group_id/students request")
         result = self.control.get_group_student(course_id, group_id)
         return json.dumps(result)
 
@@ -65,18 +62,18 @@ class GroupStaffView(MethodView):
         self.control = GroupController()
 
     def post(self, course_id, group_id):
-        logging.info("New POST /course/<string:course_id>/group/<int:group_id/staffs request")
+        logger.info("New POST /course/<string:course_id>/group/<int:group_id/staffs request")
 
         result = self.control.create_group_staff(course_id, current_user, group_id)
         return json.dumps(result)
 
     def get(self, course_id, group_id):
-        logging.info("New GET/course/<string:course_id>/group/<int:group_id/staffs request")
+        logger.info("New GET/course/<string:course_id>/group/<int:group_id/staffs request")
         result = self.control.get_group_staff(course_id, group_id)
         return json.dumps(result)
 
     def delete(self, course_id, group_id):
-        logging.info("New DELETE/course/<string:course_id>/group/<int:group_id/staffs request")
+        logger.info("New DELETE/course/<string:course_id>/group/<int:group_id/staffs request")
         result = self.control.delete_group_staff(course_id, current_user, group_id)
         return json.dumps(result)
 
@@ -88,7 +85,7 @@ class CheckStaffGroupView(MethodView):
         self.control = GroupController()
 
     def get(self):
-        logging.info("New GET /check-group request")
+        logger.info("New GET /check-group request")
         result = self.control.check_staff_group(current_user)
         return json.dumps(result)
 

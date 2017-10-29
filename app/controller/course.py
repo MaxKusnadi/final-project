@@ -1,16 +1,14 @@
-import logging
-
 from app.models.course import Course, CourseStudent, CourseStaff
 from app.models.user import User
 from app.controller.utils.checker import Checker
 from app.controller.utils.utils import Utils
-from app import db
+from app import db, logger
 
 
 class CourseController:
 
     def get_users_courses(self, user):
-        logging.info("Getting all courses of user {}".format(user.name))
+        logger.info("Getting all courses of user {}".format(user.name))
 
         course_taken = user.courses_taken
         course_taken = list(map(lambda x: Utils.get_course_info(x.course), course_taken))
@@ -24,7 +22,7 @@ class CourseController:
         return d
 
     def get_course_info(self, course_id):
-        logging.info("Getting course info for {}".format(course_id))
+        logger.info("Getting course info for {}".format(course_id))
         course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
@@ -38,7 +36,7 @@ class CourseController:
         return course
 
     def create_mock_course(self, **kwargs):
-        logging.info("Creating a mocked course")
+        logger.info("Creating a mocked course")
         course_id = kwargs.get("course_code")
 
         course = self._get_course(course_id)
@@ -56,7 +54,7 @@ class CourseController:
         return d
 
     def get_mock_users_courses(self, matric):
-        logging.info("Getting all courses of a user")
+        logger.info("Getting all courses of a user")
         user = User.query.filter(User.matric == matric).first()
         error = Checker.check_mock_user(user, matric)
         if error:
@@ -65,7 +63,7 @@ class CourseController:
         return self.get_users_courses(user)
 
     def get_mock_course_info(self, course_id):
-        logging.info("Getting mock course info for {}".format(course_id))
+        logger.info("Getting mock course info for {}".format(course_id))
         course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
@@ -75,7 +73,7 @@ class CourseController:
     def mock_user_join_course(self, course_id, **kwargs):
         matric = kwargs.get("matric")
         role = kwargs.get('role', 0)
-        logging.info("User {} joins course {}".format(matric, course_id))
+        logger.info("User {} joins course {}".format(matric, course_id))
 
         user = User.query.filter(User.matric == matric).first()
         error = Checker.check_mock_user(user, matric)
@@ -99,7 +97,7 @@ class CourseController:
         return d
 
     def get_mock_course_student(self, course_id):
-        logging.info("Getting mock course student for {}".format(course_id))
+        logger.info("Getting mock course student for {}".format(course_id))
         course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
@@ -108,7 +106,7 @@ class CourseController:
         return self.get_course_student(course_id)
 
     def get_course_student(self, course_id):
-        logging.info("Getting course student for {}".format(course_id))
+        logger.info("Getting course student for {}".format(course_id))
         course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
@@ -122,7 +120,7 @@ class CourseController:
         return d
 
     def get_mock_course_staff(self, course_id):
-        logging.info("Getting mock course staff for {}".format(course_id))
+        logger.info("Getting mock course staff for {}".format(course_id))
         course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
@@ -130,7 +128,7 @@ class CourseController:
         return self.get_course_staff(course_id)
 
     def get_course_staff(self, course_id):
-        logging.info("Getting course staff for {}".format(course_id))
+        logger.info("Getting course staff for {}".format(course_id))
         course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
@@ -144,7 +142,7 @@ class CourseController:
         return d
 
     def get_mock_course_group(self, course_id):
-        logging.info("Getting course group for {}".format(course_id))
+        logger.info("Getting course group for {}".format(course_id))
         course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
@@ -153,7 +151,7 @@ class CourseController:
         return self.get_course_group(course_id)
 
     def get_course_group(self, course_id):
-        logging.info("Getting course group for {}".format(course_id))
+        logger.info("Getting course group for {}".format(course_id))
         course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:

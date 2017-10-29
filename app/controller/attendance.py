@@ -1,5 +1,3 @@
-import logging
-
 from datetime import datetime
 
 from app.constants.time import TIMEZONE
@@ -10,7 +8,7 @@ from app.models.course import Course
 from app.models.user import User
 from app.controller.utils.utils import Utils
 from app.controller.utils.checker import Checker
-from app import db
+from app import db, logger
 
 
 class AttendanceController:
@@ -19,7 +17,7 @@ class AttendanceController:
         self.socket = socket
 
     def create_user_attendance(self, user, session_id, **kwargs):
-        logging.info("Creating an attendance for {}".format(user.name))
+        logger.info("Creating an attendance for {}".format(user.name))
         code = kwargs.get('code')
         session = Session.query.filter(Session.id == session_id).first()
         error = Checker.check_session(session, session_id)
@@ -57,7 +55,7 @@ class AttendanceController:
         return d
 
     def patch_user_attendance(self, user, session_id, **kwargs):
-        logging.info("Patching an attendance by {}".format(user.name))
+        logger.info("Patching an attendance by {}".format(user.name))
         status = kwargs.get("status")
         status = int(status)
         matric = kwargs.get("matric")
@@ -93,7 +91,7 @@ class AttendanceController:
         return d
 
     def get_session_attendance(self, session_id, user):
-        logging.info("Getting session {} attendance info for {}".format(session_id, user.name))
+        logger.info("Getting session {} attendance info for {}".format(session_id, user.name))
         session = Session.query.filter(Session.id == session_id).first()
         error = Checker.check_session(session, session_id)
         if error:
@@ -113,7 +111,7 @@ class AttendanceController:
         return d
 
     def get_group_attendance(self, user, course_id, group_id):
-        logging.info("Getting group {}/{} attendance for {}".format(group_id, course_id, user.name))
+        logger.info("Getting group {}/{} attendance for {}".format(group_id, course_id, user.name))
         course = Course.query.filter(Course.id == course_id).first()
         error = Checker.check_course(course, course_id)
         if error:

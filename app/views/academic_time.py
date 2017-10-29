@@ -1,9 +1,8 @@
-import logging
 import json
 
 from flask.views import MethodView
 
-from app import app
+from app import app, logger
 from app.controller.academic_time import AcademicTimeController
 
 
@@ -13,7 +12,7 @@ class AcademicTimeView(MethodView):
         self.control = AcademicTimeController()
 
     def get(self):
-        logging.info("New GET /time request")
+        logger.info("New GET /time request")
         result = self.control.get_acad_time()
         return json.dumps(result)
 

@@ -1,10 +1,9 @@
-import logging
 import json
 
 from flask.views import MethodView
 from flask_login import login_required, current_user
 
-from app import app
+from app import app, logger
 from app.controller.course import CourseController
 
 
@@ -15,7 +14,7 @@ class CourseView(MethodView):
         self.control = CourseController()
 
     def get(self, course_id):
-        logging.info("New GET /course request")
+        logger.info("New GET /course request")
         if course_id is None:
             result = self.control.get_users_courses(current_user)
         else:
@@ -30,7 +29,7 @@ class CourseStudentView(MethodView):
         self.control = CourseController()
 
     def get(self, course_id):
-        logging.info("New GET /course/<string:course_id>/students request")
+        logger.info("New GET /course/<string:course_id>/students request")
         result = self.control.get_course_student(course_id)
         return json.dumps(result)
 
@@ -42,7 +41,7 @@ class CourseStaffView(MethodView):
         self.control = CourseController()
 
     def get(self, course_id):
-        logging.info("New GET /course/<string:course_id>/staffs request")
+        logger.info("New GET /course/<string:course_id>/staffs request")
         result = self.control.get_course_staff(course_id)
         return json.dumps(result)
 
@@ -54,7 +53,7 @@ class CourseGroupView(MethodView):
         self.control = CourseController()
 
     def get(self, course_id):
-        logging.info("New GET /course/<string:course_id>/groups request")
+        logger.info("New GET /course/<string:course_id>/groups request")
         result = self.control.get_course_group(course_id)
         return json.dumps(result)
 

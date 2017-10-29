@@ -1,5 +1,3 @@
-import logging
-
 from app.constants.error import Error
 from app.controller.utils.utils import Utils
 
