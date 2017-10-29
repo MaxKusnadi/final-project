@@ -7,7 +7,7 @@ from flask import request, redirect
 
 from app import app
 from app.controller.login import LoginController
-from app.constants.ivle import LOGIN_URL, LOGIN_REDIRECT_URL
+from app.constants.ivle import LOGIN_URL, LOGIN_REDIRECT_URL_DEV, LOGIN_REDIRECT_URL_LIVE
 
 
 class LoginView(MethodView):
@@ -17,6 +17,7 @@ class LoginView(MethodView):
 
     def get(self):
         logging.info("New GET /login request")
+        logging.info("CHECK THIS LOGIN {}".format(list(request.environ.keys())))
         if current_user.is_authenticated:
             result = self.control.get_user_info(current_user)
             return json.dumps(result)
@@ -50,7 +51,7 @@ class LogoutView(MethodView):
 
     def get(self):
         logout_user()
-        return redirect(LOGIN_REDIRECT_URL)
+        return redirect(LOGIN_REDIRECT_URL_DEV)
 
 
 class IvleToken(MethodView):
@@ -60,8 +61,9 @@ class IvleToken(MethodView):
 
     def get(self):
         token = request.args.get('token')
+        logging.info("CHECK THIS TOKEN {}".format(request.environ.get("HTTP_ORIGIN")))
         self.control.login(token)
-        return redirect(LOGIN_REDIRECT_URL)
+        return redirect(LOGIN_REDIRECT_URL_DEV)
 
 
 app.add_url_rule('/login', view_func=LoginView.as_view('login'))

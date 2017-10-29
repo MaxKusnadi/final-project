@@ -101,6 +101,6 @@ def _get_room_id(user):
 #         emit('count_down_received', count_down, room=room_id)
 #
 #     def post_student_attendance(self, user, session_id):
-#         logging.info("Emmitting attendance info for {}".format(user.info))
+#         logging.info("Emmitting attendance info for {}".format(user.name))
 #         room_id = str(session_id)
 #         emit("attendance_taken", Utils.get_user_info(user), room=room_id)
