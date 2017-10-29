@@ -1,6 +1,7 @@
 from datetime import datetime
 from app.constants.time import TIMEZONE
 from app.controller.utils.utils import Utils
+from app import logger
 
 
 class AcademicTimeController:
