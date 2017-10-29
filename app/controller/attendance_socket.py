@@ -15,7 +15,7 @@ def on_connect():
         if room_id:
             logging.info("{} join room {}".format(current_user.name, room_id))
             join_room(str(room_id))
-            emit("hi", data={"Hello": "hello"}, room=room_id)
+            emit("count_down_received", data={"Hello": "hello"}, room=room_id)
         else:
             logging.info("Room id not found")
     else:
