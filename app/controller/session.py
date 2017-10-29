@@ -133,7 +133,7 @@ class SessionController:
             return error
 
         group = session.group
-        error = Checker.check_user_in_group(user, group)
+        error = Checker.check_is_user_staff_group(user, group)
         if error:
             return error
 
@@ -191,22 +191,3 @@ class SessionController:
         d['attendance_closed_time'] = now_epoch
         d['status'] = 200
         return d
-
-    # def stop_session(self, session_id, user):
-    #     logger.info("Stopping session {} attendance for {}".format(session_id, user.name))
-    #     session = Session.query.filter(Session.id == session_id).first()
-    #     error = Checker.check_session(session, session_id)
-    #     if error:
-    #         return error
-    #
-    #     group = session.group
-    #     error = Checker.check_user_in_group(user, group)
-    #     if error:
-    #         return error
-    #
-    #     session.is_open = True
-    #     db.session.commit()
-    #     d = dict()
-    #     d['text'] = "Success"
-    #     d['status'] = 200
-    #     return d
