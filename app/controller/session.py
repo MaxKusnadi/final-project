@@ -167,7 +167,7 @@ class SessionController:
             return error
 
         group = session.group
-        error = Checker.check_user_in_group(user, group)
+        error = Checker.check_is_user_staff_group(user, group)
         if error:
             return error
 
@@ -185,7 +185,6 @@ class SessionController:
         room_id = str(session_id)
         if self.socket:
             self.socket.emit('count_down_received', now_epoch, room=room_id)
-        # self.socket.start_count_down(now_epoch, session_id)
 
         d = dict()
         d['text'] = "Success"

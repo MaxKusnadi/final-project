@@ -102,11 +102,5 @@ class Checker:
 
     @staticmethod
     def check_is_session_open(session, time_now, *args):
-        if not session.attendance_closed_time:
-            return Utils.create_error_code(Error.SESSION_IS_OPEN, *args)
-        return Utils.create_error_code(Error.SESSION_IS_OPEN, *args) if time_now <= session.attendance_closed_time else None
-
-    @staticmethod
-    def check_user_in_group(user, group):
-        users = list(map(lambda x: x.user, group.staffs))
-        return Utils.create_error_code(Error.USER_NOT_AUTHORIZED, user.matric) if user not in users else None
+        return Utils.create_error_code(Error.SESSION_IS_OPEN, *args) if \
+            session.attendance_closed_time and time_now <= session.attendance_closed_time else None
