@@ -17,7 +17,7 @@ class LoginView(MethodView):
 
     def get(self):
         logging.info("New GET /login request")
-        logging.info("CHECK THIS LOGIN {}".format(request.environ))
+        logging.info("Request referer: {}".format(request.environ.get("HTTP_REFERER")))
         if current_user.is_authenticated:
             result = self.control.get_user_info(current_user)
             return json.dumps(result)
@@ -61,7 +61,7 @@ class IvleToken(MethodView):
 
     def get(self):
         token = request.args.get('token')
-        logging.info("CHECK THIS TOKEN {}".format(request.environ.get("HTTP_ORIGIN")))
+        logging.info("CHECK THIS TOKEN {}".format(request.environ))
         self.control.login(token)
         return redirect(LOGIN_REDIRECT_URL_DEV)
 
