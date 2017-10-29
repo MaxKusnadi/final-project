@@ -17,7 +17,7 @@ class LoginView(MethodView):
 
     def get(self):
         logging.info("New GET /login request")
-        logging.info("CHECK THIS LOGIN {}".format(list(request.environ.keys())))
+        logging.info("CHECK THIS LOGIN {}".format(request.environ))
         if current_user.is_authenticated:
             result = self.control.get_user_info(current_user)
             return json.dumps(result)
