@@ -8,7 +8,8 @@ from flask_socketio import SocketIO
 
 logging.getLogger('socketio').setLevel(logging.CRITICAL)
 logging.getLogger('engineio').setLevel(logging.CRITICAL)
-logging.basicConfig(format=' %(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO,
+                    format=' %(asctime)s - %(levelname)s - %(message)s')
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)

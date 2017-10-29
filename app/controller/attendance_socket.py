@@ -11,7 +11,6 @@ from app import socketio
 
 @socketio.on("connect")
 def on_connect():
-    logging.info(current_user)
     if current_user.is_authenticated:
         logging.info("User {} is connected".format(current_user.name))
         room_id = _get_room_id(current_user)
