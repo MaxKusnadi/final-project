@@ -110,6 +110,26 @@ class AttendanceController:
         d['status'] = 200
         return d
 
+    def get_my_session_attendance(self, session_id, user):
+        logger.info("Getting session {} attendance info for myself {}".format(session_id, user.name))
+        session = Session.query.filter(Session.id == session_id).first()
+        error = Checker.check_session(session, session_id)
+        if error:
+            return error
+        group = session.group
+        error = Checker.check_is_user_student_group(user, group)
+        if error:
+            return error
+
+        attendance = Attendance.query.filter(Attendance.session_id == session.id,
+                                             Attendance.user_id == user.id).first()
+        status = attendance.status if attendance else 0
+
+        d = dict()
+        d['attendance'] = status
+        d['status'] = 200
+        return d
+
     def get_group_attendance(self, user, course_id, group_id):
         logger.info("Getting group {}/{} attendance for {}".format(group_id, course_id, user.name))
         course = Course.query.filter(Course.id == course_id).first()
@@ -135,6 +155,38 @@ class AttendanceController:
         }, sessions))
         d = dict()
         d['attendance'] = attendance
+        d['status'] = 200
+        return d
+
+    def get_my_group_attendance(self, user, course_id, group_id):
+        logger.info("Getting group {}/{} attendance for myself {}".format(group_id, course_id, user.name))
+        course = Course.query.filter(Course.id == course_id).first()
+        error = Checker.check_course(course, course_id)
+        if error:
+            return error
+        group = Group.query.filter(Group.id == group_id,
+                                   Group.course_id == course.id).first()
+        error = Checker.check_group(group, course_id, group_id)
+        if error:
+            return error
+        error = Checker.check_is_user_student_group(user, group)
+        if error:
+            return error
+
+        sessions = group.sessions
+        all_attendance = []
+
+        for session in sessions:
+            attendance = Attendance.query.filter(Attendance.session_id == session.id,
+                                                 Attendance.user_id == user.id).first()
+            status = attendance.status if attendance else 0
+            all_attendance.append({
+                "week_name": session.week_name,
+                "attendance": status
+            })
+
+        d = dict()
+        d['attendance'] = all_attendance
         d['status'] = 200
         return d
 

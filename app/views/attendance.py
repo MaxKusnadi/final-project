@@ -46,6 +46,18 @@ class AttendanceView(MethodView):
         return json.dumps(result)
 
 
+class MyAttendanceView(MethodView):
+    decorators = [login_required]
+
+    def __init__(self):  # pragma: no cover
+        self.control = AttendanceController(socketio)
+
+    def get(self, session_id):
+        logger.info("New GET /session/<string:session_id>/attendance/me request")
+        result = self.control.get_my_session_attendance(session_id, current_user)
+        return json.dumps(result)
+
+
 class GroupAttendanceView(MethodView):
     decorators = [login_required]
 
@@ -58,6 +70,20 @@ class GroupAttendanceView(MethodView):
         return json.dumps(result)
 
 
+class MyGroupAttendanceView(MethodView):
+    decorators = [login_required]
+
+    def __init__(self):  # pragma: no cover
+        self.control = AttendanceController()
+
+    def get(self, course_id, group_id):
+        logger.info("New GET /course/<string:course_id>/group/<int:group_id>/attendance request")
+        result = self.control.get_my_group_attendance(current_user, course_id, group_id)
+        return json.dumps(result)
+
+
 app.add_url_rule('/session/<int:session_id>/attendance', view_func=AttendanceView.as_view('attendance'))
+app.add_url_rule('/session/<int:session_id>/attendance/me', view_func=MyAttendanceView.as_view('my_attendance'))
 app.add_url_rule('/course/<int:course_id>/group/<int:group_id>/attendance', view_func=GroupAttendanceView.as_view('group_attendance'))
+app.add_url_rule('/course/<int:course_id>/group/<int:group_id>/attendance/me', view_func=MyGroupAttendanceView.as_view('my_group_attendance'))
 socketio.on_event('connect', on_connect)
