@@ -20,6 +20,7 @@ END_TIME = 1511608376
 CY = "e0030878"
 MAX = "a0130369"
 CK = "a0107396"
+KAIDI = "a0130717"
 
 dummy_course = Course.query.filter(Course.course_code == "CS3216-DUMMY").first()
 # group = Group(dummy_course, "Dummy Tutorial", "1200", "1300", 5, 0, "SOC", "Tutorial")
@@ -30,21 +31,26 @@ group = Group.query.get(273)
 CY = User.query.filter(User.matric == CY).first()
 CK = User.query.filter(User.matric == CK).first()
 MAX = User.query.filter(User.matric == MAX).first()
+KAIDI = User.query.filter(User.matric == KAIDI).first()
 
-group_staff = GroupStaff.query.filter(GroupStaff.group_id == group.id).first()
-db.session.delete(group_staff)
-group_students = GroupStudent.query.filter(GroupStudent.group_id == group.id).all()
-for x in group_students:
-    db.session.delete(x)
-db.session.commit()
+# group_staff = GroupStaff.query.filter(GroupStaff.group_id == group.id).first()
+# db.session.delete(group_staff)
+# group_students = GroupStudent.query.filter(GroupStudent.group_id == group.id).all()
+# for x in group_students:
+#     db.session.delete(x)
+# db.session.commit()
 
-group_staff = GroupStaff(CK, group)
-group_student = GroupStudent(CY, group)
-group_student_1 = GroupStudent(MAX, group)
-db.session.add(group_staff)
+group_student = GroupStudent(KAIDI, group)
 db.session.add(group_student)
-db.session.add(group_student_1)
 db.session.commit()
+
+# group_staff = GroupStaff(CK, group)
+# group_student = GroupStudent(CY, group)
+# group_student_1 = GroupStudent(MAX, group)
+# db.session.add(group_staff)
+# db.session.add(group_student)
+# db.session.add(group_student_1)
+# db.session.commit()
 
 # session = Session(group, "10", TIME, END_TIME)
 # db.session.add(session)
