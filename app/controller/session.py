@@ -139,9 +139,6 @@ class SessionController:
 
         d = dict()
         d['status'] = 200
-        if session.code:
-            d['code'] = session.code
-            return d
 
         code = random.randint(0, 1000000)
         code = str(code).zfill(6)

@@ -265,7 +265,3 @@ class GroupController:
         d['results'] = group_staffs
         d['status'] = 200
         return d
-
-# if __name__ == '__main__':
-#     error = Checker.check_group(None, 1, 2)
-#     print(error)
