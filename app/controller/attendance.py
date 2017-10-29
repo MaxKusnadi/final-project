@@ -31,7 +31,7 @@ class AttendanceController:
         if error:
             return error
 
-        now = datetime.now(TIMEZONE)
+        now = datetime.now(TIMEZONE).timestamp()
 
         error = Checker.check_attendance_code(session, now, code)
         if error:
