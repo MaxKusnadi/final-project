@@ -18,11 +18,12 @@ class LoginView(MethodView):
     def get(self):
         logging.info("New GET /login request")
         logging.info("Request referer: {}".format(request.environ.get("HTTP_REFERER")))
+        referer = request.environ.get("HTTP_REFERER")
         if current_user.is_authenticated:
             result = self.control.get_user_info(current_user)
             return json.dumps(result)
         else:
-            return redirect(LOGIN_URL)
+            return redirect(LOGIN_URL + "?referer={}".format(referer))
 
 
 class LoginStatusView(MethodView):
@@ -61,8 +62,10 @@ class IvleToken(MethodView):
 
     def get(self):
         token = request.args.get('token')
-        logging.info("CHECK THIS TOKEN {}".format(request.environ))
+        referer = request.args.get('referer')
         self.control.login(token)
+        if referer == "https://nusattend.firebaseapp.com/":
+            return redirect(LOGIN_REDIRECT_URL_LIVE)
         return redirect(LOGIN_REDIRECT_URL_DEV)
 
 
