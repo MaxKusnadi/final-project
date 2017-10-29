@@ -8,7 +8,6 @@ from app.models.session import Session
 from app.models.user import User
 from app.controller.utils.utils import Utils
 from app.controller.utils.checker import Checker
-# from app.controller.attendance_socket import AttendanceSocket
 from app import db
 
 

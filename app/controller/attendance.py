@@ -10,7 +10,6 @@ from app.models.course import Course
 from app.models.user import User
 from app.controller.utils.utils import Utils
 from app.controller.utils.checker import Checker
-# from app.controller.attendance_socket import AttendanceSocket
 from app import db
 
 
@@ -52,7 +51,6 @@ class AttendanceController:
         if self.socket:
             self.socket.emit("attendance_taken", Utils.get_user_info(user), room=room_id)
 
-        # self.socket.post_student_attendance(user, session_id)
         d = dict()
         d['text'] = "Success"
         d['status'] = 200

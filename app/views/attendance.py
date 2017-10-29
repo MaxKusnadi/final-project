@@ -15,7 +15,7 @@ class AttendanceView(MethodView):
     decorators = [login_required]
 
     def __init__(self):  # pragma: no cover
-        self.control = AttendanceController()
+        self.control = AttendanceController(socketio)
 
     def post(self, session_id):
         logging.info("New POST /session/<string:session_id>/attendance request")

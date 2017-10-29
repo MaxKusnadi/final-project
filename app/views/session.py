@@ -4,7 +4,7 @@ import json
 from flask.views import MethodView
 from flask_login import login_required, current_user
 
-from app import app
+from app import app, socketio
 from app.controller.session import SessionController
 
 
@@ -39,7 +39,7 @@ class StartSessionView(MethodView):
     decorators = [login_required]
 
     def __init__(self):  # pragma: no cover
-        self.control = SessionController()
+        self.control = SessionController(socketio)
 
     def get(self, session_id):
         logging.info("New GET /session/<string:session_id>/start request")
