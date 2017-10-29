@@ -6,6 +6,7 @@ from flask_login import current_user
 
 from app.constants.time import TIMEZONE
 from app.controller.utils.utils import Utils
+from app import socketio
 
 
 def on_connect():
@@ -15,12 +16,13 @@ def on_connect():
         if room_id:
             logging.info("{} join room {}".format(current_user.name, room_id))
             join_room(str(room_id))
-            emit("count_down_received", data={"Hello": "hello"}, room=room_id)
+            emit("count_down_received", data={"Hello": "hello"}, room=str(room_id))
         else:
             logging.info("Room id not found")
     else:
         logging.info("NOT AUTHENTICATED")
         disconnect()
+
 
 def _get_room_id(user):
     now = datetime.now(TIMEZONE)
