@@ -8,6 +8,7 @@ from flask_login import login_required, current_user
 from app import app, socketio
 from app.constants.error import Error
 from app.controller.attendance import AttendanceController
+from app.controller.attendance_socket import on_connect
 
 
 class AttendanceView(MethodView):
@@ -60,3 +61,4 @@ class GroupAttendanceView(MethodView):
 
 app.add_url_rule('/session/<int:session_id>/attendance', view_func=AttendanceView.as_view('attendance'))
 app.add_url_rule('/course/<int:course_id>/group/<int:group_id>/attendance', view_func=GroupAttendanceView.as_view('group_attendance'))
+socketio.on_event('connect', on_connect)

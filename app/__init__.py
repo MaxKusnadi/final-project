@@ -40,3 +40,4 @@ from app.views.course import *
 from app.views.group import *
 from app.views.session import *
 from app.views.attendance import *
+

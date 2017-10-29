@@ -6,10 +6,8 @@ from flask_login import current_user
 
 from app.constants.time import TIMEZONE
 from app.controller.utils.utils import Utils
-from app import socketio
 
 
-@socketio.on("connect")
 def on_connect():
     if current_user.is_authenticated:
         logging.info("User {} is connected".format(current_user.name))
@@ -22,7 +20,6 @@ def on_connect():
     else:
         logging.info("NOT AUTHENTICATED")
         disconnect()
-
 
 def _get_room_id(user):
     now = datetime.now(TIMEZONE)

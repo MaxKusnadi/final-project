@@ -11,10 +11,13 @@ from app.models.user import User
 from app.controller.utils.utils import Utils
 from app.controller.utils.checker import Checker
 # from app.controller.attendance_socket import AttendanceSocket
-from app import db, socketio
+from app import db
 
 
 class AttendanceController:
+
+    def __init__(self, socket=None):
+        self.socket = socket
 
     def create_user_attendance(self, user, session_id, **kwargs):
         logging.info("Creating an attendance for {}".format(user.name))
@@ -46,7 +49,8 @@ class AttendanceController:
 
         # Emitting through socketio
         room_id = str(session_id)
-        socketio.emit("attendance_taken", Utils.get_user_info(user), room=room_id)
+        if self.socket:
+            self.socket.emit("attendance_taken", Utils.get_user_info(user), room=room_id)
 
         # self.socket.post_student_attendance(user, session_id)
         d = dict()
