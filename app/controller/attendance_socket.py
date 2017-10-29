@@ -9,7 +9,7 @@ from app.controller.utils.utils import Utils
 from app import socketio
 
 
-@socketio.on("connect", namespace='attendance')
+@socketio.on("connect")
 def on_connect():
     logging.info(current_user)
     if current_user.is_authenticated:

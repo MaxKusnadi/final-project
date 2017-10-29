@@ -46,7 +46,7 @@ class AttendanceController:
 
         # Emitting through socketio
         room_id = str(session_id)
-        socketio.emit("attendance_taken", Utils.get_user_info(user), room=room_id, namespace='attendance')
+        socketio.emit("attendance_taken", Utils.get_user_info(user), room=room_id)
 
         # self.socket.post_student_attendance(user, session_id)
         d = dict()
@@ -136,7 +136,7 @@ class AttendanceController:
         return d
 
     def _get_attendance_helper(self, session, total_attendance):
-        attendance = session.student
+        attendance = session.students
         attendance_user_matric = list(map(lambda x: x.user.matric, attendance))
         missing_student = list(filter(lambda x: x.matric not in attendance_user_matric, total_attendance))
         attendance = list(map(lambda x: Utils.get_attendance_info(x), attendance))

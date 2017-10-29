@@ -182,7 +182,7 @@ class SessionController:
 
         # Emitting through socketio
         room_id = str(session_id)
-        socketio.emit('count_down_received', now_epoch, room=room_id, namespace='attendance')
+        socketio.emit('count_down_received', now_epoch, room=room_id)
         # self.socket.start_count_down(now_epoch, session_id)
 
         d = dict()
