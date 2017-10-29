@@ -56,7 +56,7 @@ class GroupController:
         if error:
             return error
 
-        error = Checker.check_user_from_course_staff(user, course)
+        error = Checker.check_is_user_staff_course(user, course)
         if error:
             return error
 
@@ -89,7 +89,7 @@ class GroupController:
         if error:
             return error
 
-        error = Checker.check_user_from_course_staff(user, course)
+        error = Checker.check_is_user_staff_course(user, course)
         if error:
             return error
 

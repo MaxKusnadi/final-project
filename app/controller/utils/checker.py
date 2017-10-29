@@ -22,7 +22,7 @@ class Checker:
                                        group.group_name) if len(found) == 0 else None
 
     @staticmethod
-    def check_user_from_course_staff(user, course):
+    def check_is_user_staff_course(user, course):
         course_staff = course.staffs
         found = list(filter(lambda x: x.user_id == user.id, course_staff))
         return Utils.create_error_code(Error.USER_IS_NOT_STAFF_COURSE,

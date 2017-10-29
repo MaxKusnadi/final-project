@@ -123,6 +123,9 @@ class AttendanceController:
         error = Checker.check_group(group, course_id, group_id)
         if error:
             return error
+        error = Checker.check_is_user_staff_group(user, group)
+        if error:
+            return error
 
         sessions = group.sessions
         total_attendance = group.students
