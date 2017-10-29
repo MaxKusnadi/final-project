@@ -57,7 +57,7 @@ class GroupStudent(db.Model):
         self.group_id = group.id
 
     def __repr__(self):
-        return "<STUDENT> User: {user} - Group: {group_id}".format(user=self.user.metric, group_id=self.group_id)
+        return "<STUDENT> User: {user} - Group: {group_id}".format(user=self.user.matric, group_id=self.group_id)
 
 
 class GroupStaff(db.Model):
@@ -76,4 +76,4 @@ class GroupStaff(db.Model):
         self.group_id = group.id
 
     def __repr__(self):
-        return "<STAFF> User: {user} - Group: {group_id}".format(user=self.user.metric, group_id=self.group_id)
+        return "<STAFF> User: {user} - Group: {group_id}".format(user=self.user.matric, group_id=self.group_id)
