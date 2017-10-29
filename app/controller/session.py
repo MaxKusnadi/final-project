@@ -8,14 +8,11 @@ from app.models.session import Session
 from app.models.user import User
 from app.controller.utils.utils import Utils
 from app.controller.utils.checker import Checker
-from app.controller.attendance_socket import AttendanceSocket
-from app import db
+# from app.controller.attendance_socket import AttendanceSocket
+from app import db, socketio
 
 
 class SessionController:
-
-    def __init__(self):
-        self.socket = AttendanceSocket()
 
     def create_mock_session(self, **kwargs):
         logging.info("Creating a mocked session")
@@ -183,7 +180,10 @@ class SessionController:
         session.attendance_closed_time = now_epoch
         db.session.commit()
 
-        self.socket.start_count_down(now_epoch, session_id)
+        # Emitting through socketio
+        room_id = str(session_id)
+        socketio.emit('count_down_received', now_epoch, room=room_id, namespace='attendance')
+        # self.socket.start_count_down(now_epoch, session_id)
 
         d = dict()
         d['text'] = "Success"
