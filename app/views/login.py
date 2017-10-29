@@ -52,6 +52,9 @@ class LogoutView(MethodView):
 
     def get(self):
         logout_user()
+        referer = request.environ.get("HTTP_REFERER")
+        if referer == "https://nusattend.firebaseapp.com/":
+            return redirect(LOGIN_REDIRECT_URL_LIVE)
         return redirect(LOGIN_REDIRECT_URL_DEV)
 
 
