@@ -215,7 +215,7 @@ class AttendanceController:
         }, sessions))
 
         # Creating excel
-        file_name = "group_{}_attendance.xls".format(group_id)
+        file_name = "{}_{}_{}.xls".format(course.course_code, group.group_type, group.group_name)
         ans = []
         HEADER = ['NAME', 'MATRIC_NUMBER']
         total_weeks = len(attendance)

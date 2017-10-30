@@ -13,23 +13,25 @@ from app import db
 #             x.is_attached_to_group = True
 #             db.session.commit()
 
+# DELETE THIS
+
 # Creating tutorial class
 TIME = 1508929976
 END_TIME = 1511608376
 
-CY = "e0030878"
+# CY = "e0030878"
 MAX = "a0130369"
-CK = "a0107396"
+# CK = "a0107396"
 KAIDI = "a0130717"
 
 dummy_course = Course.query.filter(Course.course_code == "CS3216-DUMMY").first()
 # group = Group(dummy_course, "Dummy Tutorial", "1200", "1300", 5, 0, "SOC", "Tutorial")
 # db.session.add(group)
 # db.session.commit()
-group = Group.query.get(273)
+group = Group.query.get(246)
 
-CY = User.query.filter(User.matric == CY).first()
-CK = User.query.filter(User.matric == CK).first()
+# CY = User.query.filter(User.matric == CY).first()
+# CK = User.query.filter(User.matric == CK).first()
 MAX = User.query.filter(User.matric == MAX).first()
 KAIDI = User.query.filter(User.matric == KAIDI).first()
 
@@ -44,21 +46,21 @@ group_student = GroupStudent(KAIDI, group)
 db.session.add(group_student)
 db.session.commit()
 
-# group_staff = GroupStaff(CK, group)
+group_staff = GroupStaff(MAX, group)
 # group_student = GroupStudent(CY, group)
 # group_student_1 = GroupStudent(MAX, group)
-# db.session.add(group_staff)
+db.session.add(group_staff)
 # db.session.add(group_student)
 # db.session.add(group_student_1)
-# db.session.commit()
+db.session.commit()
 
-# session = Session(group, "10", TIME, END_TIME)
-# db.session.add(session)
-# session_1 = Session(group, "11", TIME, END_TIME)
-# db.session.add(session_1)
-# session_2 = Session(group, "12", TIME, END_TIME)
-# db.session.add(session_2)
-# db.session.commit()
+session = Session(group, "10", TIME, END_TIME)
+db.session.add(session)
+session_1 = Session(group, "11", TIME, END_TIME)
+db.session.add(session_1)
+session_2 = Session(group, "12", TIME, END_TIME)
+db.session.add(session_2)
+db.session.commit()
 
 
 # TIME = 1508472000
