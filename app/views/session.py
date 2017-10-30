@@ -46,21 +46,8 @@ class StartSessionView(MethodView):
         return json.dumps(result)
 
 
-# class StopSessionView(MethodView):
-#     decorators = [login_required]
-#
-#     def __init__(self):  # pragma: no cover
-#         self.control = SessionController()
-#
-#     def get(self, session_id):
-#         logger.info("New GET /session/<string:session_id>/stop request")
-#         result = self.control.stop_session(session_id, current_user)
-#         return json.dumps(result)
-
-
 session_view = SessionView.as_view('session')
 app.add_url_rule('/session', defaults={'session_id': None}, view_func=session_view, methods=['GET'])
 app.add_url_rule('/session/<int:session_id>', view_func=session_view, methods=['GET'])
 app.add_url_rule('/session/<int:session_id>/code', view_func=SessionCodeView.as_view('session_code'))
 app.add_url_rule('/session/<int:session_id>/start', view_func=StartSessionView.as_view('start_session'))
-# app.add_url_rule('/session/<int:session_id>/stop', view_func=StopSessionView.as_view('stop_session'))

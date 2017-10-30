@@ -26,6 +26,7 @@ class Utils:
         d['name'] = user.name
         d['matric'] = user.matric
         d['email'] = user.email
+        d['is_first_time'] = user.is_first_time
         return d
 
     @staticmethod

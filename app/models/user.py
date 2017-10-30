@@ -13,6 +13,7 @@ class User(UserMixin, db.Model):
     token = Column(String)
     is_data_pulled = Column(Boolean)
     is_mocked = Column(Boolean)
+    is_first_time = Column(Boolean)
 
     def __init__(self, matric, name, email=""):
         self.matric = matric
@@ -21,6 +22,7 @@ class User(UserMixin, db.Model):
         self.token = ""
         self.is_mocked = False
         self.is_data_pulled = False
+        self.is_first_time = True
 
     def is_active(self):
         return True
