@@ -224,13 +224,13 @@ class AttendanceController:
 
         # Filling in row by row
         for student in total_attendance:
-            ans.append(student.name + ",")
-            ans.append(student.matric + ",")
+            ans.append("{},".format(student.name))
+            ans.append("{},".format(student.matric))
             count = 0
             for att in attendance:
                 status = list(filter(lambda x: x['name'] == student.name, att['attendance']))[0]['status']
                 count += status
-                ans.append(str(status) + ",")
+                ans.append("{},".format(status))
             ans.append("{}/{}".format(count, total_weeks))
             ans.append("\n")
         ans = "".join(ans)
