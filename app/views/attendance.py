@@ -1,6 +1,6 @@
 import json
 
-from flask import request
+from flask import request, Response
 from flask.views import MethodView
 from flask_login import login_required, current_user
 
@@ -82,8 +82,26 @@ class MyGroupAttendanceView(MethodView):
         return json.dumps(result)
 
 
+class DownloadGroupView(MethodView):
+    decorators = [login_required]
+
+    def __init__(self):
+        self.control = AttendanceController()
+
+    def get(self, course_id, group_id):
+        logger.info("New GET /course/<string:course_id>/group/<int:group_id>/attendance request")
+        result = self.control.download_group_attendance(current_user, course_id, group_id)
+        if result['status'] == 200:
+            return Response(
+                result['result'],
+                mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                headers={"Content-disposition": "attachment; filename=group_{}_attendance.xls".format(group_id)})
+        return json.dumps(result)
+
+
 app.add_url_rule('/session/<int:session_id>/attendance', view_func=AttendanceView.as_view('attendance'))
 app.add_url_rule('/session/<int:session_id>/attendance/me', view_func=MyAttendanceView.as_view('my_attendance'))
 app.add_url_rule('/course/<int:course_id>/group/<int:group_id>/attendance', view_func=GroupAttendanceView.as_view('group_attendance'))
 app.add_url_rule('/course/<int:course_id>/group/<int:group_id>/attendance/me', view_func=MyGroupAttendanceView.as_view('my_group_attendance'))
+app.add_url_rule('/course/<int:course_id>/group/<int:group_id>/attendance/download', view_func=DownloadGroupView.as_view('download_excel'))
 socketio.on_event('connect', on_connect)

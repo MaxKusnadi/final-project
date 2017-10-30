@@ -190,6 +190,56 @@ class AttendanceController:
         d['status'] = 200
         return d
 
+    def download_group_attendance(self, user, course_id, group_id):
+        logger.info("Downloading group {}/{} attendance for myself {}".format(group_id, course_id, user.name))
+        course = Course.query.filter(Course.id == course_id).first()
+        error = Checker.check_course(course, course_id)
+        if error:
+            return error
+        group = Group.query.filter(Group.id == group_id,
+                                   Group.course_id == course.id).first()
+        error = Checker.check_group(group, course_id, group_id)
+        if error:
+            return error
+        error = Checker.check_is_user_staff_group(user, group)
+        if error:
+            return error
+
+        sessions = group.sessions
+        total_attendance = group.students
+        total_attendance = list(map(lambda x: x.user, total_attendance))
+
+        attendance = list(map(lambda x: {
+            "week_name": x.week_name,
+            "attendance": self._get_attendance_helper(x, total_attendance)
+        }, sessions))
+
+        # Creating csv header
+        ans = ['NAME,', 'MATRIC,']
+        total_weeks = len(attendance)
+        for att in attendance:
+            ans.append("WEEK_{},".format(att['week_name']))
+        ans.append("TOTAL")
+        ans.append("\n")
+
+        # Filling in row by row
+        for student in total_attendance:
+            ans.append(student.name + ",")
+            ans.append(student.matric + ",")
+            count = 0
+            for att in attendance:
+                status = list(filter(lambda x: x['name'] == student.name, att['attendance']))[0]['status']
+                count += status
+                ans.append(str(status) + ",")
+            ans.append("{}/{}".format(count, total_weeks))
+            ans.append("\n")
+        ans = "".join(ans)
+        d = dict()
+        logger.critical(ans)
+        d['result'] = ans
+        d['status'] = 200
+        return d
+
     def _get_attendance_helper(self, session, total_attendance):
         attendance = session.students
         attendance_user_matric = list(map(lambda x: x.user.matric, attendance))
