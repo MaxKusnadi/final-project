@@ -1,6 +1,7 @@
 import json
+import flask_excel as excel
 
-from flask import request, Response
+from flask import request
 from flask.views import MethodView
 from flask_login import login_required, current_user
 
@@ -92,10 +93,10 @@ class DownloadGroupView(MethodView):
         logger.info("New GET /course/<string:course_id>/group/<int:group_id>/attendance request")
         result = self.control.download_group_attendance(current_user, course_id, group_id)
         if result['status'] == 200:
-            return Response(
-                result['result'],
-                mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                headers={"Content-disposition": "attachment; filename=group_{}_attendance.xls".format(group_id)})
+            filename = result['filename']
+            ex = result['result']
+            return excel.make_response_from_array(ex, "xls", file_name=filename)
+
         return json.dumps(result)
 
 

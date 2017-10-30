@@ -5,6 +5,7 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_socketio import SocketIO
+import flask_excel as excel
 
 logging.getLogger('socketio').setLevel(logging.ERROR)
 logging.getLogger('engineio').setLevel(logging.ERROR)
@@ -19,12 +20,13 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path="")
 CORS(app, supports_credentials=True)
 app.config.from_object('config')
 socketio = SocketIO(app)
 login_manager = LoginManager(app)
 db = SQLAlchemy(app)
+excel.init_excel(app)
 
 # Models
 from app.models.user import User

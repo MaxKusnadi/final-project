@@ -214,28 +214,31 @@ class AttendanceController:
             "attendance": self._get_attendance_helper(x, total_attendance)
         }, sessions))
 
-        # Creating csv header
-        ans = ['NAME,', 'MATRIC,']
+        # Creating excel
+        file_name = "group_{}_attendance.xls".format(group_id)
+        ans = []
+        HEADER = ['NAME', 'MATRIC_NUMBER']
         total_weeks = len(attendance)
         for att in attendance:
-            ans.append("WEEK_{},".format(att['week_name']))
-        ans.append("TOTAL")
-        ans.append("\n")
+            HEADER.append("WEEK_{}".format(att['week_name']))
+        HEADER.append("TOTAL")
+        ans.append(HEADER)
 
         # Filling in row by row
         for student in total_attendance:
-            ans.append("{},".format(student.name))
-            ans.append("{},".format(student.matric))
+            ROW = list()
+            ROW.append("{}".format(student.name))
+            ROW.append("{}".format(student.matric))
             count = 0
             for att in attendance:
                 status = list(filter(lambda x: x['name'] == student.name, att['attendance']))[0]['status']
                 count += status
-                ans.append("{},".format(status))
-            ans.append("{}/{}".format(count, total_weeks))
-            ans.append("\n")
-        ans = "".join(ans)
+                ROW.append("{}".format(status))
+            ROW.append("{}/{}".format(count, total_weeks))
+            ans.append(ROW)
+
         d = dict()
-        logger.critical(ans)
+        d['filename'] = file_name
         d['result'] = ans
         d['status'] = 200
         return d
