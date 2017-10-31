@@ -24,21 +24,28 @@ from app import db
 # CK = "a0107396"
 # KAIDI = "a0130717"
 
-dummy_course = Course.query.filter(Course.course_code == "CS3216-DUMMY").first()
-user = User.query.filter(User.matric == "dcsckf").first()
-if not user:
-    user = User("dcsckf", "Chong Ket Fah", "dcsckf@nus.edu.sg")
-    db.session.add(user)
-    db.session.commit()
-
-course_staff = CourseStaff(user, dummy_course, "Lecturer")
-db.session.add(course_staff)
-db.session.commit()
+# dummy_course = Course.query.filter(Course.course_code == "CS3216-DUMMY").first()
+# user = User.query.filter(User.matric == "dcsckf").first()
+# if not user:
+#     user = User("dcsckf", "Chong Ket Fah", "dcsckf@nus.edu.sg")
+#     db.session.add(user)
+#     db.session.commit()
+#
+# course_staff = CourseStaff(user, dummy_course, "Lecturer")
+# db.session.add(course_staff)
+# db.session.commit()
 
 # group = Group(dummy_course, "Dummy Tutorial", "1200", "1300", 5, 0, "SOC", "Tutorial")
 # db.session.add(group)
 # db.session.commit()
-# group = Group.query.get(273)
+group = Group.query.get(273)
+group_sessions = group.sessions
+
+for session in group_sessions:
+    attendance = session.students
+    for x in attendance:
+        db.session.delete(x)
+db.session.commit()
 
 # CY = User.query.filter(User.matric == CY).first()
 # CK = User.query.filter(User.matric == CK).first()

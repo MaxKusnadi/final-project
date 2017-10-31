@@ -179,7 +179,10 @@ class AttendanceController:
         for session in sessions:
             attendance = Attendance.query.filter(Attendance.session_id == session.id,
                                                  Attendance.user_id == user.id).first()
-            status = attendance.status if attendance else 0
+            if not session.attendance_closed_time:
+                status = "-"
+            else:
+                status = attendance.status if attendance else 0
             all_attendance.append({
                 "week_name": session.week_name,
                 "attendance": status
