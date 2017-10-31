@@ -109,3 +109,13 @@ class Utils:
         d['matric'] = user.matric
         d['email'] = user.email
         return d
+
+    @staticmethod
+    def get_not_taken_attendance_info(user):
+        d = dict()
+        d['status'] = "-"
+        d['remark'] = ""
+        d['name'] = user.name
+        d['matric'] = user.matric
+        d['email'] = user.email
+        return d
