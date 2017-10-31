@@ -66,7 +66,9 @@ class IVLEScrapper:
 
     def _get_staff_group_info(self, group):
         group_time = group['Time']
-        start_time, end_time = group_time.split(" - ")
+        if not group_time:
+            logger.critical("ERROR FOUND WHEN PARSING THIS {}".format(group))
+        start_time, end_time = group_time.split(" - ") if group_time else ("0", "0")
         d = {
             'group_name': group['GroupName'],
             'start_time': start_time.zfill(4),
