@@ -66,8 +66,6 @@ class IVLEScrapper:
 
     def _get_staff_group_info(self, group):
         group_time = group['Time']
-        if not group_time:
-            logger.critical("ERROR FOUND WHEN PARSING THIS {}".format(group))
         start_time, end_time = group_time.split(" - ") if group_time else ("0", "0")
         d = {
             'group_name': group['GroupName'],
@@ -77,8 +75,8 @@ class IVLEScrapper:
             'group_type': group['GroupType'].upper()
         }
         try:
-            d['day_code'] = self._get_day_code(group["Day"])
-            d['week_code'] = self._get_week_code(group['Week'])
+            d['day_code'] = self._get_day_code(group["Day"]) if group['Day'] else -1
+            d['week_code'] = self._get_week_code(group['Week']) if group['Week'] else -1
         except ValueError:
             d['day_code'] = -1
             d['week_code'] = -1
