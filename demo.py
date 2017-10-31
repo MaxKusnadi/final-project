@@ -16,31 +16,41 @@ from app import db
 # DELETE THIS
 
 # Creating tutorial class
-TIME = 1508929976
-END_TIME = 1511608376
+# TIME = 1508929976
+# END_TIME = 1511608376
 
 # CY = "e0030878"
 # MAX = "a0130369"
 # CK = "a0107396"
-KAIDI = "a0130717"
+# KAIDI = "a0130717"
 
 dummy_course = Course.query.filter(Course.course_code == "CS3216-DUMMY").first()
+user = User.query.filter(User.matric == "dcsckf").first()
+if not user:
+    user = User("dcsckf", "Chong Ket Fah", "dcsckf@nus.edu.sg")
+    db.session.add(user)
+    db.session.commit()
+
+course_staff = CourseStaff(user, dummy_course, "Lecturer")
+db.session.add(course_staff)
+db.session.commit()
+
 # group = Group(dummy_course, "Dummy Tutorial", "1200", "1300", 5, 0, "SOC", "Tutorial")
 # db.session.add(group)
 # db.session.commit()
-group = Group.query.get(273)
+# group = Group.query.get(273)
 
 # CY = User.query.filter(User.matric == CY).first()
 # CK = User.query.filter(User.matric == CK).first()
 # MAX = User.query.filter(User.matric == MAX).first()
-KAIDI = User.query.filter(User.matric == KAIDI).first()
+# KAIDI = User.query.filter(User.matric == KAIDI).first()
 
 # group_staff = GroupStaff.query.filter(GroupStaff.group_id == group.id).first()
 # db.session.delete(group_staff)
-group_students = GroupStudent.query.filter(GroupStudent.group_id == group.id,
-                                           GroupStudent.user_id == KAIDI.id).first()
-db.session.delete(group_students)
-db.session.commit()
+# group_students = GroupStudent.query.filter(GroupStudent.group_id == group.id,
+#                                            GroupStudent.user_id == KAIDI.id).first()
+# db.session.delete(group_students)
+# db.session.commit()
 # for x in group_students:
 #     db.session.delete(x)
 # db.session.commit()
