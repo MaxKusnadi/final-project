@@ -52,7 +52,7 @@ class SessionController:
         return self.get_users_sessions(user)
 
     def get_users_sessions(self, user):
-        logger.info("Getting all sessions for user {} this week".format(user.name))
+        logger.info("Getting closest for user {} this week".format(user.name))
 
         now = datetime.now(TIMEZONE)
         now_epoch = int(now.timestamp())
