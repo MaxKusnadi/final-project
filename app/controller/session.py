@@ -59,28 +59,29 @@ class SessionController:
         week_info = Utils.get_week_name(now_epoch)
         week_name = week_info['week_name']
 
+        groups = list()
         groups_taken = user.groups
         groups_taken = list(map(lambda x: x.group, groups_taken))
+        groups.extend(groups_taken)
         groups_taught = user.groups_taught
         groups_taught = list(map(lambda x: x.group, groups_taught))
+        groups.extend(groups_taught)
 
-        sessions_taken = []
-        sessions_taught = []
-        for group in groups_taken:
-            sessions_taken.extend(group.sessions)
-        for group in groups_taught:
-            sessions_taught.extend(group.sessions)
+        sessions = list()
+        for group in groups:
+            sessions.extend(group.sessions)
 
-        sessions_taken = list(filter(lambda x: x.week_name == week_name, sessions_taken))
-        sessions_taught = list(filter(lambda x: x.week_name == week_name, sessions_taught))
-        sessions_taken = list(map(lambda x: Utils.get_session_info(x), sessions_taken))
-        sessions_taught = list(map(lambda x: Utils.get_session_info(x), sessions_taught))
+        # Filter by week
+        sessions = list(filter(lambda x: x.week_name == week_name, sessions))
+        # Filter by time
+        sessions = list(filter(lambda x: x.start_date >= now_epoch, sessions))
+        sessions = sorted(sessions, key=lambda x: x.start_date)
 
-        d = dict()
-        d['session_taken'] = sessions_taken
-        d['session_taught'] = sessions_taught
-        d['status'] = 200
-        return d
+        closest_session = sessions[0]
+        session_info = Utils.get_session_info(closest_session)
+        session_info['session_type'] = "student" if closest_session.group in groups_taken else "staff"
+        session_info['status'] = 200
+        return session_info
 
     def get_mock_session_info(self, session_id, matric):
         logger.info("Getting session {} info for {}".format(session_id, matric))
