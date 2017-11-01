@@ -235,6 +235,7 @@ class AttendanceController:
             count = 0
             for att in attendance:
                 status = list(filter(lambda x: x['name'] == student.name, att['attendance']))[0]['status']
+                status = 0 if status == "-" else int(status)
                 count += status
                 ROW.append("{}".format(status))
             ROW.append("{}/{}".format(count, total_weeks))
