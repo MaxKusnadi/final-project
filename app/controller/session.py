@@ -74,7 +74,7 @@ class SessionController:
         # Filter by week
         sessions = list(filter(lambda x: x.week_name == week_name, sessions))
         # Filter by time
-        sessions = list(filter(lambda x: x.start_date >= now_epoch, sessions))
+        sessions = list(filter(lambda x: now_epoch <= x.end_date, sessions))
         sessions = sorted(sessions, key=lambda x: x.start_date)
 
         closest_session = sessions[0]
