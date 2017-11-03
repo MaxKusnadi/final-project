@@ -73,13 +73,21 @@ class SessionController:
 
         # Filter by week
         sessions = list(filter(lambda x: x.week_name == week_name, sessions))
-        logger.critical("1st Sessions: {}".format(sessions))
         # Filter by time
         sessions = list(filter(lambda x: now_epoch <= x.end_date, sessions))
-        logger.critical("2nd Sessions: {}".format(sessions))
-        sessions = sorted(sessions, key=lambda x: x.start_date)
-        logger.critical("3rd sessions: {}".format(sessions))
 
+        # Check if it exists if not get the next week one
+        if not sessions:
+            week_name = str(int(week_name) + 1)
+            sessions = list(filter(lambda x: x.week_name == week_name, sessions))
+            # Filter by time
+            sessions = list(filter(lambda x: now_epoch <= x.end_date, sessions))
+
+        # Check if it exists. if not return empty
+        if not sessions:
+            return {}
+
+        sessions = sorted(sessions, key=lambda x: x.start_date)
         closest_session = sessions[0]
         session_info = Utils.get_session_info(closest_session)
         session_info['session_type'] = "student" if closest_session.group in groups_taken else "staff"
