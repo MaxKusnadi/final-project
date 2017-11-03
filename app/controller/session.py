@@ -72,27 +72,27 @@ class SessionController:
             sessions.extend(group.sessions)
 
         # Filter by week
-        sessions = list(filter(lambda x: x.week_name == week_name, sessions))
+        first_sessions = list(filter(lambda x: x.week_name == week_name, sessions))
         # Filter by time
-        sessions = list(filter(lambda x: now_epoch <= x.end_date, sessions))
-        logger.critical("Sessions initially: {}".format(sessions))
+        first_sessions = list(filter(lambda x: now_epoch <= x.end_date, first_sessions))
+        logger.critical("Sessions initially: {}".format(first_sessions))
 
         # Check if it exists if not get the next week one
-        if not sessions:
+        if not first_sessions:
             week_name = str(int(week_name) + 1)
             logger.critical("weekname {}".format(week_name))
-            sessions = list(filter(lambda x: x.week_name == week_name, sessions))
-            logger.critical("Sessions: {}".format(sessions))
+            first_sessions = list(filter(lambda x: x.week_name == week_name, sessions))
+            logger.critical("Sessions: {}".format(first_sessions))
             # Filter by time
-            sessions = list(filter(lambda x: now_epoch <= x.end_date, sessions))
-            logger.critical("Sessions 2: {}".format(sessions))
+            first_sessions = list(filter(lambda x: now_epoch <= x.end_date, first_sessions))
+            logger.critical("Sessions 2: {}".format(first_sessions))
 
         # Check if it exists. if not return empty
-        if not sessions:
+        if not first_sessions:
             return {}
 
-        sessions = sorted(sessions, key=lambda x: x.start_date)
-        closest_session = sessions[0]
+        first_sessions = sorted(first_sessions, key=lambda x: x.start_date)
+        closest_session = first_sessions[0]
         session_info = Utils.get_session_info(closest_session)
         session_info['session_type'] = "student" if closest_session.group in groups_taken else "staff"
         session_info['status'] = 200
