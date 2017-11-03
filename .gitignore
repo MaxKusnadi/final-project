@@ -102,4 +102,4 @@ ENV/
 .idea
 .DS_Store
 config.py
-api_test.py
+/api_test.py
