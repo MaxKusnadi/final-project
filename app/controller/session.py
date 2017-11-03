@@ -75,17 +75,13 @@ class SessionController:
         first_sessions = list(filter(lambda x: x.week_name == week_name, sessions))
         # Filter by time
         first_sessions = list(filter(lambda x: now_epoch <= x.end_date, first_sessions))
-        logger.critical("Sessions initially: {}".format(first_sessions))
 
         # Check if it exists if not get the next week one
         if not first_sessions:
             week_name = str(int(week_name) + 1)
-            logger.critical("weekname {}".format(week_name))
             first_sessions = list(filter(lambda x: x.week_name == week_name, sessions))
-            logger.critical("Sessions: {}".format(first_sessions))
             # Filter by time
             first_sessions = list(filter(lambda x: now_epoch <= x.end_date, first_sessions))
-            logger.critical("Sessions 2: {}".format(first_sessions))
 
         # Check if it exists. if not return empty
         if not first_sessions:
