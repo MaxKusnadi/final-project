@@ -79,9 +79,12 @@ class SessionController:
         # Check if it exists if not get the next week one
         if not sessions:
             week_name = str(int(week_name) + 1)
+            logger.critical("weekname ", week_name)
             sessions = list(filter(lambda x: x.week_name == week_name, sessions))
+            logger.critical("Sessions: {}".format(sessions))
             # Filter by time
             sessions = list(filter(lambda x: now_epoch <= x.end_date, sessions))
+            logger.critical("Sessions 2: {}".format(sessions))
 
         # Check if it exists. if not return empty
         if not sessions:
