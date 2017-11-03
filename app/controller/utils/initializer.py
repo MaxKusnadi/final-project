@@ -31,8 +31,6 @@ class Initializer:
     def _store_module_taught(self, course, token):
         logger.info('Storing course {}'.format(course['course_code']))
         module_db = Course.query.filter(Course.course_id == course['course_id']).first()
-        if module_db:
-            return
         if not module_db:
             args = (course['creator_user_id'], course['creator_name'],
                     course['course_id'], course['course_code'],
