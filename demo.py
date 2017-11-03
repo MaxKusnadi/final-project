@@ -47,6 +47,7 @@ for name in TUTORIAL_STUDENTS:
     user = User.query.filter(User.name == name).first()
     if not user:
         print("{} not found")
+    print("Pairing {} with {}".format(user.name, tutorial_group.group_name))
     g = GroupStudent(user, tutorial_group)
     db.session.add(g)
 db.session.commit()
