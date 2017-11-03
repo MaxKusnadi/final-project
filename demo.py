@@ -4,6 +4,53 @@ from app.models.course import Course, CourseStaff
 from app.models.group import Group, GroupStaff, GroupStudent
 from app import db
 
+
+# FOR CHENGYU CLASS
+cs2010 = Course.query.get(119)
+print("Course {}".format(cs2010))
+lect_group = Group.query.get(258)
+print("Lect group {}".format(lect_group))
+tutorial_group = Group.query.get(259)
+print("Tutorial group {}".format(tutorial_group))
+TUTORIAL_STUDENTS = [
+ 	"ALICIA HO SOR SIAN",
+ 	"CHEW CHAOW THONG DANIEL",
+ 	"CHOO HONG LI, JARRETT",
+ 	"EU YI NING",
+    "GENEVIEVE TAY HUI TING",
+    "JESTON TEO ZHE HAO",
+    "KOO CHIN CHYE",
+    "KUAN JUN REN",
+    "LAI CHENG YU",
+    "LAM ZI WEI ANDY",
+    "LEE WEI QING",
+    "NGUYEN VAN HOANG",
+    "RONAK LAKHOTIA",
+    "STEVEN JAMES SAWTELLE",
+    "WONG PENG FAI SHANNON",
+    "ZAMES CHUA FEIKE",
+    "ZHANG SHIHAO",
+    "ZHU YILUN",
+]
+# Pairing lecture group
+lect_students = cs2010.students
+lect_students = list(map(lambda x: x.user, lect_students))
+
+for student in lect_students:
+    print("Pairing {} with {}".format(student.name, lect_group.group_name))
+    g = GroupStudent(student, lect_group)
+    db.session.add(g)
+db.session.commit()
+
+# Pairing tutorial group
+for name in TUTORIAL_STUDENTS:
+    user = User.query.filter(User.name == name).first()
+    if not user:
+        print("{} not found")
+    g = GroupStudent(user, tutorial_group)
+    db.session.add(g)
+db.session.commit()
+
 # Corrective db please comment later
 # courses = Course.query.all()
 # for course in courses:
@@ -38,14 +85,14 @@ from app import db
 # group = Group(dummy_course, "Dummy Tutorial", "1200", "1300", 5, 0, "SOC", "Tutorial")
 # db.session.add(group)
 # db.session.commit()
-group = Group.query.get(273)
-group_sessions = group.sessions
-
-for session in group_sessions:
-    attendance = session.students
-    for x in attendance:
-        db.session.delete(x)
-db.session.commit()
+# group = Group.query.get(273)
+# group_sessions = group.sessions
+#
+# for session in group_sessions:
+#     attendance = session.students
+#     for x in attendance:
+#         db.session.delete(x)
+# db.session.commit()
 
 # CY = User.query.filter(User.matric == CY).first()
 # CK = User.query.filter(User.matric == CK).first()
