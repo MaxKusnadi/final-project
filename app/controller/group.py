@@ -106,9 +106,18 @@ class GroupController:
         logger.info("Getting all groups for user {}".format(user.name))
 
         groups_taken = user.groups
-        groups_taken = list(map(lambda x: Utils.get_group_info(x.group), groups_taken))
+        groups_taken = list(map(lambda x: x.group, groups_taken))
+        groups_taken = list(filter(lambda x: x.day_code != -1, groups_taken))
+        groups_taken = sorted(groups_taken, key=lambda x: x.start_time)
+        groups_taken = sorted(groups_taken, key=lambda x: x.day_code)
+        groups_taken = list(map(lambda x: Utils.get_group_info(x), groups_taken))
+
         groups_taught = user.groups_taught
-        groups_taught = list(map(lambda x: Utils.get_group_info(x.group), groups_taught))
+        groups_taught = list(map(lambda x: x.group, groups_taught))
+        groups_taught = list(filter(lambda x: x.day_code != -1, groups_taught))
+        groups_taught = sorted(groups_taught, key=lambda x: x.start_time)
+        groups_taught = sorted(groups_taught, key=lambda x: x.day_code)
+        groups_taught = list(map(lambda x: Utils.get_group_info(x), groups_taught))
 
         d = dict()
         d['group_taken'] = groups_taken
