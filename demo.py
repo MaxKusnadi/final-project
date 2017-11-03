@@ -4,34 +4,14 @@ from app.models.course import Course, CourseStaff
 from app.models.group import Group, GroupStaff, GroupStudent
 from app import db
 
-
 # FOR CHENGYU CLASS
-cs2010 = Course.query.get(119)
+cs2010 = Course.query.get(117)
 print("Course {}".format(cs2010))
-lect_group = Group.query.get(258)
+lect_group = Group.query.get(252)
 print("Lect group {}".format(lect_group))
-tutorial_group = Group.query.get(259)
+tutorial_group = Group.query.get(253)
 print("Tutorial group {}".format(tutorial_group))
-TUTORIAL_STUDENTS = [
- 	"ALICIA HO SOR SIAN",
- 	"CHEW CHAOW THONG DANIEL",
- 	"CHOO HONG LI, JARRETT",
- 	"EU YI NING",
-    "GENEVIEVE TAY HUI TING",
-    "JESTON TEO ZHE HAO",
-    "KOO CHIN CHYE",
-    "KUAN JUN REN",
-    "LAI CHENG YU",
-    "LAM ZI WEI ANDY",
-    "LEE WEI QING",
-    "NGUYEN VAN HOANG",
-    "RONAK LAKHOTIA",
-    "STEVEN JAMES SAWTELLE",
-    "WONG PENG FAI SHANNON",
-    "ZAMES CHUA FEIKE",
-    "ZHANG SHIHAO",
-    "ZHU YILUN",
-]
+
 # Pairing lecture group
 lect_students = cs2010.students
 lect_students = list(map(lambda x: x.user, lect_students))
@@ -45,16 +25,12 @@ for student in lect_students:
         db.session.add(g)
 db.session.commit()
 
-# Pairing tutorial group
-for name in TUTORIAL_STUDENTS:
-    user = User.query.filter(User.name == name).first()
-    if not user:
-        print("{} not found")
-    print("Pairing {} with {}".format(user.name, tutorial_group.group_name))
-    g = GroupStudent.query.filter(GroupStudent.user_id == user.id,
+for student in lect_students:
+    print("Pairing {} with {}".format(student.name, tutorial_group.group_name))
+    g = GroupStudent.query.filter(GroupStudent.user_id == student.id,
                                   GroupStudent.group_id == tutorial_group.id).first()
     if not g:
-        g = GroupStudent(user, tutorial_group)
+        g = GroupStudent(student, tutorial_group)
         db.session.add(g)
 db.session.commit()
 
