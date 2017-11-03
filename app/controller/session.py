@@ -73,9 +73,12 @@ class SessionController:
 
         # Filter by week
         sessions = list(filter(lambda x: x.week_name == week_name, sessions))
+        logger.critical("1st Sessions: {}".format(sessions))
         # Filter by time
         sessions = list(filter(lambda x: now_epoch <= x.end_date, sessions))
+        logger.critical("2nd Sessions: {}".format(sessions))
         sessions = sorted(sessions, key=lambda x: x.start_date)
+        logger.critical("3rd sessions: {}".format(sessions))
 
         closest_session = sessions[0]
         session_info = Utils.get_session_info(closest_session)
