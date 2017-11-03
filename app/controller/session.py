@@ -80,7 +80,7 @@ class SessionController:
         # Check if it exists if not get the next week one
         if not sessions:
             week_name = str(int(week_name) + 1)
-            logger.critical("weekname ", week_name)
+            logger.critical("weekname {}".format(week_name))
             sessions = list(filter(lambda x: x.week_name == week_name, sessions))
             logger.critical("Sessions: {}".format(sessions))
             # Filter by time
