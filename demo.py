@@ -38,8 +38,11 @@ lect_students = list(map(lambda x: x.user, lect_students))
 
 for student in lect_students:
     print("Pairing {} with {}".format(student.name, lect_group.group_name))
-    g = GroupStudent(student, lect_group)
-    db.session.add(g)
+    g = GroupStudent.query.filter(GroupStudent.user_id == student.id,
+                                  GroupStudent.group_id == lect_group.id).first()
+    if not g:
+        g = GroupStudent(student, lect_group)
+        db.session.add(g)
 db.session.commit()
 
 # Pairing tutorial group
@@ -48,8 +51,11 @@ for name in TUTORIAL_STUDENTS:
     if not user:
         print("{} not found")
     print("Pairing {} with {}".format(user.name, tutorial_group.group_name))
-    g = GroupStudent(user, tutorial_group)
-    db.session.add(g)
+    g = GroupStudent.query.filter(GroupStudent.user_id == user.id,
+                                  GroupStudent.group_id == tutorial_group.id).first()
+    if not g:
+        g = GroupStudent(user, tutorial_group)
+        db.session.add(g)
 db.session.commit()
 
 # Corrective db please comment later
