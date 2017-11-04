@@ -49,6 +49,8 @@ class Utils:
     def get_session_info(session):
         d = dict()
         d['session_id'] = session.id
+        d['course_id'] = session.group.course.id
+        d['group_id'] = session.group.id
         d['group_name'] = session.group.group_name
         d['course_code'] = session.group.course.course_code
         d['start_date'] = session.start_date
