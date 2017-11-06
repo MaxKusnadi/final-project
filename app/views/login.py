@@ -19,8 +19,9 @@ class LoginView(MethodView):
         logger.info("Request referer: {}".format(request.environ.get("HTTP_REFERER")))
         referer = request.environ.get("HTTP_REFERER")
         if current_user.is_authenticated:
-            result = self.control.get_user_info(current_user)
-            return json.dumps(result)
+            if referer and "https://nusattend.firebaseapp.com/" in referer:
+                return redirect(LOGIN_REDIRECT_URL_LIVE)
+            return redirect(LOGIN_REDIRECT_URL_DEV)
         else:
             return redirect(LOGIN_URL + "?referer={}".format(referer))
 

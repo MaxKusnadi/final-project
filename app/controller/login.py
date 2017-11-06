@@ -18,36 +18,39 @@ class LoginController:
         self.initializer = Initializer()
 
     def login(self, token):
-        logger.info("Validating token...")
-        is_token_valid, token = IVLEApi.validate_token(token)
-        if is_token_valid:
-            profile = IVLEApi.get_profile(token)
+        # VALIDATE_TOKEN API is somehow broken. We bypass this for a while
+        # logger.info("Validating token...")
+        # is_token_valid, token = IVLEApi.validate_token(token)
+        # if is_token_valid:
+        profile = IVLEApi.get_profile(token)
+        try:
             matric = profile['UserID']
-
-            user = User.query.filter(User.matric == matric).first()
-            if not user:
-                logger.info("Creating user with UserID {}".format(matric))
-                name = profile['Name']
-                email = profile['Email']
-                user = User(matric, name, email)
-                db.session.add(user)
-                db.session.commit()
-            user.token = token
-            login_user(user)
-            if not user.is_data_pulled:
-                self.initializer.initialize_user(user, token)
-                user.is_data_pulled = True
-            db.session.commit()
+        except:
+            logger.error("Invalid token {}".format(token))
             d = dict()
-            d['name'] = user.name
-            d['email'] = user.email
-            d['matric'] = user.matric
-            d['status'] = 200
+            d['text'] = "Invalid Token"
+            d['status'] = 301
             return d
-        logger.error("Invalid token {}".format(token))
+
+        user = User.query.filter(User.matric == matric).first()
+        if not user:
+            logger.info("Creating user with UserID {}".format(matric))
+            name = profile['Name']
+            email = profile['Email']
+            user = User(matric, name, email)
+            db.session.add(user)
+            db.session.commit()
+        user.token = token
+        login_user(user)
+        if not user.is_data_pulled:
+            self.initializer.initialize_user(user, token)
+            user.is_data_pulled = True
+        db.session.commit()
         d = dict()
-        d['text'] = "Invalid Token"
-        d['status'] = 301
+        d['name'] = user.name
+        d['email'] = user.email
+        d['matric'] = user.matric
+        d['status'] = 200
         return d
 
     def mock_login(self, **kwargs):

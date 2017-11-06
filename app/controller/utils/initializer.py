@@ -144,13 +144,13 @@ class Initializer:
         # TEMPORARY
         if module_db.course_code == "DP1001":
             return
-        logger.info("Getting class roster for course {}".format(module_db.course_code))
-        class_roster = self.ivle_scrapper.get_class_roster(token, module_db.course_id)
-        list(map(lambda x: self._store_course_roster(x, module_db), class_roster))
-
-        logger.info("Getting lecturers for course {}".format(module_db.course_code))
-        lecturers = self.ivle_scrapper.get_course_staffs(token, module_db.course_id)
-        list(map(lambda x: self._store_course_staffs(x, module_db), lecturers))
+        # logger.info("Getting class roster for course {}".format(module_db.course_code))
+        # class_roster = self.ivle_scrapper.get_class_roster(token, module_db.course_id)
+        # list(map(lambda x: self._store_course_roster(x, module_db), class_roster))
+        #
+        # logger.info("Getting lecturers for course {}".format(module_db.course_code))
+        # lecturers = self.ivle_scrapper.get_course_staffs(token, module_db.course_id)
+        # list(map(lambda x: self._store_course_staffs(x, module_db), lecturers))
 
     def _store_group_student(self, group, user, module_db):
         group_db = self._get_group_from_db(group, module_db)
