@@ -1,6 +1,8 @@
 from datetime import datetime
+from cryptography.fernet import Fernet
 
 from app.constants.time import TIMEZONE
+from app.constants.encryption import CIPHER_KEY
 from app.models.attendance import Attendance
 from app.models.group import Group
 from app.models.session import Session
@@ -14,6 +16,7 @@ from app import db, logger
 class AttendanceController:
 
     def __init__(self, socket=None):
+        self.cipher = Fernet(CIPHER_KEY)
         self.socket = socket
 
     def create_user_attendance(self, user, session_id, **kwargs):
@@ -30,6 +33,53 @@ class AttendanceController:
             return error
 
         now = datetime.now(TIMEZONE).timestamp()
+
+        error = Checker.check_attendance_code(session, now, code)
+        if error:
+            return error
+
+        attendance = Attendance.query.filter(Attendance.session_id == session_id,
+                                             Attendance.user_id == user.id).first()
+        if not attendance:
+            attendance = Attendance(user, session, 1)
+            db.session.add(attendance)
+            db.session.commit()
+        attendance.status = 1
+        db.session.commit()
+
+        # Emitting through socketio
+        room_id = str(session_id)
+        if self.socket:
+            self.socket.emit("attendance_taken", Utils.get_user_info(user), room=room_id)
+
+        d = dict()
+        d['text'] = "Success"
+        d['status'] = 200
+        return d
+
+    def create_user_attendance_qr(self, session_id, user, code):
+        logger.info("Creating an attendance for {} via QR code".format(user.name))
+
+        if not code:
+            d = dict()
+            d['text'] = "Invalid QR Code"
+            d['status'] = 400
+            return d
+
+        session = Session.query.filter(Session.id == session_id).first()
+        error = Checker.check_session(session, session_id)
+        if error:
+            return error
+
+        group = session.group
+        error = Checker.check_is_user_student_group(user, group)
+        if error:
+            return error
+
+        now = datetime.now(TIMEZONE).timestamp()
+
+        decoded_code = self.cipher.decrypt(str.encode(code))
+        code = decoded_code.decode()
 
         error = Checker.check_attendance_code(session, now, code)
         if error:

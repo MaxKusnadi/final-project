@@ -47,6 +47,19 @@ class AttendanceView(MethodView):
         return json.dumps(result)
 
 
+class AttendanceQRView(MethodView):
+    decorators = [login_required]
+
+    def __init__(self):  # pragma: no cover
+        self.control = AttendanceController(socketio)
+
+    def get(self, session_id):
+        logger.info("New GET /session/<string:session_id>/attendance/qr request")
+        code = request.args.get('code')
+        result = self.control.create_user_attendance_qr(session_id, current_user, code)
+        return json.dumps(result)
+
+
 class MyAttendanceView(MethodView):
     decorators = [login_required]
 
@@ -101,6 +114,7 @@ class DownloadGroupView(MethodView):
 
 
 app.add_url_rule('/session/<int:session_id>/attendance', view_func=AttendanceView.as_view('attendance'))
+app.add_url_rule('/session/<int:session_id>/attendance/qr', view_func=AttendanceQRView.as_view('attendance_qr'))
 app.add_url_rule('/session/<int:session_id>/attendance/me', view_func=MyAttendanceView.as_view('my_attendance'))
 app.add_url_rule('/course/<int:course_id>/group/<int:group_id>/attendance', view_func=GroupAttendanceView.as_view('group_attendance'))
 app.add_url_rule('/course/<int:course_id>/group/<int:group_id>/attendance/me', view_func=MyGroupAttendanceView.as_view('my_group_attendance'))

@@ -1,7 +1,9 @@
 import random
+from cryptography.fernet import Fernet
 
 from datetime import datetime, timedelta
 from app.constants.time import TIMEZONE, COUNTDOWN_TIMEOUT
+from app.constants.encryption import CIPHER_KEY
 from app.models.group import Group
 from app.models.session import Session
 from app.models.user import User
@@ -13,6 +15,7 @@ from app import db, logger
 class SessionController:
 
     def __init__(self, socket=None):
+        self.cipher = Fernet(CIPHER_KEY)
         self.socket = socket
 
     def create_mock_session(self, **kwargs):
@@ -156,7 +159,9 @@ class SessionController:
         code = str(code).zfill(6)
         session.code = code
         db.session.commit()
+        qr_code = self.cipher.encrypt(str.encode(code)).decode()
         d['code'] = code
+        d['qr_code'] = qr_code
         return d
 
     def start_mock_session(self, session_id, matric):
