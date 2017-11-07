@@ -3,7 +3,7 @@ import requests
 from app.models.week_code import WeekCode
 from app.constants.ivle import (API_KEY, IVLE_URL, MODULE_URL, PROFILE_URL, VALIDATE_URL,
                                 CLASS_ROSTER_URL, STUDENT_GROUP_URL, LECTURER_URL,
-                                STAFF_GROUP_URL)
+                                STAFF_GROUP_URL, SESSION)
 from app import logger
 
 
@@ -128,7 +128,7 @@ class IVLEApi:
             "AuthToken": token,
             "CourseID": course_id
         }
-        resp = requests.get(url, params=params).json()
+        resp = SESSION.get(url, params=params).json()
         return resp['Results']
 
     @staticmethod
@@ -141,7 +141,7 @@ class IVLEApi:
             "AcadYear": "2017/2018",
             "Semester": 1
         }
-        resp = requests.get(url, params=params).json()
+        resp = SESSION.get(url, params=params).json()
         return resp['Results']
 
     @staticmethod
@@ -152,7 +152,7 @@ class IVLEApi:
             "AuthToken": token,
             "CourseID": course_id
         }
-        resp = requests.get(url, params=params).json()
+        resp = SESSION.get(url, params=params).json()
         return resp['Results']
 
     @staticmethod
@@ -164,7 +164,7 @@ class IVLEApi:
             "Duration": 0,
             "IncludeAllInfo": False
         }
-        resp = requests.get(url, params=params).json()
+        resp = SESSION.get(url, params=params).json()
         return resp['Results']
 
     @staticmethod
@@ -174,7 +174,7 @@ class IVLEApi:
             "APIKey": API_KEY,
             "Token": token
         }
-        resp = requests.get(validate_url, params=params).json()
+        resp = SESSION.get(validate_url, params=params).json()
         return resp['Success'], resp['Token']
 
     @staticmethod
@@ -184,7 +184,7 @@ class IVLEApi:
             "APIKey": API_KEY,
             "AuthToken": token
         }
-        resp = requests.get(url, params=params).json()
+        resp = SESSION.get(url, params=params).json()
         return resp['Results'][0]
 
     @staticmethod
@@ -196,6 +196,6 @@ class IVLEApi:
             "CourseID": course_id,
             "Duration": 0
         }
-        resp = requests.get(url, params=params).json()
+        resp = SESSION.get(url, params=params).json()
         return resp['Results']
 
