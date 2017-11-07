@@ -152,13 +152,20 @@ class SessionController:
         if error:
             return error
 
+        now_epoch = datetime.now(TIMEZONE)
+        now_epoch = int(now_epoch.timestamp())
+
+        error = Checker.check_is_session_open(session, now_epoch, session_id)
+        if error:
+            code = session.code
+        else:
+            code = random.randint(0, 1000000)
+            code = str(code).zfill(6)
+            session.code = code
+            db.session.commit()
+
         d = dict()
         d['status'] = 200
-
-        code = random.randint(0, 1000000)
-        code = str(code).zfill(6)
-        session.code = code
-        db.session.commit()
         qr_code = self.cipher.encrypt(str.encode(code)).decode()
         d['code'] = code
         d['qr_code'] = qr_code
@@ -186,23 +193,28 @@ class SessionController:
             return error
 
         closed_time = datetime.now(TIMEZONE) + timedelta(seconds=COUNTDOWN_TIMEOUT)
-        now_epoch = int(closed_time.timestamp())
+        closed_time = int(closed_time.timestamp())
+        now_epoch = datetime.now(TIMEZONE)
+        now_epoch = int(now_epoch.timestamp())
 
         error = Checker.check_is_session_open(session, now_epoch, session_id)
-        logger.critical(error)
         if error:
-            return error
+            d = dict()
+            d['text'] = "Success"
+            d['attendance_closed_time'] = session.attendance_closed_time
+            d['status'] = 200
+            return d
 
-        session.attendance_closed_time = now_epoch
+        session.attendance_closed_time = closed_time
         db.session.commit()
 
         # Emitting through socketio
         room_id = str(session_id)
         if self.socket:
-            self.socket.emit('count_down_received', now_epoch, room=room_id)
+            self.socket.emit('count_down_received', closed_time, room=room_id)
 
         d = dict()
         d['text'] = "Success"
-        d['attendance_closed_time'] = now_epoch
+        d['attendance_closed_time'] = closed_time
         d['status'] = 200
         return d

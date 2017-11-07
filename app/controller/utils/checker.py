@@ -103,7 +103,5 @@ class Checker:
 
     @staticmethod
     def check_is_session_open(session, time_now, *args):
-        logger.critical(session.attendance_closed_time)
-        logger.critical(time_now)
         return Utils.create_error_code(Error.SESSION_IS_OPEN, *args) if \
             session.attendance_closed_time and time_now <= session.attendance_closed_time else None
