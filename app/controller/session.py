@@ -189,6 +189,7 @@ class SessionController:
         now_epoch = int(closed_time.timestamp())
 
         error = Checker.check_is_session_open(session, now_epoch, session_id)
+        logger.critical(error)
         if error:
             return error
 
