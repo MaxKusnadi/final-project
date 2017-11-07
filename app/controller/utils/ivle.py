@@ -122,6 +122,7 @@ class IVLEApi:
 
     @staticmethod
     def get_student_group(token, course_id):
+        logger.info("Querying IVLE for {}".format(STUDENT_GROUP_URL))
         url = IVLE_URL + STUDENT_GROUP_URL
         params = {
             "APIKey": API_KEY,
@@ -133,6 +134,7 @@ class IVLEApi:
 
     @staticmethod
     def get_staff_group(token, course_id):
+        logger.info("Querying IVLE for {}".format(STAFF_GROUP_URL))
         url = IVLE_URL + STAFF_GROUP_URL
         params = {
             "APIKey": API_KEY,
@@ -146,6 +148,7 @@ class IVLEApi:
 
     @staticmethod
     def get_class_roster(token, course_id):
+        logger.info("Querying IVLE for {}".format(CLASS_ROSTER_URL))
         url = IVLE_URL + CLASS_ROSTER_URL
         params = {
             "APIKey": API_KEY,
@@ -157,6 +160,7 @@ class IVLEApi:
 
     @staticmethod
     def get_modules(token):
+        logger.info("Querying IVLE for {}".format(MODULE_URL))
         url = IVLE_URL + MODULE_URL
         params = {
             "APIKey": API_KEY,
@@ -169,6 +173,7 @@ class IVLEApi:
 
     @staticmethod
     def validate_token(token):
+        logger.info("Querying IVLE for {}".format(VALIDATE_URL))
         validate_url = IVLE_URL + VALIDATE_URL
         params = {
             "APIKey": API_KEY,
@@ -179,6 +184,7 @@ class IVLEApi:
 
     @staticmethod
     def get_profile(token):
+        logger.info("Querying IVLE for {}".format(PROFILE_URL))
         url = IVLE_URL + PROFILE_URL
         params = {
             "APIKey": API_KEY,
@@ -189,6 +195,7 @@ class IVLEApi:
 
     @staticmethod
     def get_course_staffs(token, course_id):
+        logger.info("Querying IVLE for {}".format(LECTURER_URL))
         url = IVLE_URL + LECTURER_URL
         params = {
             "APIKey": API_KEY,
