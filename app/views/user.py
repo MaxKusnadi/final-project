@@ -7,6 +7,12 @@ from app import app, logger
 from app.controller.user import UserController
 
 
+class LoaderIO(MethodView):
+    
+    def get(self):
+        return "loaderio-50f8912a9fc614e3b216254cadd87c42"
+
+
 class MyProfileView(MethodView):
     decorators = [login_required]
 
@@ -46,6 +52,7 @@ class MarkMyProfileView(MethodView):
         return json.dumps(result)
 
 
+app.add_url_rule('/loaderio-50f8912a9fc614e3b216254cadd87c42/', view_func=LoaderIO.as_view('loader_io'))
 app.add_url_rule('/me', view_func=MyProfileView.as_view('my_profile'))
 app.add_url_rule('/pull', view_func=PullMyProfileView.as_view('pull_profile'))
 app.add_url_rule('/mark-first-time', view_func=MarkMyProfileView.as_view('mark_profile'))
