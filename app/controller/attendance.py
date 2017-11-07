@@ -203,6 +203,7 @@ class AttendanceController:
             "week_name": x.week_name,
             "attendance": self._get_attendance_helper(x, total_attendance)
         }, sessions))
+        attendance = sorted(attendance, key=lambda x: int(x['week_name']))
         d = dict()
         d['attendance'] = attendance
         d['status'] = 200
@@ -237,7 +238,7 @@ class AttendanceController:
                 "week_name": session.week_name,
                 "attendance": status
             })
-
+        all_attendance = sorted(all_attendance, key=lambda x: int(x['week_name']))
         d = dict()
         d['attendance'] = all_attendance
         d['status'] = 200
@@ -266,6 +267,7 @@ class AttendanceController:
             "week_name": x.week_name,
             "attendance": self._get_attendance_helper(x, total_attendance)
         }, sessions))
+        attendance = sorted(attendance, key=lambda x: int(x['week_name']))
 
         # Creating excel
         file_name = "{}_{}_{}.xls".format(course.course_code, group.group_type, group.group_name)
