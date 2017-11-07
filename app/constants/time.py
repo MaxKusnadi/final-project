@@ -1,4 +1,4 @@
 import pytz
 
 TIMEZONE = pytz.timezone('Asia/Singapore')
-COUNTDOWN_TIMEOUT = 30
+COUNTDOWN_TIMEOUT = 120

@@ -30,6 +30,6 @@ STAFF_GROUP_URL = "GroupsByUserAndModule"
 
 SESSION = requests.Session()
 retries = Retry(total=20,
-                backoff_factor=0.1,
+                backoff_factor=0.5,
                 status_forcelist=[500, 502, 503, 504])
 SESSION.mount('https://', HTTPAdapter(max_retries=retries))
