@@ -25,10 +25,10 @@ from app import db
 #         db.session.add(g)
 # db.session.commit()
 # 273
-dummy_group = Group.query.get(273)
+dummy_group = Group.query.get(258)
 # user = User.query.filter(User.matric == "a0130369").first()A0130717
-user = User.query.filter(User.matric == "a0130717").first()
-c = GroupStudent(user, dummy_group)
+user = User.query.filter(User.name == "LAI CHENG YU").first()
+c = GroupStaff(user, dummy_group)
 db.session.add(c)
 db.session.commit()
 
