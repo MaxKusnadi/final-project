@@ -201,7 +201,8 @@ class AttendanceController:
 
         attendance = list(map(lambda x: {
             "week_name": x.week_name,
-            "attendance": self._get_attendance_helper(x, total_attendance)
+            "attendance": self._get_attendance_helper(x, total_attendance),
+            "session_id": x.id
         }, sessions))
         attendance = sorted(attendance, key=lambda x: int(x['week_name']))
         d = dict()
@@ -236,7 +237,8 @@ class AttendanceController:
                 status = attendance.status if attendance else 0
             all_attendance.append({
                 "week_name": session.week_name,
-                "attendance": status
+                "attendance": status,
+                "session_id": session.id
             })
         all_attendance = sorted(all_attendance, key=lambda x: int(x['week_name']))
         d = dict()
