@@ -111,8 +111,8 @@ class AttendanceController:
         matric = kwargs.get("matric")
         remark = kwargs.get("remark", "")
 
-        user_db = User.query.filter(User.matric == matric).first()
-        error = Checker.check_user(user_db)
+        student = User.query.filter(User.matric == matric).first()
+        error = Checker.check_user(student)
         if error:
             return error
 
@@ -127,9 +127,9 @@ class AttendanceController:
             return error
 
         attendance = Attendance.query.filter(Attendance.session_id == session_id,
-                                             Attendance.user_id == user_db.id).first()
+                                             Attendance.user_id == student.id).first()
         if not attendance:
-            attendance = Attendance(user, session, status)
+            attendance = Attendance(student, session, status)
             db.session.add(attendance)
             db.session.commit()
         attendance.status = status
