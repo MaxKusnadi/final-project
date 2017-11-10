@@ -20,6 +20,10 @@ class Error:
         "text": "User {} is not a mock",
         "status": 500
     }
+    STATUS_NOT_FOUND = {
+        "text": "status is empty",
+        "status": 400
+    }
     # =================================================== #
     COURSE_CODE_NOT_FOUND = {
         "text": "course_code is empty",
