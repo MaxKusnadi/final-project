@@ -25,15 +25,20 @@ from app import db
 #         db.session.add(g)
 # db.session.commit()
 # 273
-dummy_group = Group.query.get(258)
-# user = User.query.filter(User.matric == "a0130369").first()A0130717
-user = User.query.filter(User.name == "LAI CHENG YU").first()
-c = GroupStaff(user, dummy_group)
-db.session.add(c)
-db.session.commit()
+# dummy_group = Group.query.get(258)
+# # user = User.query.filter(User.matric == "a0130369").first()A0130717
+# user = User.query.filter(User.name == "LAI CHENG YU").first()
+# c = GroupStaff(user, dummy_group)
+# db.session.add(c)
+# db.session.commit()
 
 # for x in dummy_group.staffs:
 #     db.session.delete(x)
 # for x in dummy_group.students:
 #     db.session.delete(x)
 # db.session.commit()
+
+dummy_group = Group.query.get(273)
+s = Session(dummy_group, "13", 1510339446, 1510944246)
+db.session.add(s)
+db.session.commit()
