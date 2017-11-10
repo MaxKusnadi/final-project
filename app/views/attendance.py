@@ -34,7 +34,7 @@ class AttendanceView(MethodView):
 
         if not data:
             return json.dumps(Error.JSON_NOT_FOUND)
-        if data.get("status") != "1" and data.get("status") != "0":
+        if data.get("status") != 1 and data.get("status") != 0:
             return json.dumps(Error.STATUS_NOT_FOUND)
         if not data.get("matric"):
             return json.dumps(Error.MATRIC_NOT_FOUND)
