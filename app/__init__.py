@@ -5,6 +5,7 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_socketio import SocketIO
+from flask_cache import Cache
 import flask_excel as excel
 
 logging.getLogger('socketio').setLevel(logging.ERROR)
@@ -27,6 +28,7 @@ socketio = SocketIO(app)
 login_manager = LoginManager(app)
 db = SQLAlchemy(app)
 excel.init_excel(app)
+cache = Cache(app, config={"CACHE_TYPE": "redis"})
 
 # Models
 from app.models.user import User

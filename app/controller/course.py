@@ -2,11 +2,12 @@ from app.models.course import Course, CourseStudent, CourseStaff
 from app.models.user import User
 from app.controller.utils.checker import Checker
 from app.controller.utils.utils import Utils
-from app import db, logger
+from app import db, logger, cache
 
 
 class CourseController:
 
+    @cache.memoize()
     def get_users_courses(self, user):
         logger.info("Getting all courses of user {}".format(user.name))
 
@@ -21,6 +22,7 @@ class CourseController:
         d['status'] = 200
         return d
 
+    @cache.memoize()
     def get_course_info(self, course_id):
         logger.info("Getting course info for {}".format(course_id))
         course = self._get_course(course_id)
@@ -31,6 +33,7 @@ class CourseController:
         d['status'] = 200
         return d
 
+    @cache.memoize()
     def _get_course(self, course_id):
         course = Course.query.filter(Course.id == int(course_id)).first()
         return course
@@ -105,6 +108,7 @@ class CourseController:
 
         return self.get_course_student(course_id)
 
+    @cache.memoize()  #TODO update this next time
     def get_course_student(self, course_id):
         logger.info("Getting course student for {}".format(course_id))
         course = self._get_course(course_id)
@@ -127,6 +131,7 @@ class CourseController:
             return error
         return self.get_course_staff(course_id)
 
+    @cache.memoize()  #TODO update this next time
     def get_course_staff(self, course_id):
         logger.info("Getting course staff for {}".format(course_id))
         course = self._get_course(course_id)
@@ -150,6 +155,7 @@ class CourseController:
 
         return self.get_course_group(course_id)
 
+    @cache.memoize()  #TODO update this next time
     def get_course_group(self, course_id):
         logger.info("Getting course group for {}".format(course_id))
         course = self._get_course(course_id)

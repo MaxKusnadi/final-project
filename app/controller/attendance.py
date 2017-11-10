@@ -10,7 +10,7 @@ from app.models.course import Course
 from app.models.user import User
 from app.controller.utils.utils import Utils
 from app.controller.utils.checker import Checker
-from app import db, logger
+from app import db, logger, cache
 
 
 class AttendanceController:
@@ -22,7 +22,7 @@ class AttendanceController:
     def create_user_attendance(self, user, session_id, **kwargs):
         logger.info("Creating an attendance for {}".format(user.name))
         code = kwargs.get('code')
-        session = Session.query.filter(Session.id == session_id).first()
+        session = self._get_session(session_id)
         error = Checker.check_session(session, session_id)
         if error:
             return error
@@ -66,7 +66,7 @@ class AttendanceController:
             d['status'] = 400
             return d
 
-        session = Session.query.filter(Session.id == session_id).first()
+        session = self._get_session(session_id)
         error = Checker.check_session(session, session_id)
         if error:
             return error
@@ -116,7 +116,7 @@ class AttendanceController:
         if error:
             return error
 
-        session = Session.query.filter(Session.id == session_id).first()
+        session = self._get_session(session_id)
         error = Checker.check_session(session, session_id)
         if error:
             return error
@@ -142,7 +142,7 @@ class AttendanceController:
 
     def get_session_attendance(self, session_id, user):
         logger.info("Getting session {} attendance info for {}".format(session_id, user.name))
-        session = Session.query.filter(Session.id == session_id).first()
+        session = self._get_session(session_id)
         error = Checker.check_session(session, session_id)
         if error:
             return error
@@ -162,7 +162,8 @@ class AttendanceController:
 
     def get_my_session_attendance(self, session_id, user):
         logger.info("Getting session {} attendance info for myself {}".format(session_id, user.name))
-        session = Session.query.filter(Session.id == session_id).first()
+
+        session = self._get_session(session_id)
         error = Checker.check_session(session, session_id)
         if error:
             return error
@@ -182,12 +183,13 @@ class AttendanceController:
 
     def get_group_attendance(self, user, course_id, group_id):
         logger.info("Getting group {}/{} attendance for {}".format(group_id, course_id, user.name))
-        course = Course.query.filter(Course.id == course_id).first()
+
+        course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
             return error
-        group = Group.query.filter(Group.id == group_id,
-                                   Group.course_id == course.id).first()
+
+        group = self._get_group(course, group_id)
         error = Checker.check_group(group, course_id, group_id)
         if error:
             return error
@@ -212,12 +214,13 @@ class AttendanceController:
 
     def get_my_group_attendance(self, user, course_id, group_id):
         logger.info("Getting group {}/{} attendance for myself {}".format(group_id, course_id, user.name))
-        course = Course.query.filter(Course.id == course_id).first()
+
+        course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
             return error
-        group = Group.query.filter(Group.id == group_id,
-                                   Group.course_id == course.id).first()
+
+        group = self._get_group(course, group_id)
         error = Checker.check_group(group, course_id, group_id)
         if error:
             return error
@@ -248,12 +251,12 @@ class AttendanceController:
 
     def download_group_attendance(self, user, course_id, group_id):
         logger.info("Downloading group {}/{} attendance for myself {}".format(group_id, course_id, user.name))
-        course = Course.query.filter(Course.id == course_id).first()
+        course = self._get_course(course_id)
         error = Checker.check_course(course, course_id)
         if error:
             return error
-        group = Group.query.filter(Group.id == group_id,
-                                   Group.course_id == course.id).first()
+
+        group = self._get_group(course, group_id)
         error = Checker.check_group(group, course_id, group_id)
         if error:
             return error
@@ -300,6 +303,22 @@ class AttendanceController:
         d['result'] = ans
         d['status'] = 200
         return d
+
+    @cache.memoize()
+    def _get_group(self, course, group_id):
+        group = Group.query.filter(Group.id == group_id,
+                                   Group.course_id == course.id).first()
+        return group
+
+    @cache.memoize()
+    def _get_course(self, course_id):
+        course = Course.query.filter(Course.id == course_id).first()
+        return course
+
+    @cache.memoize()
+    def _get_session(self, session_id):
+        session = Session.query.filter(Session.id == session_id).first()
+        return session
 
     def _get_attendance_helper(self, session, total_attendance):
         if not session.attendance_closed_time:

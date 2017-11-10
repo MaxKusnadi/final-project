@@ -4,7 +4,7 @@ from app.models.user import User
 from app.controller.utils.checker import Checker
 from app.controller.utils.ivle import IVLEApi
 from app.controller.utils.initializer import Initializer
-from app import db, login_manager, logger
+from app import db, login_manager, logger, cache
 
 
 @login_manager.user_loader
@@ -32,7 +32,7 @@ class LoginController:
             d['status'] = 301
             return d
 
-        user = User.query.filter(User.matric == matric).first()
+        user = self._get_user(matric)
         if not user:
             logger.info("Creating user with UserID {}".format(matric))
             name = profile['Name']
@@ -68,6 +68,11 @@ class LoginController:
         d['status'] = 200
         return d
 
+    @cache.memoize()
+    def _get_user(self, matric):
+        return User.query.filter(User.matric == matric).first()
+
+    @cache.memoize()
     def get_user_info(self, user):
         logger.info("Getting information for user {}".format(user.matric))
         d = dict()

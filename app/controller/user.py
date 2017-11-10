@@ -2,7 +2,7 @@ from app.models.user import User
 from app.controller.utils.utils import Utils
 from app.controller.utils.checker import Checker
 from app.controller.utils.initializer import Initializer
-from app import db, logger
+from app import db, logger, cache
 
 
 class UserController:
@@ -37,6 +37,7 @@ class UserController:
         d = Utils.get_user_info(user)
         return d
 
+    @cache.memoize()
     def get_my_info(self, user):
         logger.info("Getting user {} info".format(user.matric))
         d = Utils.get_user_info(user)

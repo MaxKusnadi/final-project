@@ -3,7 +3,7 @@ from app.models.group import Group, GroupStudent, GroupStaff
 from app.models.user import User
 from app.controller.utils.utils import Utils
 from app.controller.utils.checker import Checker
-from app import db, logger
+from app import db, logger, cache
 
 
 class GroupController:
@@ -134,6 +134,7 @@ class GroupController:
 
         return self.get_users_groups(user)
 
+    @cache.memoize()
     def get_group_info(self, course_id, group_id):
         logger.info("Getting group info for {}".format(course_id))
         course = self._get_course(course_id)
@@ -149,15 +150,18 @@ class GroupController:
         d['status'] = 200
         return d
 
+    @cache.memoize()
     def _get_group(self, course, group_id):
         group = Group.query.filter(Group.id == int(group_id),
                                    Group.course_id == int(course.id)).first()
         return group
 
+    @cache.memoize()
     def _get_course(self, course_id):
         course = Course.query.filter(Course.id == int(course_id)).first()
         return course
 
+    @cache.memoize(600)
     def get_all_groups(self, course_id):
         logger.info("Getting all groups info for {}".format(course_id))
         course = self._get_course(course_id)

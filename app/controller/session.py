@@ -9,7 +9,7 @@ from app.models.session import Session
 from app.models.user import User
 from app.controller.utils.utils import Utils
 from app.controller.utils.checker import Checker
-from app import db, logger
+from app import db, logger, cache
 
 
 class SessionController:
@@ -54,6 +54,7 @@ class SessionController:
 
         return self.get_users_sessions(user)
 
+    @cache.memoize(60)
     def get_users_sessions(self, user):
         logger.info("Getting closest for user {} this week".format(user.name))
 
@@ -114,6 +115,7 @@ class SessionController:
                 d['attendance'] = attendance
         return d
 
+    @cache.memoize()
     def get_session_info(self, session_id, user):
         logger.info("Getting session {} info for {}".format(session_id, user.name))
         session = Session.query.filter(Session.id == session_id).first()

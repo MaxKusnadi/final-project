@@ -1,11 +1,12 @@
 from datetime import datetime
 from app.constants.time import TIMEZONE
 from app.controller.utils.utils import Utils
-from app import logger
+from app import logger, cache
 
 
 class AcademicTimeController:
 
+    @cache.cached(timeout=600, key_prefix='academic_time')
     def get_acad_time(self):
         logger.info("Getting current academic time")
         now = datetime.now(TIMEZONE)
