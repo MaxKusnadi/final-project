@@ -314,7 +314,6 @@ class AttendanceController:
         course = Course.query.filter(Course.id == course_id).first()
         return course
 
-    @cache.memoize()
     def _get_session(self, session_id):
         session = Session.query.filter(Session.id == session_id).first()
         return session
