@@ -19,7 +19,7 @@ class LoginView(MethodView):
         logger.info("Request referer: {}".format(request.environ.get("HTTP_REFERER")))
         referer = request.environ.get("HTTP_REFERER")
         if current_user.is_authenticated:
-            if referer and "https://nusattend.firebaseapp.com/" in referer:
+            if referer and ("https://nusattend.tk" in referer or "https://nusattend.firebaseapp.com/" in referer):
                 return redirect(LOGIN_REDIRECT_URL_LIVE)
             return redirect(LOGIN_REDIRECT_URL_DEV)
         else:
@@ -53,7 +53,7 @@ class LogoutView(MethodView):
     def get(self):
         logout_user()
         referer = request.environ.get("HTTP_REFERER")
-        if referer and "https://nusattend.firebaseapp.com/" in referer:
+        if referer and ("https://nusattend.tk" in referer or "https://nusattend.firebaseapp.com/" in referer):
             return redirect(LOGIN_REDIRECT_URL_LIVE)
         return redirect(LOGIN_REDIRECT_URL_DEV)
 
@@ -67,7 +67,7 @@ class IvleToken(MethodView):
         token = request.args.get('token')
         referer = request.args.get('referer')
         self.control.login(token)
-        if referer and "https://nusattend.firebaseapp.com/" in referer:
+        if referer and ("https://nusattend.tk" in referer or "https://nusattend.firebaseapp.com/" in referer):
                 return redirect(LOGIN_REDIRECT_URL_LIVE)
         return redirect(LOGIN_REDIRECT_URL_DEV)
 
