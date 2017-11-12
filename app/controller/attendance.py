@@ -304,7 +304,6 @@ class AttendanceController:
         d['status'] = 200
         return d
 
-    @cache.memoize()
     def _get_group(self, course, group_id):
         group = Group.query.filter(Group.id == group_id,
                                    Group.course_id == course.id).first()
