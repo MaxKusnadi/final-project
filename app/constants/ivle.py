@@ -13,7 +13,7 @@ if DEVELOPMENT:
 else:
     redirect_url = "https://imgratefultoday.com"
     LOGIN_REDIRECT_URL_DEV = "http://localhost:3000"
-LOGIN_REDIRECT_URL_LIVE = "https://nusattend.firebaseapp.com/"
+LOGIN_REDIRECT_URL_LIVE = "https://nusattend.tk/"
 LOGIN_URL = "https://ivle.nus.edu.sg/api/login/?apikey={api_key}&url={redirect_url}/ivle_token".format(api_key=API_KEY,
                                                                                                        redirect_url=redirect_url)
 

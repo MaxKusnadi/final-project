@@ -68,7 +68,7 @@ class IvleToken(MethodView):
         referer = request.args.get('referer')
         self.control.login(token)
         if referer and ("https://nusattend.tk" in referer or "https://nusattend.firebaseapp.com/" in referer):
-                return redirect(LOGIN_REDIRECT_URL_LIVE)
+            return redirect(LOGIN_REDIRECT_URL_LIVE)
         return redirect(LOGIN_REDIRECT_URL_DEV)
 
 
