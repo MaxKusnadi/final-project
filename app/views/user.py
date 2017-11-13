@@ -52,6 +52,15 @@ class MarkMyProfileView(MethodView):
         return json.dumps(result)
 
 
+class SSLView(MethodView):
+
+    def get(self, token_value):
+        with open('.well-known/acme-challenge/{}'.format(token_value)) as f:
+            answer = f.readline().strip()
+        return answer
+
+
+app.add_url_rule('/.well-known/acme-challenge/<token_value>', view_func=SSLView.as_view('ssl'))
 app.add_url_rule('/loaderio-50f8912a9fc614e3b216254cadd87c42/', view_func=LoaderIO.as_view('loader_io'))
 app.add_url_rule('/me', view_func=MyProfileView.as_view('my_profile'))
 app.add_url_rule('/pull', view_func=PullMyProfileView.as_view('pull_profile'))
