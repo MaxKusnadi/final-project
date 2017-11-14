@@ -39,7 +39,7 @@ from app import db
 # db.session.commit()
 
 dummy_group = Group.query.get(273)
-user = User.query.filter(User.name == "Yue Kaidi").first()
+user = User.query.filter(User.name == "YUE KAIDI").first()
 c = GroupStudent(user, dummy_group)
 db.session.add(c)
 db.session.commit()
