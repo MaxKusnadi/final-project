@@ -1,7 +1,6 @@
 from flask_login import login_user
 
 from app.models.user import User
-from app.controller.utils.checker import Checker
 from app.controller.utils.ivle import IVLEApi
 from app.controller.utils.initializer import Initializer
 from app import db, login_manager, logger, cache
@@ -46,21 +45,6 @@ class LoginController:
             self.initializer.initialize_user(user, token)
             user.is_data_pulled = True
         db.session.commit()
-        d = dict()
-        d['name'] = user.name
-        d['email'] = user.email
-        d['matric'] = user.matric
-        d['status'] = 200
-        return d
-
-    def mock_login(self, **kwargs):
-        matric = kwargs.get('matric')
-        logger.info("Logging in for mocked user {}".format(matric))
-        user = User.query.filter(User.matric == matric).first()
-        error = Checker.check_mock_user(user, matric)
-        if error:
-            return error
-        login_user(user)
         d = dict()
         d['name'] = user.name
         d['email'] = user.email

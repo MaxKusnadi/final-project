@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask_socketio import emit, join_room, disconnect
+from flask_socketio import join_room, disconnect
 from flask_login import current_user
 
 from app.constants.time import TIMEZONE
@@ -14,7 +14,6 @@ def on_connect():
         if room_id:
             logger.info("{} join room {}".format(current_user.name, room_id))
             join_room(str(room_id))
-            emit("hi", data={"Hello": "hello"}, room=str(room_id))
         else:
             logger.info("Room id not found")
     else:

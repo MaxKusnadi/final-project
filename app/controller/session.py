@@ -18,42 +18,6 @@ class SessionController:
         self.cipher = Fernet(CIPHER_KEY)
         self.socket = socket
 
-    def create_mock_session(self, **kwargs):
-        logger.info("Creating a mocked session")
-        group_id = kwargs.get('group_id')
-        start_date = kwargs.get('start_date')
-        end_date = kwargs.get('end_date')
-
-        start_date = int(start_date) if start_date else None
-        end_date = int(end_date) if end_date else None
-
-        group = Group.query.filter(Group.id == group_id).first()
-        error = Checker.check_mock_group_id(group, group_id)
-        if error:
-            return error
-        session = Session.query.filter(Session.group_id == group.id,
-                                       Session.start_date == start_date,
-                                       Session.end_date == end_date).first()
-        error = Checker.check_session_exist(session)
-        if error:
-            return error
-        session = Session(group, "9", start_date, end_date)
-        session.is_mocked = True
-        db.session.add(session)
-        db.session.commit()
-        d = Utils.get_session_info(session)
-        d['status'] = 200
-        return d
-
-    def get_mock_users_sessions(self, matric):
-        logger.info("Getting all mock sessions for user {} this week".format(matric))
-        user = User.query.filter(User.matric == matric).first()
-        error = Checker.check_mock_user(user, matric)
-        if error:
-            return error
-
-        return self.get_users_sessions(user)
-
     @cache.memoize(60)
     def get_users_sessions(self, user):
         logger.info("Getting closest for user {} this week".format(user.name))
@@ -98,23 +62,6 @@ class SessionController:
         session_info['status'] = 200
         return session_info
 
-    def get_mock_session_info(self, session_id, matric):
-        logger.info("Getting session {} info for {}".format(session_id, matric))
-        session = Session.query.filter(Session.id == session_id).first()
-        error = Checker.check_mock_session(session, session_id)
-        if error:
-            return error
-        d = Utils.get_session_info(session)
-        d['status'] = 200
-        group = session.group
-        user = User.query.filter(User.matric == matric).first()
-        if user:
-            if user in group.staffs:
-                attendance = session.students
-                attendance = list(map(lambda x: Utils.get_attendance_info(x), attendance))
-                d['attendance'] = attendance
-        return d
-
     @cache.memoize()
     def get_session_info(self, session_id, user):
         logger.info("Getting session {} info for {}".format(session_id, user.name))
@@ -131,16 +78,6 @@ class SessionController:
             attendance = list(map(lambda x: Utils.get_attendance_info(x), attendance))
             d['attendance'] = attendance
         return d
-
-    def get_mock_session_code(self, session_id, matric):
-        logger.info("Getting mock session {} code for {}".format(session_id, matric))
-
-        user = User.query.filter(User.matric == matric).first()
-        error = Checker.check_mock_user(user, matric)
-        if error:
-            return error
-
-        return self.get_session_code(session_id, user)
 
     def get_session_code(self, session_id, user):
         logger.info("Getting session {} code for {}".format(session_id, user.name))
@@ -172,15 +109,6 @@ class SessionController:
         d['code'] = code
         d['qr_code'] = qr_code
         return d
-
-    def start_mock_session(self, session_id, matric):
-        logger.info("Stating mock session {} attendance for {}".format(session_id, matric))
-
-        user = User.query.filter(User.matric == matric).first()
-        error = Checker.check_mock_user(user, matric)
-        if error:
-            return error
-        return self.start_session(session_id, user)
 
     def start_session(self, session_id, user):
         logger.info("Starting session {} attendance for {}".format(session_id, user.name))

@@ -10,33 +10,6 @@ class UserController:
     def __init__(self):
         self.initializer = Initializer()
 
-    def create_user(self, **kwargs):
-        logger.info("Creating a mocked user")
-        name = kwargs.get('name', "")
-        matric = kwargs.get("matric")
-        email = kwargs.get('email', '')
-
-        user = User.query.filter(User.matric == matric).first()
-        error = Checker.check_user_exist(user)
-        if error:
-            return error
-
-        user = User(matric, name, email)
-        user.is_mocked = True
-        db.session.add(user)
-        db.session.commit()
-        d = Utils.get_user_info(user)
-        return d
-
-    def get_user(self, matric_id):
-        logger.info("Getting user {} info".format(matric_id))
-        user = User.query.filter(User.matric == matric_id).first()
-        error = Checker.check_mock_user(user, matric_id)
-        if error:
-            return error
-        d = Utils.get_user_info(user)
-        return d
-
     @cache.memoize()
     def get_my_info(self, user):
         logger.info("Getting user {} info".format(user.matric))
