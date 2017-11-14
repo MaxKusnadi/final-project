@@ -20,7 +20,7 @@ Flask-SQLAlchemy==2.2
 gevent==1.2.2
 gevent-websocket==0.10.1
 greenlet==0.4.12
-gunicorn==18.0
+gunicorn==19.7
 idna==2.6
 itsdangerous==0.24
 Jinja2==2.9.6
