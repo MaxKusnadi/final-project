@@ -320,7 +320,12 @@ class AttendanceController:
 
     def _get_attendance_helper(self, session, total_attendance):
         if not session.attendance_closed_time:
-            attendance = list(map(lambda x: Utils.get_not_taken_attendance_info(x), total_attendance))
+            attendance = session.students
+            attendance_user_matric = list(map(lambda x: x.user.matric, attendance))
+            missing_student = list(filter(lambda x: x.matric not in attendance_user_matric, total_attendance))
+            attendance = list(map(lambda x: Utils.get_attendance_info(x), attendance))
+            missing_attendance = list(map(lambda x: Utils.get_not_taken_attendance_info(x), missing_student))
+            attendance.extend(missing_attendance)
             return attendance
         attendance = session.students
         attendance_user_matric = list(map(lambda x: x.user.matric, attendance))
