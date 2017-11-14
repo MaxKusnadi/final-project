@@ -39,6 +39,11 @@ from app import db
 # db.session.commit()
 
 dummy_group = Group.query.get(273)
-s = Session(dummy_group, "13", 1510339446, 1510944246)
-db.session.add(s)
+user = User.query.filter(User.name == "Yue Kaidi").first()
+c = GroupStudent(user, dummy_group)
+db.session.add(c)
 db.session.commit()
+
+# s = Session(dummy_group, "13", 1510339446, 1510944246)
+# db.session.add(s)
+# db.session.commit()

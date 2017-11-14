@@ -60,6 +60,7 @@ class SessionController:
         session_info = Utils.get_session_info(closest_session)
         session_info['session_type'] = "student" if closest_session.group in groups_taken else "staff"
         session_info['status'] = 200
+        session_info['week_name'] = week_name
         return session_info
 
     @cache.memoize()
