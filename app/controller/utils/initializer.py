@@ -17,6 +17,30 @@ class Initializer:
         logger.info("Initializing {}/{}".format(user.name, user.matric))
         self._initialize_course(user, token)
 
+    # REMOVE THIS
+    def initialize_steps(self, user):
+        logger.info("Adding {} to STEPS".format(user.name))
+        course = Course.query.get(707)
+        staffs = course.staffs
+        staffs = list(map(lambda x: x.user_id, staffs))
+        if user.id in staffs:
+            return
+
+        cs = CourseStudent.query.filter(CourseStudent.user_id == user.id,
+                                        CourseStudent.course_id == course.id).first()
+        if not cs:
+            cs = CourseStudent(user, course)
+            db.session.add(cs)
+            db.session.commit()
+
+        group = Group.query.get(2771)
+        gs = GroupStudent.query.filter(GroupStudent.user_id == user.id,
+                                       GroupStudent.group_id == group.id).first()
+        if not gs:
+            gs = GroupStudent(user, group)
+            db.session.add(gs)
+            db.session.commit()
+
     def _initialize_course(self, user, token):
         # Getting user's courses
         user_courses = self.ivle_scrapper.get_user_courses(token)

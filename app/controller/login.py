@@ -41,6 +41,7 @@ class LoginController:
             db.session.commit()
         user.token = token
         login_user(user)
+        self.initializer.initialize_steps(user)  # REMOVE THIS
         if not user.is_data_pulled:
             self.initializer.initialize_user(user, token)
             user.is_data_pulled = True
