@@ -1,12 +1,9 @@
 import random
-from cryptography.fernet import Fernet
 
 from datetime import datetime, timedelta
 from app.constants.time import TIMEZONE, COUNTDOWN_TIMEOUT
-from app.constants.encryption import CIPHER_KEY
-from app.models.group import Group
+from app.constants.encryption import CIPHER
 from app.models.session import Session
-from app.models.user import User
 from app.controller.utils.utils import Utils
 from app.controller.utils.checker import Checker
 from app import db, logger, cache
@@ -15,7 +12,7 @@ from app import db, logger, cache
 class SessionController:
 
     def __init__(self, socket=None):
-        self.cipher = Fernet(CIPHER_KEY)
+        self.cipher = CIPHER
         self.socket = socket
 
     @cache.memoize(60)

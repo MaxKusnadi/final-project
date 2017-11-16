@@ -1,8 +1,7 @@
 from datetime import datetime
-from cryptography.fernet import Fernet
 
 from app.constants.time import TIMEZONE
-from app.constants.encryption import CIPHER_KEY
+from app.constants.encryption import CIPHER
 from app.models.attendance import Attendance
 from app.models.group import Group
 from app.models.session import Session
@@ -16,7 +15,7 @@ from app import db, logger, cache
 class AttendanceController:
 
     def __init__(self, socket=None):
-        self.cipher = Fernet(CIPHER_KEY)
+        self.cipher = CIPHER
         self.socket = socket
 
     def create_user_attendance(self, user, session_id, **kwargs):
