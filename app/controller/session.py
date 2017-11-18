@@ -43,7 +43,10 @@ class SessionController:
 
         # Check if it exists if not get the next week one
         if not first_sessions:
-            week_name = str(int(week_name) + 1)
+            try:
+                week_name = str(int(week_name) + 1)
+            exception:
+                return {}
             first_sessions = list(filter(lambda x: x.week_name == week_name, sessions))
             # Filter by time
             first_sessions = list(filter(lambda x: now_epoch <= x.end_date, first_sessions))
