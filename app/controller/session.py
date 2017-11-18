@@ -45,7 +45,7 @@ class SessionController:
         if not first_sessions:
             try:
                 week_name = str(int(week_name) + 1)
-            exception:
+            except:
                 return {}
             first_sessions = list(filter(lambda x: x.week_name == week_name, sessions))
             # Filter by time
